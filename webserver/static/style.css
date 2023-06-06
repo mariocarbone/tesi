@@ -1,0 +1,23 @@
+body {
+    margin: 0;
+    padding: 0;
+  }
+  
+  #map {
+    height: 600px;
+  }
+  
+  #sidebar {
+    width: 300px;
+    background-color: #f2f2f2;
+    padding: 10px;
+    float: right;
+  }
+
+  #vehicle-details {
+    width: 300px;
+    background-color: #f2f2f2;
+    padding: 10px;
+    float: right;
+  }
+  

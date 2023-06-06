@@ -64,21 +64,17 @@ distance_lock = Lock()
 
 # Metodi per l'aggiunta dei frame alle relative code
 
-
 def add_frame(frame):
     global cv2_queue
     cv2_queue.append(frame)
-
 
 def get_latest_frame():  # preleva l'utimo frame aggiunto
     global cv2_queue
     return cv2_queue[-1] if cv2_queue else None
 
-
 def add_image(img):
     global img_queue
     img_queue.append(img)
-
 
 def get_latest_image():  # preleva l'utimo frame aggiunto
     global img_queue
