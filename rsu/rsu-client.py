@@ -53,11 +53,11 @@ def update_status():
         client.publish(topic_rsu_topub + rsu_id + "/details", rsu_details_json)
         print("Aggiornati dettagli RSU " +
               rsu_id+": "+str(rsu_deatils))
-        time.sleep(5)
+        time.sleep(1)
         print("invio alert random")
         location = {"lat": 39.35613, "lon": 16.22815}
-        alertSend(createAlert("car", location, "Pippo"))
-        time.sleep(5)
+        alertSend(createAlert("car", location, rsu_id))
+        time.sleep(1)
 
 # Calcoli RSU - Alert Veicoli
 
@@ -112,7 +112,8 @@ def update_communication_delay():
 alert_db = {}
 
 def createAlert(tipo, location, revealedBy):
-    alert_id=random.randint(0,1000)
+
+    alert_id=time.time()
     alert_details = {
     "id": alert_id ,
     "type": tipo,

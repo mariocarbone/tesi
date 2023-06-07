@@ -19,7 +19,6 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-
 # import RPi.GPIO as GPIO
 
 ld_library_path = os.environ.get('LD_LIBRARY_PATH', '')
@@ -82,7 +81,6 @@ def get_latest_image():  # preleva l'utimo frame aggiunto
 
 # Funzione per acquisire i frame dalla webcam e aggiungerli al buffer
 
-
 def capture_frames():
     # Webcam
     video_capture = cv2.VideoCapture(0)
@@ -94,13 +92,13 @@ def capture_frames():
 
     video_capture.release()
 
-
+'''
 def set_saved_video(input_video, output_video, size):
     fourcc = cv2.VideoWriter_fourcc(*"MJPG")
     fps = int(input_video.get(cv2.CAP_PROP_FPS))
     video = cv2.VideoWriter(output_video, fourcc, fps, size)
     return video
-
+'''
 
 def convert2relative(bbox):
     x, y, w, h = bbox
@@ -168,11 +166,9 @@ def video_capture(frame_queue, darknet_image_queue):
 lock = threading.Lock()
 risultati = {}
 
-
 def get_json():
     global risultati
     return risultati
-
 
 def set_json(json):
     global risultati, lock
@@ -181,7 +177,6 @@ def set_json(json):
         risultati = json
     finally:
         lock.release()
-
 
 def inference(darknet_image_queue, detections_queue, fps_queue):
     global cap, thresh
@@ -201,7 +196,6 @@ def inference(darknet_image_queue, detections_queue, fps_queue):
 
         darknet.free_image(darknet_image)
     cap.release()
-
 
 def drawing(frame_queue, detections_queue, fps_queue):
     global cap
@@ -268,7 +262,6 @@ def measure_distance():
 
 # Funzione per processare le immagini con OpenCV
 
-
 def cv2Lines():
 
     green_color = (0, 255, 0, 20)  # BGR colore verde
@@ -316,7 +309,6 @@ def cv2Lines():
         else:
             continue
 
-
 # Funzione per generare i frame per la Web UI
 def generate_frames():
     while True:
@@ -330,7 +322,6 @@ def generate_frames():
                        b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
         else:
             continue
-
 
 # Homepage
 @app.route('/')
