@@ -11,6 +11,8 @@ import time
 import cv2
 import os
 import random
+import serial
+import json
 from ctypes import *
 import numpy as np
 from flask import Flask, render_template, Response
@@ -49,7 +51,7 @@ video_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 video_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 current_json = []
 
-frame_queue = Queue() # coda frame prelevati dal flusso video
+frame_queue = Queue()  # coda frame prelevati dal flusso video
 darknet_image_queue = Queue(maxsize=1)
 detections_queue = Queue(maxsize=1)
 fps_queue = Queue(maxsize=1)
@@ -61,25 +63,40 @@ img_queue = deque(maxlen=15)  # coda dei frame per visualizzazione web
 distance = Value('d', 0.0)
 distance_lock = Lock()
 
-# Broker MQTT e Topic
+vehicle_id = "ROVER000"
+vehicle_info = {
+    "id": vehicle_id,
+    "speed": 0,
+    "braking": 0,
+    "gps": {"lat": 39.35576, "lon": 16.22927},
+    "distance": 0,
+    "rsu_id": "RSU_01",
+    "timestamp": 0
+}
+
+#Seriale Arduino
+arduino_seriale = serial.Serial("/dev/ttyACM0", 9600)
+
+# Set per salvataggio alert ricevuti
+alert = {}
+
+# Broker MQTT e Topic#Salvataggio alert ricevuti
 broker_address = "localhost"
 broker_port = 1883
 topic = "/smartcar/" + vehicle_id
 alert_topic = "/alert/#"
 
 def on_connect(client, userdata, flags, rc):
-    print("Connected to MQTT broker with result code "+str(rc))
+    print("<stato> Connesso al broker MQTT: <code: "+str(rc)+">")
     client.subscribe(alert_topic)
 
 def on_message(client, userdata, message):
-    global veicoli_connessi
     if message.topic.startswith("/alert"):
-        print("RICEVUTO ALERT")
+        print("<alert> Ricevuto Alert")
         payload = json.loads(message.payload)
         gestisciAlert(payload)
-
-        #alert_id = payload["id"]
-        #alert[alert_id] = payload
+        # alert_id = payload["id"]
+        # alert[alert_id] = payload
 
 client = mqtt.Client(vehicle_id)
 client.on_connect = on_connect
@@ -87,26 +104,115 @@ client.on_message = on_message
 client.connect(broker_address, broker_port)
 client.loop_start()
 
-# Metodi per l'aggiunta dei frame alle relative code
+# Aggiornamento stato veicolo
+def update_status():
+    while True:
+        vehicle_info["timestamp"] = time.time()
+        updateFromArduino(arduino_seriale)
+        
+        #Pubblico i dati del veicolo
+        vehicle_info_json = json.dumps(vehicle_info)
+        client.publish(topic + "/info", vehicle_info_json)
+        print("<stato> Aggiornato stato del veicolo " +
+              vehicle_id+": "+str(vehicle_info))
+        time.sleep(0.8)
 
+def updateFromArduino(serial):
+    while True:
+        if serial.in_waiting > 0:
+            linea = serial.readline().decode('utf-8').rstrip()
+            try:
+                dati_json = json.loads(linea)
+                print("<stato> Letto lo stato di Arduino: "+ dati_json)
+                vehicle_info["distance"] = dati_json["distance"]
+                vehicle_info["speed"] = dati_json["speed"]
+                vehicle_info["braking"] = dati_json["braking"]                 
+            except json.JSONDecodeError:
+                print("<errore> Errore di parsing JSON da Arduino")
+            
+def generaAlert(alert):
+
+    print("QuI GENERO UN ALERT DI PERSONA")
+
+def gestisciAlert(alert):
+
+    print("GESTISCO ALERT")
+    tipo = alert["type"]
+    if tipo == "person":
+        print("Persona")
+    elif tipo == "motorbike":
+        print("Moto")
+    elif tipo == "car":
+        print("Auto")
+    elif tipo == "dog":
+        print("Cane")
+    else:
+        print("NON SO CHE CAZZO E`")
+
+    location = (alert["gps"]["lat"], alert["gps"]["lon"])
+    my_location = (vehicle_info["gps"]["lat"], vehicle_info["gps"]["lon"])
+    distance = geodesic(location, my_location).meters
+    print("Alert location: "+ str(location))
+    print("My location: "+ str(my_location))
+    print("Distanza: " + str(distance)+ "m")
+
+
+"""   
+# Funzione per misurare la distanza
+def measure_distance():
+    
+    global distance, distance_value, vehicle_info
+    GPIO.setmode(GPIO.BOARD)
+    
+    trig_pin = 7
+    echo_pin = 11
+    GPIO.setup(trig_pin, GPIO.OUT)
+    GPIO.setup(echo_pin, GPIO.IN)
+    
+    while True:
+        
+        GPIO.output(trig_pin, GPIO.HIGH)
+        time.sleep(0.00001)
+        GPIO.output(trig_pin, GPIO.LOW)
+        
+        while GPIO.input(echo_pin) == 0:
+            pulse_start = time.time()
+        while GPIO.input(echo_pin) == 1:
+            pulse_end = time.time()
+            
+        pulse_duration = pulse_end - pulse_start
+        
+        distance_value = pulse_duration * 17150
+        
+        with distance_lock:
+            distance.value = round(distance_value, 2)
+            vehicle_info["distance"] = distance.value
+
+        time.sleep(1)
+"""
+
+
+# Metodi per l'aggiunta dei frame alle relative code
 def add_frame(frame):
     global cv2_queue
     cv2_queue.append(frame)
+
 
 def get_latest_frame():  # preleva l'utimo frame aggiunto
     global cv2_queue
     return cv2_queue[-1] if cv2_queue else None
 
+
 def add_image(img):
     global img_queue
     img_queue.append(img)
+
 
 def get_latest_image():  # preleva l'utimo frame aggiunto
     global img_queue
     return img_queue[-1] if img_queue else None
 
 # Funzione per acquisire i frame dalla webcam e aggiungerli al buffer
-
 def capture_frames():
     # Webcam
     video_capture = cv2.VideoCapture(0)
@@ -118,6 +224,7 @@ def capture_frames():
 
     video_capture.release()
 
+
 '''
 def set_saved_video(input_video, output_video, size):
     fourcc = cv2.VideoWriter_fourcc(*"MJPG")
@@ -125,6 +232,7 @@ def set_saved_video(input_video, output_video, size):
     video = cv2.VideoWriter(output_video, fourcc, fps, size)
     return video
 '''
+
 
 def convert2relative(bbox):
     x, y, w, h = bbox
@@ -192,9 +300,11 @@ def video_capture(frame_queue, darknet_image_queue):
 lock = threading.Lock()
 risultati = {}
 
+
 def get_json():
     global risultati
     return risultati
+
 
 def set_json(json):
     global risultati, lock
@@ -203,6 +313,7 @@ def set_json(json):
         risultati = json
     finally:
         lock.release()
+
 
 def inference(darknet_image_queue, detections_queue, fps_queue):
     global cap, thresh
@@ -222,6 +333,7 @@ def inference(darknet_image_queue, detections_queue, fps_queue):
 
         darknet.free_image(darknet_image)
     cap.release()
+
 
 def drawing(frame_queue, detections_queue, fps_queue):
     global cap
@@ -253,41 +365,8 @@ def drawing(frame_queue, detections_queue, fps_queue):
     cv2.destroyAllWindows()
 
 
-"""   
-# Funzione per misurare la distanza
-def measure_distance():
-    
-    global distance, distance_value
-    GPIO.setmode(GPIO.BOARD)
-    
-    trig_pin = 7
-    echo_pin = 11
-    GPIO.setup(trig_pin, GPIO.OUT)
-    GPIO.setup(echo_pin, GPIO.IN)
-    
-    while True:
-        
-        GPIO.output(trig_pin, GPIO.HIGH)
-        time.sleep(0.00001)
-        GPIO.output(trig_pin, GPIO.LOW)
-        
-        while GPIO.input(echo_pin) == 0:
-            pulse_start = time.time()
-        while GPIO.input(echo_pin) == 1:
-            pulse_end = time.time()
-            
-        pulse_duration = pulse_end - pulse_start
-        
-        distance_value = pulse_duration * 17150
-        
-        with distance_lock:
-            distance.value = round(distance_value, 2)
-            
-        time.sleep(1)
-"""
 
 # Funzione per processare le immagini con OpenCV
-
 def cv2Lines():
 
     green_color = (0, 255, 0, 20)  # BGR colore verde
@@ -336,6 +415,8 @@ def cv2Lines():
             continue
 
 # Funzione per generare i frame per la Web UI
+
+
 def generate_frames():
     while True:
         time.sleep(0.04)
@@ -379,5 +460,7 @@ if __name__ == "__main__":
            detections_queue, fps_queue)).start()
     Thread(target=drawing, args=(frame_queue,
            detections_queue, fps_queue)).start()
-    cv2_thread = threading.Thread(target=cv2Lines).start()
+    Thread(target=cv2Lines).start()
+    Thread(target=update_status, args=(
+        vehicle_info)).start()
     app.run(port=5000, debug=True)
