@@ -32,6 +32,7 @@ data_file = "/home/fabio/src/darknet/cfg/coco.data"
 config_file = "/home/fabio/src/darknet/yolov3-tiny.cfg"
 input_path = "/home/fabio/src/darknet/data/crossing_480p.mp4"
 output_path = "/home/fabio/src/darknet/output_video.mp4"
+
 thresh = .25
 dont_show = True
 ext_output = "output_video.txt"
