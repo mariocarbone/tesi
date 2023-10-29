@@ -5,13 +5,14 @@ class Raspberry(str):
 
 	def __init__(self):
 		print("Raspberry Inizializzato")
+		
 		GPIO.setmode(GPIO.BOARD)
 		self.trig_pin = 7
 		self.echo_pin = 11
 		GPIO.setup(self.trig_pin, GPIO.OUT)
 		GPIO.setup(self.echo_pin, GPIO.IN)
 		
-# Funzione per misurare la distanza
+	# Funzione per misurare la distanza
 	def measure_distance(self):
 		
 		GPIO.output(self.trig_pin, GPIO.HIGH)
@@ -26,8 +27,8 @@ class Raspberry(str):
 		pulse_duration = pulse_end - pulse_start
 		
 		distance_value = pulse_duration * 17150
+				
+		#print("Distance = ", distance_value)
 		
-		#with distance_lock:
-		#	distance.value = round(distance_value, 2)
 		return round(distance_value,2)
-
+		GPIO.cleanup()

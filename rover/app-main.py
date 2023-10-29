@@ -28,7 +28,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Distanza Misurata con Sensore ad Ultrasuoni
-distance = Value('d',0.0)
+distance = 0.0
 distance_lock = Lock()
 
 # Distanza Misurata con Sensore ad Ultrasuoni
@@ -100,11 +100,11 @@ def capture_frames():
 # Funzione per aggiornare lo stato del veicolo
 def update_vehicle_status():
 	global distance, distance_lock
+
 	while True:
 		with distance_lock:
-			distance.value = round(raspberry.measure_distance(), 2)
+			distance = round(raspberry.measure_distance(), 2)
 		time.sleep(0.5)
-	picam2.stop()
 		
 # Funzione per processare le immagini con OpenCV
 def cv2Lines():
@@ -197,7 +197,6 @@ def detection():
 
 	#picam2.stop()
 
-	
 
 # Homepage
 @app.route('/')
@@ -214,10 +213,8 @@ def video_feed():
 def get_distance():
 	global distance, distance_lock
 	
-	#distance_value = raspberry.measure_distance()
-
 	with distance_lock:
-		distance_value = distance.value
+		distance_value = distance
 		
 	return str(distance_value)
 	
