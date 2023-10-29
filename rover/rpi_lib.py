@@ -1,16 +1,14 @@
 import RPi.GPIO as GPIO
 import time
 
-
 class Raspberry(str):
 
 	def __init__(self):
 		print("Raspberry Inizializzato")
 		
 # Funzione per misurare la distanza
-	def measure_distance():
+	def measure_distance(self):
 		
-		global distance, distance_value
 		GPIO.setmode(GPIO.BOARD)
 		
 		trig_pin = 7
