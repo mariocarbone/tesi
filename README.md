@@ -1,3 +1,6 @@
-# Moduli Python e Script Tesi
+# Tesi: Rover a guida autonoma con integrazione di un sistema di alerting
 
-Lo script principale app.py va avviato sul rover. La libreria darknet.py usata nello script avvia 3 reti neurali che usano Yolo v3, v3_tiny e v4_tiny per effettuare object detection, con le prediction in formato JSON prodotte dalla rete si utilizza alert_lib.py per elaborare le prediction e capire se sono rilevamenti che possono portare a collisioni del veicolo, qui entra in gioco la libreria mqtt_lib.py, necessaria per ricevere ed inviare comunicazioni con il Broker MQTT riguardanti alert o stato del veicolo.
+Rover:  
+Lo script principale app-main.py vi avviato sul rover, questo va ad utilizzare diverse librerie python, tensorflow ecc.. per effettuare il riconoscimento di ostacoli e condividerli con altri dispositivi mediante protocollo mqtt.
+
+La libreria detection.py utilizza Tensorflow che effettua la object detection. Con le prediction in formato JSON prodotte dalla rete si utilizza alert_lib.py per elaborare le prediction e capire se sono rilevamenti che possono portare a collisioni del veicolo (e in tal caso vengono gestiti dalla libreria control-lib.py) in ogni caso entra in gioco la libreria mqtt_lib.py, necessaria per ricevere ed inviare comunicazioni con il Broker MQTT riguardanti alert o stato del veicolo.
