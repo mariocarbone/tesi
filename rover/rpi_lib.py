@@ -1,3 +1,4 @@
+import RPi.GPIO as GPIO
 
 
 class Raspberry(str):
@@ -29,9 +30,10 @@ class Raspberry(str):
 				
 			pulse_duration = pulse_end - pulse_start
 			
-			distance_value = pulse_duration * 17150
+			#distance_value = pulse_duration * 17150
 			
-			with distance_lock:
-				distance.value = round(distance_value, 2)
-				
+			#with distance_lock:
+			#	distance.value = round(distance_value, 2)
+			return round(distance_value,2)
+
 			time.sleep(1)

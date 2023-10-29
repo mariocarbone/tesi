@@ -188,6 +188,8 @@ def detection():
 
 	#picam2.stop()
 
+	
+
 # Homepage
 @app.route('/')
 def index():
@@ -202,11 +204,14 @@ def video_feed():
 @app.route('/get_distance', methods=['GET'])
 def get_distance():
     global distance, distance_lock
-
-    with distance_lock:
-        distance_value = distance.value
-        
+	
+    distance_value = raspberry.measure_distance()
     return str(distance_value)
+
+#with distance_lock:
+#    distance_value = distance.value
+        
+
     
 # API per ottenere la distanza
 @app.route('/get_predictions', methods=['GET'])
