@@ -1,9 +1,3 @@
-from flask import Flask, render_template, Response
-from flask_cors import CORS
-
-app = Flask(__name__)
-CORS(app)
-
 import cv2
 import threading
 import time
@@ -26,6 +20,12 @@ from detection import Tensorflow
 from arduino_lib import Arduino
 from rpi_lib import Raspberry
 from mqtt_lib import MQTTConnection
+
+#Web-UI
+from flask import Flask, render_template, Response
+from flask_cors import CORS
+app = Flask(__name__)
+CORS(app)
 
 # Distanza Misurata con Sensore ad Ultrasuoni
 distance = Value('d',0.0)

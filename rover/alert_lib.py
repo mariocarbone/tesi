@@ -1,5 +1,4 @@
 from mqtt_lib import MQTTConnection
-
 class Alert:
     
     def check_zona(self, punto):
