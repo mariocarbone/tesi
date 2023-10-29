@@ -52,29 +52,29 @@ vehicle_id = "ROVER"
 
 # Metodi per l'aggiunta dei frame alle relative code
 def add_frame(frame):
-    global frame_queue
-    frame_queue.append(frame)
-    
+	global frame_queue
+	frame_queue.append(frame)
+	
 def get_latest_frame():
-    global frame_queue
-    return frame_queue[-1] if frame_queue else None
-    
+	global frame_queue
+	return frame_queue[-1] if frame_queue else None
+	
 def add_tf_frame(frame):
-    global tf_queue
-    tf_queue.append(frame)
-    
+	global tf_queue
+	tf_queue.append(frame)
+	
 def get_latest_tf_frame():
-    global tf_queue
-    return tf_queue[-1] if tf_queue else None
+	global tf_queue
+	return tf_queue[-1] if tf_queue else None
 
 def add_image(img):
-    global img_queue
-    img_queue.append(img)
-    
+	global img_queue
+	img_queue.append(img)
+	
 def get_latest_image():
-    global img_queue
-    return img_queue[-1] if img_queue else None
-    
+	global img_queue
+	return img_queue[-1] if img_queue else None
+	
 #Coda Prediction
   
 # Contatore FPS
@@ -92,14 +92,22 @@ picam2.start()
 
 # Funzione per acquisire i frame dalla webcam e aggiungerli al buffer
 def capture_frames():
-    while True:
-        frame=picam2.capture_array()
-        add_frame(frame)    
-    picam2.stop()
-        
+	while True:
+		frame=picam2.capture_array()
+		add_frame(frame)    
+	picam2.stop()
+
+# Funzione per aggiornare lo stato del veicolo
+def update_vehicle_status():
+	while True:
+		with distance_lock:
+			distance.value = round(raspberry.measure_distance(), 2)
+		time.sleep(0.5)
+	picam2.stop()
+		
 # Funzione per processare le immagini con OpenCV
 def cv2Lines():
-    
+	
 	green_color = (0, 255, 0, 50)  # BGR colore verde
 	red_color = (0, 0, 255, 50)  # BGR colore verde
 	orange_color = (0, 125, 255, 50)  # BGR colore verde
@@ -144,15 +152,15 @@ def cv2Lines():
 
 # Funzione per generare i frame per la Web UI
 def generate_frames():
-    while True:
-        if len(img_queue) > 0:
-            frame = get_latest_image() #Prendo l'ultima immagine
-            ret, buffer = cv2.imencode('.jpg', frame) #Effettuo l'encoding dell'immagine
-            if ret:
-                yield (b'--frame\r\n'
-                       b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
-        else:
-            continue
+	while True:
+		if len(img_queue) > 0:
+			frame = get_latest_image() #Prendo l'ultima immagine
+			ret, buffer = cv2.imencode('.jpg', frame) #Effettuo l'encoding dell'immagine
+			if ret:
+				yield (b'--frame\r\n'
+					   b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
+		else:
+			continue
 
 def detection():
 	global frame_counter,somma_tempi_frame, media_frame, contatore_media
@@ -166,9 +174,9 @@ def detection():
 			ms = fine-inizio
 			somma_tempi_frame = somma_tempi_frame + ms
 			if(contatore_media % 10 == 0):
-			    media_frame = round(somma_tempi_frame/10)
-			    somma_tempi_frame = 0
-			    contatore_media = 0
+				media_frame = round(somma_tempi_frame/10)
+				somma_tempi_frame = 0
+				contatore_media = 0
 			logging.info(fine, "- App Main > Fine detection del frame - Tempo impiegato:", ms,"ms - Tempo medio:", media_frame , "ms") 
 			#print(fine, "- App Main > Fine detection del frame - Tempo impiegato:", ms,"ms - Tempo medio:", media_frame , "ms")
 			image = tf_instance.get_latest_image()
@@ -180,7 +188,7 @@ def detection():
 			frame_counter = frame_counter+1 
 			contatore_media = contatore_media+1
 			if(detected):
-			    print(json)
+				print(json)
 		else:
 			#logging.warning('Coda dei frame vuota') 
 			#print(round(time.time()*1000), "- App Main > Coda dei frame vuota")
@@ -193,56 +201,55 @@ def detection():
 # Homepage
 @app.route('/')
 def index():
-    return render_template('index.html')
+	return render_template('index.html')
 
 # API per ottenere il flusso video        
 @app.route('/video_feed')
 def video_feed():
-    return Response(generate_frames(),mimetype='multipart/x-mixed-replace; boundary=frame')
+	return Response(generate_frames(),mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # API per ottenere la distanza
 @app.route('/get_distance', methods=['GET'])
 def get_distance():
-    global distance, distance_lock
+	global distance, distance_lock
 	
-    distance_value = raspberry.measure_distance()
-    return str(distance_value)
+	#distance_value = raspberry.measure_distance()
 
-#with distance_lock:
-#    distance_value = distance.value
-        
-
-    
+	with distance_lock:
+		distance_value = distance.value
+		
+	return str(distance_value)
+	
 # API per ottenere la distanza
 @app.route('/get_predictions', methods=['GET'])
 def get_predictions():
-    global prediction_json, prediction_lock
+	global prediction_json, prediction_lock
 
-    with prediction_lock:
-        predicted_objects = prediction_json.value
-        
-    return str(predicted_objects)    
+	with prediction_lock:
+		predicted_objects = prediction_json.value
+		
+	return str(predicted_objects)    
 
-    
+	
 def run_flask_app():
-    app.run(host='0.0.0.0', port=5000) 
+	app.run(host='0.0.0.0', port=5000) 
 
 # Main
 if __name__ == "__main__":
-    
-    # Avvia i thread
-    capture_thread = threading.Thread(target=capture_frames)
-    detection_thread = threading.Thread(target=detection)
-    #distance_thread = threading.Thread(target=measure_distance)
-    cv2_thread = threading.Thread(target=cv2Lines)
-    flask_thread = threading.Thread(target=run_flask_app)
-    flask_thread.start()
-    capture_thread.start()   
-    time.sleep(0.1)
-    detection_thread.start()
-    time.sleep(0.1)
-    cv2_thread.start()
-    
-    detection_thread.join()
-    cv2_thread.join()
-    flask_thread.join()
+	
+	# Avvia i thread
+	capture_thread = threading.Thread(target=capture_frames)
+	detection_thread = threading.Thread(target=detection)
+	#distance_thread = threading.Thread(target=measure_distance)
+	cv2_thread = threading.Thread(target=cv2Lines)
+	flask_thread = threading.Thread(target=run_flask_app)
+	flask_thread.start()
+	capture_thread.start()   
+	time.sleep(0.1)
+	detection_thread.start()
+	time.sleep(0.1)
+	cv2_thread.start()
+	
+	detection_thread.join()
+	cv2_thread.join()
+	flask_thread.join()

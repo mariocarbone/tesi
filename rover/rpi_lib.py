@@ -5,34 +5,29 @@ class Raspberry(str):
 
 	def __init__(self):
 		print("Raspberry Inizializzato")
+		GPIO.setmode(GPIO.BOARD)
+		self.trig_pin = 7
+		self.echo_pin = 11
+		GPIO.setup(self.trig_pin, GPIO.OUT)
+		GPIO.setup(self.echo_pin, GPIO.IN)
 		
 # Funzione per misurare la distanza
 	def measure_distance(self):
 		
-		GPIO.setmode(GPIO.BOARD)
+		GPIO.output(self.trig_pin, GPIO.HIGH)
+		time.sleep(0.00001)
+		GPIO.output(self.trig_pin, GPIO.LOW)
 		
-		trig_pin = 7
-		echo_pin = 11
-		GPIO.setup(trig_pin, GPIO.OUT)
-		GPIO.setup(echo_pin, GPIO.IN)
+		while GPIO.input(self.echo_pin) == 0:
+			pulse_start = time.time()
+		while GPIO.input(self.echo_pin) == 1:
+			pulse_end = time.time()
+			
+		pulse_duration = pulse_end - pulse_start
 		
-		while True:
-			
-			GPIO.output(trig_pin, GPIO.HIGH)
-			time.sleep(0.00001)
-			GPIO.output(trig_pin, GPIO.LOW)
-			
-			while GPIO.input(echo_pin) == 0:
-				pulse_start = time.time()
-			while GPIO.input(echo_pin) == 1:
-				pulse_end = time.time()
-				
-			pulse_duration = pulse_end - pulse_start
-			
-			distance_value = pulse_duration * 17150
-			
-			#with distance_lock:
-			#	distance.value = round(distance_value, 2)
-			return round(distance_value,2)
+		distance_value = pulse_duration * 17150
+		
+		#with distance_lock:
+		#	distance.value = round(distance_value, 2)
+		return round(distance_value,2)
 
-			time.sleep(1)
