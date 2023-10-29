@@ -99,6 +99,7 @@ def capture_frames():
 
 # Funzione per aggiornare lo stato del veicolo
 def update_vehicle_status():
+	global distance, distance_lock
 	while True:
 		with distance_lock:
 			distance.value = round(raspberry.measure_distance(), 2)
