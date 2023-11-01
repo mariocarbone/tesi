@@ -60,7 +60,17 @@
         }
 
         function updateStatus(status) {
-            statusElement.textContent = status;
+            // Pulizia del contenuto attuale
+            statusElement.innerHTML = '';
+
+            // Itera attraverso le chiavi nel JSON di stato
+            for (var key in status) {
+                if (status.hasOwnProperty(key)) {
+                    var value = status[key];
+                    var statusHTML = `<p>${key}: ${value}</p>`;
+                    statusElement.innerHTML += statusHTML;
+                }
+            }
         }
 
         /* Aggiorna la distanza ogni 500 millisecondi utilizzando AJAX
