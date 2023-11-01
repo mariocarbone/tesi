@@ -21,7 +21,7 @@ class Vehicle_Control():
     def update_distance(self):
         self.distance, self.distance_lock, self.rpi
         with self.distance_lock:
-            distance = round(self.rpi.measure_distance(), 2)
+            self.distance = round(self.rpi.measure_distance(), 2)
 
 
     def getDistance(self):
