@@ -18,11 +18,10 @@ from libcamera import controls
 #Librerie
 from detection import Tensorflow
 from control_lib import Vehicle_Control
-from rpi_lib import Raspberry
 from mqtt_lib import MQTTConnection
 
 #Web-UI
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, jsonify, Response
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
@@ -32,7 +31,7 @@ distance = 0.0
 distance_lock = Lock()
 
 # Distanza Misurata con Sensore ad Ultrasuoni
-prediction_json = Value('d',0.0)
+prediction_json = {}
 prediction_lock = Lock()
 
 # Code dei frame
@@ -42,7 +41,6 @@ img_queue = deque(maxlen=15) #Web Output
 
 tf_instance = Tensorflow()
 vehicle_control = Vehicle_Control()
-raspberry = Raspberry()
 
 topic_alert = "/alert/"
 topic_auto = "/smartcar/"
@@ -104,7 +102,6 @@ def update_vehicle_status():
 	while True:
 		with distance_lock:
 			distance = vehicle_control.getDistance()
-			#distance = round(raspberry.measure_distance(), 2)
 		time.sleep(0.5)
 		
 # Funzione per processare le immagini con OpenCV
@@ -225,9 +222,9 @@ def get_predictions():
 	global prediction_json, prediction_lock
 
 	with prediction_lock:
-		predicted_objects = prediction_json.value
+		predicted_objects = prediction_json
 		
-	return str(predicted_objects)    
+	return jsonify(predicted_objects)    
 
 	
 def run_flask_app():
