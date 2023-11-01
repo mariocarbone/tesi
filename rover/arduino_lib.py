@@ -42,7 +42,7 @@ class Arduino:
 		self.send_command(command)
 
 	def get_status(self):
-		command = "STATUS"
+		command = "STA"
 		self.send_command(command)
 		response = self.arduino.readline().decode('ascii')
 		return(response)
