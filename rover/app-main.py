@@ -101,7 +101,10 @@ def update_vehicle_status():
 
 	while True:
 		with distance_lock:
-			distance = vehicle_control.getDistance()
+			vehicle_control.update_distance()
+			time.sleep(0.1)
+			distance = vehicle_control.distance
+			#distance = vehicle_control.getDistance()
 		time.sleep(0.5)
 		
 # Funzione per processare le immagini con OpenCV

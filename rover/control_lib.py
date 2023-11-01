@@ -8,7 +8,6 @@ class Vehicle_Control():
 
     def __init__(self):
         print("Vehicle Control avviato")
-        self.loop()
 
 
     status = {}
@@ -21,19 +20,12 @@ class Vehicle_Control():
 
     def update_distance(self):
         self.distance, self.distance_lock, self.rpi
-        while True:
-            with self.distance_lock:
-                distance = round(self.rpi.measure_distance(), 2)
-            time.sleep(0.5)
+        with self.distance_lock:
+            distance = round(self.rpi.measure_distance(), 2)
+
 
     def getDistance(self):
         self.distance, self.distance_lock
 
         with self.distance_lock:
             return self.distance
-
-
-    def loop(self):
-        updateThread = threading.Thread(target=self.update_distance)
-        updateThread.start()
-        updateThread.join()
