@@ -23,7 +23,7 @@ class Vehicle_Control():
             distance = round(rpi.measure_distance(), 2)
 
     def getDistance(self):
-        
+
         with distance_lock:
             return distance
 
