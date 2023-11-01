@@ -242,6 +242,7 @@ def get_predictions():
 def get_status():
 	global status_json, status_lock
 
+	print ("STATO", status_json)
 	with status_lock:
 		status_obj = status_json
 		
