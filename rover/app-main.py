@@ -170,7 +170,7 @@ def generate_frames():
 			continue
 
 def detection():
-	global frame_counter,somma_tempi_frame, media_frame, contatore_media
+	global frame_counter,somma_tempi_frame, media_frame, contatore_media,prediction_json,prediction_lock
 	while True:
 		if len(frame_queue) > 0:
 			inizio = round(time.time()*1000)
@@ -196,6 +196,8 @@ def detection():
 			contatore_media = contatore_media+1
 			if(detected):
 				print(json)
+				with prediction_lock:
+					prediction_json = json
 		else:
 			#logging.warning('Coda dei frame vuota') 
 			#print(round(time.time()*1000), "- App Main > Coda dei frame vuota")

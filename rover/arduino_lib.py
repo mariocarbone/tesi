@@ -45,7 +45,7 @@ class Arduino:
 		command = "STATUS"
 		self.send_command(command)
 		response = self.arduino.readline().decode('ascii')
-		print(response)
+		return(response)
 
 	def send_command(self, command):
 		newline = "\n"
