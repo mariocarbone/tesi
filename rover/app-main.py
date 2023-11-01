@@ -30,9 +30,13 @@ CORS(app)
 distance = 0.0
 distance_lock = Lock()
 
-# Distanza Misurata con Sensore ad Ultrasuoni
+# Prediction trovate su frame
 prediction_json = {}
 prediction_lock = Lock()
+
+# Stato del veicolo
+status_json = {}
+status_lock = Lock()
 
 # Code dei frame
 frame_queue = deque(maxlen=15) #Webcam
@@ -100,8 +104,9 @@ def update_vehicle_status():
 	global distance, distance_lock
 
 	while True:
+		vehicle_control.update_distance()
+		vehicle_control.update_status()
 		with distance_lock:
-			vehicle_control.update_distance()
 			time.sleep(0.1)
 			#distance = vehicle_control.distance
 			distance = vehicle_control.getDistance()
@@ -228,6 +233,16 @@ def get_predictions():
 		predicted_objects = prediction_json
 		
 	return jsonify(predicted_objects)    
+
+# API per ottenere la distanza
+@app.route('/get_status', methods=['GET'])
+def get_status():
+	global status_json, status_lock
+
+	with status_lock:
+		status_obj = status_json
+		
+	return jsonify(status_obj)  
 
 	
 def run_flask_app():
