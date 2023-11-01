@@ -3,19 +3,17 @@ from threading import Lock
 from rpi_lib import Raspberry
 from arduino_lib import Arduino
 
+status = {}
+distance = 0.0
+distance_lock = Lock()
+
+arduino = Arduino("/dev/ttyACM0", 9600, 1, 1)
+rpi = Raspberry()
+
 class Vehicle_Control():
 
     def __init__(self):
         print("Vehicle Control avviato")
-
-
-    status = {}
-    distance = 0.0
-    distance_lock = Lock()
-
-    arduino = Arduino("/dev/ttyACM0", 9600, 1, 1)
-    rpi = Raspberry()
-
 
     def updateDistance(self):
         global distance, distance_lock, rpi
