@@ -24,6 +24,7 @@ class Vehicle_Control():
         #self.status, self.status_lock, self.rpi, self.arduino
         with self.status_lock:
             self.status = self.arduino.get_status()
+            print(self.status)
 
 
     def get_distance(self):
