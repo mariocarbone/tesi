@@ -18,8 +18,8 @@ class Vehicle_Control():
 
 
     def updateDistance(self):
-        self.distance, self.distance_lock, self.rpi
-        with self.distance_lock:
+        global distance, distance_lock, rpi
+        with distance_lock:
             distance = round(self.rpi.measure_distance(), 2)
 
     def getDistance(self):
