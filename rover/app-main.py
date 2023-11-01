@@ -17,7 +17,7 @@ from libcamera import controls
 
 #Librerie
 from detection import Tensorflow
-from arduino_lib import Arduino
+from control_lib import Vehicle_Control
 from rpi_lib import Raspberry
 from mqtt_lib import MQTTConnection
 
@@ -41,7 +41,7 @@ tf_queue = deque(maxlen=15) #Tensorflow Output
 img_queue = deque(maxlen=15) #Web Output
 
 tf_instance = Tensorflow()
-arduino = Arduino("/dev/ttyACM0", 9600, 1, 1)
+vehicle_control = Vehicle_Control()
 raspberry = Raspberry()
 
 topic_alert = "/alert/"
@@ -103,7 +103,8 @@ def update_vehicle_status():
 
 	while True:
 		with distance_lock:
-			distance = round(raspberry.measure_distance(), 2)
+			distance = vehicle_control.getDistance()
+			#distance = round(raspberry.measure_distance(), 2)
 		time.sleep(0.5)
 		
 # Funzione per processare le immagini con OpenCV
