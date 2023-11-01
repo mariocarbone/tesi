@@ -5,7 +5,7 @@ class Raspberry(str):
 
 	def __init__(self):
 		print("Raspberry Inizializzato")
-		
+		GPIO.cleanup()
 		GPIO.setmode(GPIO.BOARD)
 		self.trig_pin = 7
 		self.echo_pin = 11
