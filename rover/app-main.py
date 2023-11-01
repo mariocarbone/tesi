@@ -101,7 +101,6 @@ def update_vehicle_status():
 
 	while True:
 		with distance_lock:
-			vehicle_control.updateDistance()
 			distance = vehicle_control.getDistance()
 		time.sleep(0.5)
 		
