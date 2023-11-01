@@ -103,6 +103,7 @@ def update_vehicle_status():
 		with distance_lock:
 			vehicle_control.update_distance()
 			time.sleep(0.1)
+			print("VEHICLE", vehicle_control.distance)
 			distance = vehicle_control.distance
 			#distance = vehicle_control.getDistance()
 		time.sleep(0.5)
