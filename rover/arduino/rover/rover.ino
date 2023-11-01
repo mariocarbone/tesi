@@ -208,10 +208,11 @@ void loop() {
         dx=analogRead(RIGHT);
         center=analogRead(CENTER);
         
-        Serial.println("{ speed:" + String(velocita) + ",speed_left_side:" + String(velSinistra)
-                      + ",speed_right_side:" + String(velDestra) + ",steer_angle:" + String(angolo) + ",last_angle:" 
-                      + String(lastAngolo) + ",ir_left:" + String(sx) + ",ir_center:" + String(center) + ",ir_right:"
-                      + String(dx) + ",last_command:" + last_command+"}");
+        Serial.println("{\"speed\":" + String(velocita) + ",\"speed_left_side\":" + String(velSinistra)
+                      + ",\"speed_right_side\":" + String(velDestra) + ",\"steer_angle\":" + String(angolo) + ",\"last_angle\":" 
+                      + String(lastAngolo) + ",\"ir_left\":" + String(sx) + ",\"ir_center\":" + String(center) + ",\"ir_right\":"
+                      + String(dx) + ",\"last_command\":\"" + "\""+last_command + "\"}");
+
         //Serial.println(status);   
       
       }
