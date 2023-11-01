@@ -10,7 +10,7 @@ class Vehicle_Control():
 
 
     status = {}
-    distance = {}
+    distance = 0.0
     distance_lock = Lock()
 
     arduino = Arduino("/dev/ttyACM0", 9600, 1, 1)
@@ -18,15 +18,15 @@ class Vehicle_Control():
 
 
     def updateDistance(self):
-        global distance, distance_lock, rpi
-        with distance_lock:
-            distance = round(rpi.measure_distance(), 2)
+        self.distance, self.distance_lock, self.rpi
+        with self.distance_lock:
+            distance = round(self.rpi.measure_distance(), 2)
 
     def getDistance(self):
-        global distance, distance_lock
+        self.distance, self.distance_lock
 
-        #with distance_lock:
-        return distance
+        with self.distance_lock:
+            return self.distance
 
 
 
