@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Webcam Stream</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </head>
 </head>
+
 <body>
     <h1>Webcam Stream</h1>
-    
-    
+
+
     <div>
         <h2>Distanza: <span id="distance-value">0.0</span> cm</h2>
     </div>
-    
+
     <div>
         <img id="video" src="{{ url_for('video_feed') }}">
     </div>
@@ -25,7 +27,7 @@
     <div>
         <h2>Prediction: <span id="prediction-json">{}</span></h2>
     </div>
-   
+
     <script type="text/javascript">
         var frameElement = document.getElementById('frame');
         var distanceElement = document.getElementById('distance-value');
@@ -38,13 +40,29 @@
         }
 
         function updatePrediction(prediction) {
-            predictionElement.textContent = prediction;
+            // Pulizia del contenuto attuale
+            predictionElement.innerHTML = '';
+
+            // Itera attraverso gli oggetti numerati nel JSON
+            for (var key in prediction) {
+                if (prediction.hasOwnProperty(key)) {
+                    var predictionObj = prediction[key];
+                    var predictionHTML = `<p>Category: ${predictionObj.category}</p>`;
+                    predictionHTML += `<p>Coordinates: h=${predictionObj.coordinates.h}, w=${predictionObj.coordinates.w}, x=${predictionObj.coordinates.x}, y=${predictionObj.coordinates.y}</p>`;
+                    predictionHTML += `<p>Score: ${predictionObj.score}</p>`;
+                    predictionElement.innerHTML += predictionHTML;
+                }
+            }
+
+            // Gestione del campo "timestamp" fuori dagli oggetti numerati
+            var timestampHTML = `<p>Timestamp: ${prediction.timestamp}</p>`;
+            timestampElement.innerHTML = timestampHTML;
         }
 
         function updateStatus(status) {
             statusElement.textContent = status;
         }
-    
+
         /* Aggiorna la distanza ogni 500 millisecondi utilizzando AJAX
         function getDistance() {
             $.ajax({
@@ -54,40 +72,41 @@
                 }
             });
         }*/
-        
+
         // Aggiorna il frame immagine ogni secondo
-        setInterval(function() {
+        setInterval(function () {
             var currentTime = new Date().getTime();
             frameElement.src = '/frame?' + currentTime;
         }, 1000);
 
         /* Aggiorna la distanza ogni 500 millisecondi
         setInterval(getDistance, 500);*/
-        
+
         // Aggiorna la distanza ogni 500 millisecondi utilizzando Fetch API
-        setInterval(function() {
+        setInterval(function () {
             fetch('/get_distance')
                 .then(response => response.text())
                 .then(data => updateDistance(data))
                 .catch(error => console.log('Errore durante la richiesta della distanza:', error));
         }, 1000);
 
-        setInterval(function() {
+        setInterval(function () {
             fetch('/get_predictions')
                 .then(response => response.json())
                 .then(data => updatePrediction(data))
                 .catch(error => console.log('Errore durante la richiesta della distanza:', error));
         }, 1000);
 
-        setInterval(function() {
+        setInterval(function () {
             fetch('/get_status')
                 .then(response => response.json())
                 .then(data => updateStatus(data))
                 .catch(error => console.log('Errore durante la richiesta della distanza:', error));
         }, 1000);
     </script>
-        
+
     </script>
-    
+
 </body>
+
 </html>
