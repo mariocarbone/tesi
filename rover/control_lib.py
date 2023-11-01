@@ -26,8 +26,14 @@ class Vehicle_Control():
             self.status = self.arduino.get_status()
 
 
-    def getDistance(self):
+    def get_distance(self):
         self.distance, self.distance_lock
 
         with self.distance_lock:
             return self.distance
+
+    def get_status(self):
+        self.status, self.status_lock
+
+        with self.status_lock:
+            return self.status
