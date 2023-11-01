@@ -1,4 +1,5 @@
 from threading import Lock
+import threading
 import time
 from rpi_lib import Raspberry
 from arduino_lib import Arduino
@@ -7,7 +8,7 @@ class Vehicle_Control():
 
     def __init__(self):
         print("Vehicle Control avviato")
-        self.updateDistance()
+        self.loop()
 
 
     status = {}
@@ -18,7 +19,7 @@ class Vehicle_Control():
     rpi = Raspberry()
 
 
-    def updateDistance(self):
+    def update_distance(self):
         self.distance, self.distance_lock, self.rpi
         while True:
             with self.distance_lock:
@@ -32,4 +33,7 @@ class Vehicle_Control():
             return self.distance
 
 
-
+    def loop(self):
+        updateThread = threading.Thread(target=self.update_distance)
+        updateThread.start()
+        updateThread.join()
