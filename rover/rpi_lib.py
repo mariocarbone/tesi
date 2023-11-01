@@ -1,7 +1,6 @@
 import RPi.GPIO as GPIO
 import time
 
-
 class Raspberry(str):
 
 	def __init__(self):
