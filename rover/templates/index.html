@@ -64,7 +64,7 @@
         }, 1000);
 
         setInterval(function() {
-            fetch('/get_prediction')
+            fetch('/get_predictions')
                 .then(response => response.json())
                 .then(data => updatePrediction(data))
                 .catch(error => console.log('Errore durante la richiesta della distanza:', error));

@@ -24,9 +24,9 @@ class Vehicle_Control():
 
     def getDistance(self):
         global distance, distance_lock
-        
-        with distance_lock:
-            return distance
+
+        #with distance_lock:
+        return distance
 
 
 
