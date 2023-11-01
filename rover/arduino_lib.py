@@ -44,7 +44,7 @@ class Arduino:
 	def get_status(self):
 		command = "STA"
 		self.send_command(command)
-		response = self.arduino.readline().decode('ascii')
+		response = self.ser.readline().decode('ascii')
 		return(response)
 
 	def send_command(self, command):
