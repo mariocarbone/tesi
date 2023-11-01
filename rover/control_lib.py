@@ -16,12 +16,12 @@ class Vehicle_Control():
         self.distance_lock = Lock()
 
     def update_distance(self):
-        self.distance, self.distance_lock, self.rpi
+        #self.distance, self.distance_lock, self.rpi
         with self.distance_lock:
             self.distance = round(self.rpi.measure_distance(), 2)
 
     def update_status(self):
-        self.status, self.status_lock, self.rpi
+        #self.status, self.status_lock, self.rpi, self.arduino
         with self.status_lock:
             self.status = self.arduino.get_status()
 
