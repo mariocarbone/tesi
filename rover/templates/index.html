@@ -65,15 +65,19 @@
             // Pulizia del contenuto attuale
             statusElement.innerHTML = '';
 
-            // Formatta il JSON in un blocco di testo multilinea
-            var statusJSON = JSON.stringify(status, null, 2);
+            // Converte la stringa JSON in un oggetto JSON
+            var statusObj = JSON.parse(status);
 
-            // Sostituisci i caratteri di andata a capo con <br> per l'HTML
-            statusJSON = statusJSON.replace(/\n/g, '<br>');
-
-            // Inserisci il testo formattato nell'elemento HTML
-            statusElement.innerHTML = statusJSON;
+            // Itera attraverso le chiavi nell'oggetto JSON di stato
+            for (var key in statusObj) {
+                if (statusObj.hasOwnProperty(key)) {
+                    var value = statusObj[key];
+                    var statusHTML = `<p>${key}: ${value}</p>`;
+                    statusElement.innerHTML += statusHTML;
+                }
+            }
         }
+        
         /* Aggiorna la distanza ogni 500 millisecondi utilizzando AJAX
         function getDistance() {
             $.ajax({
