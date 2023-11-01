@@ -101,7 +101,7 @@ def capture_frames():
 
 # Funzione per aggiornare lo stato del veicolo
 def update_vehicle_status():
-	global distance, distance_lock
+	global distance, distance_lock,status_json
 
 	while True:
 		vehicle_control.update_distance()
