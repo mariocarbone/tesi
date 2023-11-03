@@ -24,6 +24,8 @@ from mqtt_lib import MQTTConnection
 from flask import Flask, render_template, jsonify, Response
 from flask_cors import CORS
 app = Flask(__name__)
+log = logging.getLogger('werkzeug')
+log.disabled = True
 CORS(app)
 
 # Distanza Misurata con Sensore ad Ultrasuoni
@@ -270,8 +272,7 @@ def stop_all_threads():
 def run_flask_app():
 	global stop_threads
 	app.run(host='0.0.0.0', port=5000, debug=not stop_threads, use_reloader=False)
-	log = logging.getLogger('werkzeug')
-	log.disabled = True
+
 
 
 # Main
