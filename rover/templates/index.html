@@ -18,22 +18,29 @@
             </div>
 
             <div class="col-lg-5" style="background-color: #dcdcdc;">
-                <h3 class="mt-4">Stato del rover</h1>
-                    <div id="status-fields">
-                        <div class="col"></div>
-                        <b>Distanza anteriore:</b>
-                        <span id="distance-value">0.0</span> cm
-                        <b>Velocità</b>
-                        <span id="speed">0</span> m/s
-                        <b>Angolo di sterzo</b>
-                        <span id="steer_angle">0</span> degrees
-                        <b>IR Sinistra</b>
-                        <span id="ir_left">0</span>
-                        <b>IR Centro</b>
-                        <span id="ir_center">0</span>
-                        <b>IR Destra</b>
-                        <span id="ir_right">0</span>
+                <h3 class="mt-4">Stato del rover</h3>
+                <div id="status-fields">
+                    <div class="status-field">
+                        <h4>Velocità</h4>
+                        <div id="speed">0</div>
                     </div>
+                    <div class="status-field">
+                        <h4>Angolo di sterzo</h4>
+                        <div id="steer_angle">0</div>
+                    </div>
+                    <div class="status-field">
+                        <h4>IR Sinistra</h4>
+                        <div id="ir_left">0</div>
+                    </div>
+                    <div class="status-field">
+                        <h4>IR Centro</h4>
+                        <div id="ir_center">0</div>
+                    </div>
+                    <div class="status-field">
+                        <h4>IR Destra</h4>
+                        <div id="ir_right">0</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -54,11 +61,11 @@
         var distanceElement = document.getElementById('distance-value');
         var predictionElement = document.getElementById('prediction-json');
         var statusElement = document.getElementById('status-json');
-        var speedField = document.getElementById('speed');
-        var steerField = document.getElementById('steer_angle');
-        var irLField = document.getElementById('ir_left');
-        var irRField = document.getElementById('ir_right');
-        var irCField = document.getElementById('ir_center');
+        var speedDiv = document.getElementById('speed');
+        var steerDiv = document.getElementById('steer_angle');
+        var irLDiv = document.getElementById('ir_left');
+        var irCDiv = document.getElementById('ir_center');
+        var irRDiv = document.getElementById('ir_right');
 
 
         // Funzione per aggiornare la distanza nel documento HTML
@@ -89,24 +96,11 @@
 
         function updateStatus(status) {
             var statusObj = JSON.parse(status);
-
-            if (speedField) {
-                speedField.value = statusObj.speed;
-            }
-
-            if (steerField) {
-                steerField.value = statusObj.steer_angle;
-            }
-
-            if (irLField) {
-                irLField.value = statusObj.ir_left;
-            }
-            if (irCField) {
-                irCField.value = statusObj.ir_center;
-            }
-            if (irRField) {
-                irRField.value = statusObj.ir_right;
-            }
+            speedDiv.textContent = statusObj.speed;
+            steerDiv.textContent = statusObj.steer_angle;
+            irLDiv.textContent = statusObj.ir_left;
+            irCDiv.textContent = statusObj.ir_center;
+            irRDiv.textContent = statusObj.ir_right;
         }
 
         // Aggiorna il frame immagine ogni secondo
