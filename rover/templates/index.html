@@ -12,7 +12,7 @@
         <h1 class="mt-4">Rover Manager</h1>
 
         <div class="row">
-            <div class="col-lg-7">
+            <div class="col-lg-7" style="background-color: #dcdcdc;">
                 <h3 class="mt-4">Webcam Stream</h1>
                     <img id="video" style="max-width: 640px;" src="{{ url_for('video_feed') }}">
             </div>
@@ -20,24 +20,17 @@
             <div class="col-lg-5" style="background-color: #dcdcdc;">
                 <h3 class="mt-4">Stato del rover</h1>
                     <div id="status-fields">
+                        <div class="col"></div>
                         <b>Distanza anteriore:</b>
                         <span id="distance-value">0.0</span> cm
-                        <div class="row">
-                            <div class="col-lg-1">
-                                <b>Velocità</b>
-                                <span id="speed">0</span> m/s
-                            </div>
-                            <div class="col-lg-1">
-                                <b>Angolo di sterzo</b>
-                                <span id="steer_angle">0</span> degrees
-                            </div>
-                        </div>
-                        <h4>Angolo di sterzo</h4>
-                        <input type="text" id="steer_angle" value="0" readonly>
+                        <b>Velocità</b>
+                        <span id="speed">0</span> m/s
+                        <b>Angolo di sterzo</b>
+                        <span id="steer_angle">0</span> degrees
                     </div>
-                    <!-- Aggiungi ulteriori campi di stato con valori di esempio qui -->
             </div>
         </div>
+    </div>
     </div>
 
     <div class="row mt-4">
