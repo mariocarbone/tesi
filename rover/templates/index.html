@@ -83,7 +83,7 @@
 
         // Funzione per aggiornare la distanza nel documento HTML
         function updateDistance(distance) {
-            distanceElement.textContent = distance;
+            distanceElement.textContent = distance +" cm";
         }
 
         function updatePrediction(prediction) {
@@ -109,11 +109,11 @@
 
         function updateStatus(status) {
             var statusObj = JSON.parse(status);
-            speedDiv.textContent = statusObj.speed + "m/s";
-            steerDiv.textContent = statusObj.steer_angle + "°";
-            irLDiv.textContent = statusObj.ir_left + "";
-            irCDiv.textContent = statusObj.ir_center + "";
-            irRDiv.textContent = statusObj.ir_right + "";
+            speedDiv.textContent = statusObj.speed + " m/s";
+            steerDiv.textContent = statusObj.steer_angle + " °";
+            irLDiv.textContent = statusObj.ir_left + " ";
+            irCDiv.textContent = statusObj.ir_center + " ";
+            irRDiv.textContent = statusObj.ir_right + " ";
         }
 
         // Aggiorna il frame immagine ogni secondo
