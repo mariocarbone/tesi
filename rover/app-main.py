@@ -207,8 +207,6 @@ def detection():
 			#print(round(time.time()*1000), "- App Main > Coda dei frame vuota")
 			continue
 
-	#picam2.stop()
-
 
 # Homepage
 @app.route('/')
@@ -274,7 +272,7 @@ def stop_all_threads():
 
 def run_flask_app():
     global stop_threads
-    app.run(host='0.0.0.0', port=5000, debug=not stop_threads, use_reloader=False)
+    app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)
 
 
 # Main
