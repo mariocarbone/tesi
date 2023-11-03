@@ -19,18 +19,19 @@
 
             <div class="col-lg-5" style="background-color: #dcdcdc;">
                 <h3 class="mt-4">Stato del rover</h1>
-                    <table>
-                        <tr>
-                            <td><b>Distanza anteriore:</b></td>
-                            <td><span id="distance-value">0.0</span> cm</td>
-                        </tr>
-                        <tr>
-                            <td><b>Status:</b></td>
-                            <td>
-                                <div id="status-json" class="alert alert-info"></div>
-                            </td>
-                        </tr>
-                    </table>
+                    <div id="status-fields">
+                        <div class="status-field">
+                            <b>Distanza anteriore:</b>
+                            <span id="distance-value">0.0</span> cm
+                            <h4>Velocità</h4>
+                            <input type="text" id="speed" value="0" readonly>
+                        </div>
+                        <div class="status-field">
+                            <h4>Angolo di sterzo</h4>
+                            <input type="text" id="steer_angle" value="0" readonly>
+                        </div>
+                        <!-- Aggiungi ulteriori campi di stato con valori di esempio qui -->
+                    </div>
             </div>
         </div>
 
@@ -43,24 +44,14 @@
             </div>
         </div>
 
-        <div class="row mt-4">
-            <div class="col-lg-12">
-                <h2>Prediction:</h2>
-                <table>
-                    <tr>
-                        <td><b>Nome campo:</b></td>
-                        <td><span id="field-value">Valore dinamico</span></td>
-                    </tr>
-                    <!-- Aggiungi altre righe di dati delle previsioni qui -->
-                </table>
-            </div>
-        </div>
 
         <script type="text/javascript">
             var frameElement = document.getElementById('frame');
             var distanceElement = document.getElementById('distance-value');
             var predictionElement = document.getElementById('prediction-json');
             var statusElement = document.getElementById('status-json');
+            var speedField = document.getElementById('speed');
+            var steerField = document.getElementById('steer_angle');
 
             // Funzione per aggiornare la distanza nel documento HTML
             function updateDistance(distance) {
@@ -89,32 +80,16 @@
             }
 
             function updateStatus(status) {
-                // Pulizia del contenuto attuale
-                statusElement.innerHTML = '';
-
-                // Converte la stringa JSON in un oggetto JSON
                 var statusObj = JSON.parse(status);
 
-                // Itera attraverso le chiavi nell'oggetto JSON di stato e aggiungi righe alla tabella
-                for (var key in statusObj) {
-                    if (statusObj.hasOwnProperty(key)) {
-                        var value = statusObj[key];
-                        var newRow = document.createElement("tr");
-                        newRow.innerHTML = `<td><b>${key}:</b></td><td>${value}</td>`;
-                        statusElement.appendChild(newRow);
-                    }
+                if (speedField) {
+                    speedField.value = statusObj.speed;
+                }
+
+                if (steerField) {
+                    steerField.value = statusObj.steer_angle;
                 }
             }
-
-            /* Aggiorna la distanza ogni 500 millisecondi utilizzando AJAX
-            function getDistance() {
-                $.ajax({
-                    url: '/get_distance',
-                    success: function(data) {
-                        updateDistance(data);
-                    }
-                });
-            }*/
 
             // Aggiorna il frame immagine ogni secondo
             setInterval(function () {
