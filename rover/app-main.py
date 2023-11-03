@@ -109,7 +109,6 @@ def update_vehicle_status():
 		vehicle_control.update_distance()
 		vehicle_control.update_status()
 		with distance_lock:
-
 			distance = vehicle_control.get_distance()
 		with status_lock:
 			status_json = vehicle_control.get_status()
@@ -242,8 +241,7 @@ def get_predictions():
 @app.route('/get_status', methods=['GET'])
 def get_status():
 	global status_json, status_lock
-
-	print ("STATO", status_json)
+	
 	with status_lock:
 		status_obj = status_json
 		
