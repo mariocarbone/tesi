@@ -5,22 +5,31 @@
     <title>Webcam Stream</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
 </head>
 
-<body>
-    <!-- Header -->
-    <header class="bg-primary text-white">
+<body class="d-flex flex-column">
+
+    <header class="bg-primary text-white py-3">
         <div class="container">
-            <h1 class="mt-4">Rover Manager</h1>
-            <!-- Altri elementi dell'intestazione, come il menu di navigazione, possono essere aggiunti qui -->
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <img src="icona-rover.png" style="max-width: 70px;" class="header-icon" alt="Icona Personalizzata">
+                </div>
+                <div class="col">
+                    <h1>Rover Manager</h1>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-light">Esci</button>
+                </div>
+            </div>
         </div>
     </header>
-    <div class="container">
 
-        <h1 class="mt-4">Rover Manager</h1>
-
+    <!-- Contenuto principale della pagina -->
+    <div class="container flex-grow-1">
         <div class="row">
-            <h3 class="mt-4" style="padding-left: 15px;">Webcam Stream</h1>
+            <h3 class="mt-4" style="padding-left: 15px;">Webcam Stream</h3>
         </div>
         <div class="row">
             <div class="col-lg-7">
@@ -28,46 +37,46 @@
             </div>
 
             <div class="col-lg-5" style="background-color: #f0f0f0;">
-                <h3 class="mt-4">Stato del rover</h3>
+                <h3 class="mt-4 text-center">Stato del rover</h3>
                 <div class="column" id="status-fields">
-                    <div class="row justify-content-center align-items-center"">
-                        <div class=" status-field mx-2 my-2 text-center">
-                        <h5>Velocità</h5>
-                        <div id="speed" class="h5">0</div>
+                    <div class="row justify-content-center align-items-center">
+                        <div class="status-field mx-2 my-2 text-center">
+                            <h5>Velocità</h5>
+                            <div id="speed" class="h5">0</div>
+                        </div>
+                        <div class="status-field mx-2 my-2 text-center">
+                            <h5>Angolo di sterzo</h5>
+                            <div id="steer_angle" class="h5">0</div>
+                        </div>
+                        <div class="status-field mx-2 my-2 text-center">
+                            <h5>Distanza anteriore</h5>
+                            <div id="distance-value" class="h5">0</div>
+                        </div>
                     </div>
-                    <div class="status-field mx-2 my-2 text-center">
-                        <h5>Angolo di sterzo</h5>
-                        <div id="steer_angle" class="h5">0</div>
+                    <div class="row justify-content-center align-items-center">
+                        <div class="status-field mx-2 my-2 text-center">
+                            <h5>IR Sinistra</h5>
+                            <div id="ir_left" class="h5">0</div>
+                        </div>
+                        <div class="status-field mx-2 my-2 text-center">
+                            <h5>IR Centro</h5>
+                            <div id="ir_center" class="h5">0</div>
+                        </div>
+                        <div class="status-field mx-2 my-2 text-center">
+                            <h5>IR Destra</h5>
+                            <div id="ir_right" class="h5">0</div>
+                        </div>
                     </div>
-                    <div class="status-field mx-2 my-2 text-center">
-                        <h5>Distanza anteriore</h5>
-                        <div id="distance-value" class="h5">0</div>
+                    <h3 class="mt-4 text-center">Comandi del rover</h3>
+                    <div id="rover-commands" class="row justify-content-center align-items-center">
+                        <button id="rover-start" class="btn btn-primary mx-2 my-2">Start</button>
+                        <button id="rover-stop" class="btn btn-danger mx-2 my-2">Stop</button>
                     </div>
-                </div>
-                <div class="row justify-content-center align-items-center"">
-                        <div class=" status-field mx-2 my-2 text-center">
-                    <h5>IR Sinistra</h5>
-                    <div id="ir_left" class="h5">0</div>
-                </div>
-                <div class="status-field mx-2 my-2 text-center">
-                    <h5>IR Centro</h5>
-                    <div id="ir_center" class="h5">0</div>
-                </div>
-                <div class="status-field mx-2 my-2 text-center">
-                    <h5>IR Destra</h5>
-                    <div id="ir_right" class="h5">0</div>
                 </div>
             </div>
         </div>
-        <h3 class="mt-4">Comandi del rover</h3>
-        <div id="rover-commands">
-            <button id="rover-start" class="btn btn-primary">Start</button>
-            <button id="rover-stop" class="btn btn-danger">Stop</button>
-        </div>
-    </div>
-    </div>
 
-    <div>
+
         <div class="row mt-4">
             <div class="col-lg-12">
                 <h2>Prediction:</h2>
@@ -77,9 +86,16 @@
             </div>
         </div>
     </div>
-    </div>
-    </div>
-    </div>
+
+    <footer class="bg-light text-center text-lg-start fixed-bottom">
+        <!-- Copyright -->
+        <div class="text-center p-3">
+            © 2023 Copyright:
+            <a class="text-dark" href="https://mariocarbone.net/">Mario Carbone</a>
+        </div>
+        <!-- Copyright -->
+    </footer>
+
 
     <script type="text/javascript">
         var frameElement = document.getElementById('frame');
@@ -201,9 +217,9 @@
                     console.error('Errore:', error);
                 });
         });
-
-
     </script>
+
+
 
 </body>
 
