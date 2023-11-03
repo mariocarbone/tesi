@@ -96,11 +96,11 @@ picam2.start()
 
 # Funzione per acquisire i frame dalla webcam e aggiungerli al buffer
 def capture_frames():
-    global stop_threads
-    while not stop_threads:
-        frame = picam2.capture_array()
-        add_frame(frame)
-    picam2.stop()
+	global stop_threads
+	while not stop_threads:
+		frame = picam2.capture_array()
+		add_frame(frame)
+	picam2.stop()
 
 # Funzione per aggiornare lo stato del veicolo
 def update_vehicle_status():
@@ -253,26 +253,28 @@ def get_status():
 @app.route('/rover/start', methods=['POST'])
 def rover_start():
 
-    print("ROVER START")
-    return jsonify({"message": "Rover partito!"})
+	print("ROVER START")
+	return jsonify({"message": "Rover partito!"})
 
 # API per far fermare il rover
 @app.route('/rover/stop', methods=['POST'])
 def rover_stop():
 
-    print("ROVER STOP")
-    return jsonify({"message": "Rover fermato!"})
+	print("ROVER STOP")
+	return jsonify({"message": "Rover fermato!"})
 
 @app.route('/stop_threads', methods=['POST'])
 def stop_all_threads():
-    global stop_threads
-    stop_threads = True
-    # Puoi aggiungere ulteriori azioni o pulizie se necessario prima di terminare i thread.
-    return jsonify({"message": "Tutti i thread verranno fermati."})
+	global stop_threads
+	stop_threads = True
+	# Puoi aggiungere ulteriori azioni o pulizie se necessario prima di terminare i thread.
+	return jsonify({"message": "Tutti i thread verranno fermati."})
 
 def run_flask_app():
-    global stop_threads
-    app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)
+	global stop_threads
+	app.run(host='0.0.0.0', port=5000, debug=not stop_threads, use_reloader=False)
+	log = logging.getLogger('werkzeug')
+	log.disabled = True
 
 
 # Main
