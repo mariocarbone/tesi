@@ -186,7 +186,7 @@ def detection():
 				somma_tempi_frame = 0
 				contatore_media = 0
 			logging.info(fine, "- App Main > Fine detection del frame - Tempo impiegato:", ms,"ms - Tempo medio:", media_frame , "ms") 
-			print(fine, "- App Main > Fine detection del frame - Tempo impiegato:", ms,"ms - Tempo medio:", media_frame , "ms")
+			#print(fine, "- App Main > Fine detection del frame - Tempo impiegato:", ms,"ms - Tempo medio:", media_frame , "ms")
 			image = tf_instance.get_latest_image()
 			add_tf_frame(image)
 			json=tf_instance.get_predictions()
