@@ -8,124 +8,147 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" style="background-color: #f0f0f0;">
         <h1 class="mt-4">Rover Manager</h1>
 
         <div class="row">
-
             <div class="col-lg-7">
                 <h3 class="mt-4">Webcam Stream</h1>
-                <img id="video" style="max-width: 640px;"src="{{ url_for('video_feed') }}">
+                    <img id="video" style="max-width: 640px;" src="{{ url_for('video_feed') }}">
             </div>
 
-            <div class="col-lg-5">
+            <div class="col-lg-5" style="background-color: #dcdcdc;">
                 <h3 class="mt-4">Stato del rover</h1>
-                <h4>Distanza anteriore: <span id="distance-value">0.0</span> cm</h2>
-                <h4>Status:</h2>
-                <div id="status-json" class="alert alert-info">
-                    <!-- Status data will be displayed here -->
-                </div>
+                    <table>
+                        <tr>
+                            <td><b>Distanza anteriore:</b></td>
+                            <td><span id="distance-value">0.0</span> cm</td>
+                        </tr>
+                        <tr>
+                            <td><b>Status:</b></td>
+                            <td>
+                                <div id="status-json" class="alert alert-info"></div>
+                            </td>
+                        </tr>
+                    </table>
             </div>
         </div>
-        
+
         <div class="row mt-4">
             <div class="col-lg-12">
-                <h2>Prediction: <span id="prediction-json">" "</span></h2>
+                <h2>Prediction:</h2>
+                <table id="prediction-table">
+                    <!-- Le righe delle previsioni saranno generate dinamicamente qui -->
+                </table>
             </div>
         </div>
-    </div>
 
-    <script type="text/javascript">
-        var frameElement = document.getElementById('frame');
-        var distanceElement = document.getElementById('distance-value');
-        var predictionElement = document.getElementById('prediction-json');
-        var statusElement = document.getElementById('status-json');
+        <div class="row mt-4">
+            <div class="col-lg-12">
+                <h2>Prediction:</h2>
+                <table>
+                    <tr>
+                        <td><b>Nome campo:</b></td>
+                        <td><span id="field-value">Valore dinamico</span></td>
+                    </tr>
+                    <!-- Aggiungi altre righe di dati delle previsioni qui -->
+                </table>
+            </div>
+        </div>
 
-        // Funzione per aggiornare la distanza nel documento HTML
-        function updateDistance(distance) {
-            distanceElement.textContent = distance;
-        }
+        <script type="text/javascript">
+            var frameElement = document.getElementById('frame');
+            var distanceElement = document.getElementById('distance-value');
+            var predictionElement = document.getElementById('prediction-json');
+            var statusElement = document.getElementById('status-json');
 
-        function updatePrediction(prediction) {
-            // Pulizia del contenuto attuale
-            predictionElement.innerHTML = '';
+            // Funzione per aggiornare la distanza nel documento HTML
+            function updateDistance(distance) {
+                distanceElement.textContent = distance;
+            }
 
-            // Itera attraverso gli oggetti numerati nel JSON
-            for (var key in prediction) {
-                if (prediction.hasOwnProperty(key)) {
-                    var predictionObj = prediction[key];
-                    var predictionHTML = `<p>Category: ${predictionObj.category}</p>`;
-                    predictionHTML += `<p>Coordinates: h=${predictionObj.coordinates.h}, w=${predictionObj.coordinates.w}, x=${predictionObj.coordinates.x}, y=${predictionObj.coordinates.y}</p>`;
-                    predictionHTML += `<p>Score: ${predictionObj.score}</p>`;
-                    predictionElement.innerHTML += predictionHTML;
+            function updatePrediction(prediction) {
+                // Otteni il riferimento alla tabella
+                var predictionTable = document.getElementById('prediction-table');
+
+                // Pulizia del contenuto attuale della tabella
+                predictionTable.innerHTML = '';
+
+                // Itera attraverso gli oggetti numerati nel JSON e aggiungi righe alla tabella
+                for (var key in prediction) {
+                    if (prediction.hasOwnProperty(key)) {
+                        var predictionObj = prediction[key];
+                        var newRow = predictionTable.insertRow();
+                        var categoryCell = newRow.insertCell(0);
+                        var valueCell = newRow.insertCell(1);
+
+                        categoryCell.innerHTML = `<b>${predictionObj.category}:</b>`;
+                        valueCell.textContent = predictionObj.value;
+                    }
                 }
             }
 
-            // Gestione del campo "timestamp" fuori dagli oggetti numerati
-            var timestampHTML = `<p>Timestamp: ${prediction.timestamp}</p>`;
-            timestampElement.innerHTML = timestampHTML;
-        }
+            function updateStatus(status) {
+                // Pulizia del contenuto attuale
+                statusElement.innerHTML = '';
 
-        function updateStatus(status) {
-            // Pulizia del contenuto attuale
-            statusElement.innerHTML = '';
+                // Converte la stringa JSON in un oggetto JSON
+                var statusObj = JSON.parse(status);
 
-            // Converte la stringa JSON in un oggetto JSON
-            var statusObj = JSON.parse(status);
-
-            // Itera attraverso le chiavi nell'oggetto JSON di stato
-            for (var key in statusObj) {
-                if (statusObj.hasOwnProperty(key)) {
-                    var value = statusObj[key];
-                    var statusHTML = `<p>${key}: ${value}</p>`;
-                    statusElement.innerHTML += statusHTML;
+                // Itera attraverso le chiavi nell'oggetto JSON di stato e aggiungi righe alla tabella
+                for (var key in statusObj) {
+                    if (statusObj.hasOwnProperty(key)) {
+                        var value = statusObj[key];
+                        var newRow = document.createElement("tr");
+                        newRow.innerHTML = `<td><b>${key}:</b></td><td>${value}</td>`;
+                        statusElement.appendChild(newRow);
+                    }
                 }
             }
-        }
-        
-        /* Aggiorna la distanza ogni 500 millisecondi utilizzando AJAX
-        function getDistance() {
-            $.ajax({
-                url: '/get_distance',
-                success: function(data) {
-                    updateDistance(data);
-                }
-            });
-        }*/
 
-        // Aggiorna il frame immagine ogni secondo
-        setInterval(function () {
-            var currentTime = new Date().getTime();
-            frameElement.src = '/frame?' + currentTime;
-        }, 1000);
+            /* Aggiorna la distanza ogni 500 millisecondi utilizzando AJAX
+            function getDistance() {
+                $.ajax({
+                    url: '/get_distance',
+                    success: function(data) {
+                        updateDistance(data);
+                    }
+                });
+            }*/
 
-        /* Aggiorna la distanza ogni 500 millisecondi
-        setInterval(getDistance, 500);*/
+            // Aggiorna il frame immagine ogni secondo
+            setInterval(function () {
+                var currentTime = new Date().getTime();
+                frameElement.src = '/frame?' + currentTime;
+            }, 1000);
 
-        // Aggiorna la distanza ogni 500 millisecondi utilizzando Fetch API
-        setInterval(function () {
-            fetch('/get_distance')
-                .then(response => response.text())
-                .then(data => updateDistance(data))
-                .catch(error => console.log('Errore durante la richiesta della distanza:', error));
-        }, 1000);
+            /* Aggiorna la distanza ogni 500 millisecondi
+            setInterval(getDistance, 500);*/
 
-        setInterval(function () {
-            fetch('/get_predictions')
-                .then(response => response.json())
-                .then(data => updatePrediction(data))
-                .catch(error => console.log('Errore durante la richiesta della distanza:', error));
-        }, 1000);
+            // Aggiorna la distanza ogni 500 millisecondi utilizzando Fetch API
+            setInterval(function () {
+                fetch('/get_distance')
+                    .then(response => response.text())
+                    .then(data => updateDistance(data))
+                    .catch(error => console.log('Errore durante la richiesta della distanza:', error));
+            }, 1000);
 
-        setInterval(function () {
-            fetch('/get_status')
-                .then(response => response.json())
-                .then(data => updateStatus(data))
-                .catch(error => console.log('Errore durante la richiesta della distanza:', error));
-        }, 1000);
-    </script>
+            setInterval(function () {
+                fetch('/get_predictions')
+                    .then(response => response.json())
+                    .then(data => updatePrediction(data))
+                    .catch(error => console.log('Errore durante la richiesta della distanza:', error));
+            }, 1000);
 
-    </script>
+            setInterval(function () {
+                fetch('/get_status')
+                    .then(response => response.json())
+                    .then(data => updateStatus(data))
+                    .catch(error => console.log('Errore durante la richiesta della distanza:', error));
+            }, 1000);
+        </script>
+
+        </script>
 
 </body>
 
