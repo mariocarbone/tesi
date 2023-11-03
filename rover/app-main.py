@@ -248,6 +248,16 @@ def get_status():
 		
 	return jsonify(status_obj)  
 
+# API per far partire il rover
+@app.route('/rover/start', methods=['POST'])
+def rover_start():
+
+    # esegui_mia_azione()
+    
+    return jsonify({"message": "Rover partito!"})
+
+
+
 	
 def run_flask_app():
 	app.run(host='0.0.0.0', port=5000) 

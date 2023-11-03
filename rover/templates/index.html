@@ -12,12 +12,12 @@
         <h1 class="mt-4">Rover Manager</h1>
 
         <div class="row">
-            <div class="col-lg-8" style="background-color: #dcdcdc;">
+            <div class="col-lg-7" style="background-color: #dcdcdc;">
                 <h3 class="mt-4">Webcam Stream</h1>
                     <img id="video" style="max-width: 640px;" src="{{ url_for('video_feed') }}">
             </div>
 
-            <div class="col-lg-4" style="background-color: #dcdcdc;">
+            <div class="col-lg-" style="background-color: #dcdcdc;">
                 <h3 class="mt-4">Stato del rover</h3>
                 <div id="status-fields">
                     <div class="row">
@@ -49,8 +49,12 @@
                         </div>
                     </div>
                 </div>
+                <h3 class="mt-4">Comandi del rover</h3>
+                <div id="rover-commands">
+                    <button id="rover-start" class="btn btn-primary">Start</button>
+                </div>
             </div>
-            
+
         </div>
         <div>
             <div class="row mt-4">
@@ -83,7 +87,7 @@
 
         // Funzione per aggiornare la distanza nel documento HTML
         function updateDistance(distance) {
-            distanceElement.textContent = distance +" cm";
+            distanceElement.textContent = distance + " cm";
         }
 
         function updatePrediction(prediction) {
@@ -146,7 +150,29 @@
                 .then(data => updateStatus(data))
                 .catch(error => console.log('Errore durante la richiesta della distanza:', error));
         }, 1000);
-    </script>
+
+
+        //Azioni bottoni
+        var buttonRoverStart = document.getElementById('action-button');
+
+        actionButton.addEventListener('click', function () {
+            fetch('/rover/start', {
+                method: 'POST'
+            })
+                .then(function (response) {
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        throw new Error('Errore nella richiesta');
+                    }
+                })
+                .then(function (data) {
+                    alert(data); // Mostra un messaggio di conferma
+                })
+                .catch(function (error) {
+                    console.error('Errore:', error);
+                });
+        });
 
     </script>
 
