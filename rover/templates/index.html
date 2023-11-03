@@ -23,25 +23,25 @@
                     <div class="row">
                         <div class="status-field mx-2 my-2 text-center">
                             <h5>Velocità</h5>
-                            <div id="speed" class="display-4">0</div>
+                            <div id="speed" class="display-5">0</div>
                         </div>
                         <div class="status-field mx-2 my-2 text-center">
                             <h5>Angolo di sterzo</h5>
-                            <div id="steer_angle" class="display-4">0</div>
+                            <div id="steer_angle" class="display-5">0</div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="status-field mx-2 my-2 text-center">
                             <h5>IR Sinistra</h5>
-                            <div id="ir_left" class="display-4">0</div>
+                            <div id="ir_left" class="display-5">0</div>
                         </div>
                         <div class="status-field mx-2 my-2 text-center">
                             <h5>IR Centro</h5>
-                            <div id="ir_center" class="display-4">0</div>
+                            <div id="ir_center" class="display-5">0</div>
                         </div>
                         <div class="status-field mx-2 my-2 text-center">
                             <h5>IR Destra</h5>
-                            <div id="ir_right" class="display-4">0</div>
+                            <div id="ir_right" class="display-5">0</div>
                         </div>
                     </div>
                 </div>
@@ -105,11 +105,11 @@
 
         function updateStatus(status) {
             var statusObj = JSON.parse(status);
-            speedDiv.textContent = statusObj.speed;
-            steerDiv.textContent = statusObj.steer_angle;
-            irLDiv.textContent = statusObj.ir_left;
-            irCDiv.textContent = statusObj.ir_center;
-            irRDiv.textContent = statusObj.ir_right;
+            speedDiv.textContent = statusObj.speed + "m/s";
+            steerDiv.textContent = statusObj.steer_angle + "°";
+            irLDiv.textContent = statusObj.ir_left + "";
+            irCDiv.textContent = statusObj.ir_center + "";
+            irRDiv.textContent = statusObj.ir_right + "";
         }
 
         // Aggiorna il frame immagine ogni secondo
