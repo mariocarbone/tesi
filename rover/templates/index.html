@@ -29,15 +29,16 @@
 
     <!-- Contenuto principale della pagina -->
     <div class="container flex-grow-1">
-        <div class="row">
-            <div class="col-lg-7">
-                <h3 class="mt-4 text-center">Webcam Stream</h3>
-                <img id="video" style="max-width: 640px;" src="{{ url_for('video_feed') }}">
-            </div>
 
-            <div class="col-lg-5" style="background-color: #f0f0f0;">
-                <h3 class="mt-4 text-center">Stato del rover</h3>
-                <div class="column" id="status-fields">
+            <div class="row">
+                <div class="col-lg-7">
+                    <h3 class="mt-4 text-center">Webcam Stream</h3>
+                    <img id="video" style="max-width: 640px;" src="{{ url_for('video_feed') }}">
+                </div>
+
+            <div class="col-lg-5">
+                <h3 class="mt-4 text-center" style="background-color: white;">Stato del rover</h3>
+                <div class="column" id="status-fields" style="background-color: #f0f0f0;">
                     <div class="row justify-content-center align-items-center">
                         <div class="status-field mx-2 my-2 text-center">
                             <h5>Velocità</h5>
