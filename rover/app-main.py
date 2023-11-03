@@ -198,7 +198,6 @@ def detection():
 			frame_counter = frame_counter+1 
 			contatore_media = contatore_media+1
 			if(detected):
-				print(json)
 				with prediction_lock:
 					prediction_json = json
 		else:
@@ -241,7 +240,7 @@ def get_predictions():
 @app.route('/get_status', methods=['GET'])
 def get_status():
 	global status_json, status_lock
-	
+
 	with status_lock:
 		status_obj = status_json
 		
