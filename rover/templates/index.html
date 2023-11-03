@@ -20,110 +20,115 @@
             <div class="col-lg-5" style="background-color: #dcdcdc;">
                 <h3 class="mt-4">Stato del rover</h1>
                     <div id="status-fields">
-                        <div class="status-field">
-                            <b>Distanza anteriore:</b>
-                            <span id="distance-value">0.0</span> cm
-                            <h4>Velocità</h4>
-                            <input type="text" id="speed" value="0" readonly>
+                        <b>Distanza anteriore:</b>
+                        <span id="distance-value">0.0</span> cm
+                        <div class="row">
+                            <div class="col-lg-1">
+                                <b>Velocità</b>
+                                <span id="speed">0</span> m/s
+                            </div>
+                            <div class="col-lg-1">
+                                <b>Angolo di sterzo</b>
+                                <span id="steer_angle">0</span> degrees
+                            </div>
                         </div>
-                        <div class="status-field">
-                            <h4>Angolo di sterzo</h4>
-                            <input type="text" id="steer_angle" value="0" readonly>
-                        </div>
-                        <!-- Aggiungi ulteriori campi di stato con valori di esempio qui -->
+                        <h4>Angolo di sterzo</h4>
+                        <input type="text" id="steer_angle" value="0" readonly>
                     </div>
+                    <!-- Aggiungi ulteriori campi di stato con valori di esempio qui -->
             </div>
         </div>
+    </div>
 
-        <div class="row mt-4">
-            <div class="col-lg-12">
-                <h2>Prediction:</h2>
-                <table id="prediction-table">
-                    <!-- Le righe delle previsioni saranno generate dinamicamente qui -->
-                </table>
-            </div>
+    <div class="row mt-4">
+        <div class="col-lg-12">
+            <h2>Prediction:</h2>
+            <table id="prediction-table">
+                <!-- Le righe delle previsioni saranno generate dinamicamente qui -->
+            </table>
         </div>
+    </div>
 
 
-        <script type="text/javascript">
-            var frameElement = document.getElementById('frame');
-            var distanceElement = document.getElementById('distance-value');
-            var predictionElement = document.getElementById('prediction-json');
-            var statusElement = document.getElementById('status-json');
-            var speedField = document.getElementById('speed');
-            var steerField = document.getElementById('steer_angle');
+    <script type="text/javascript">
+        var frameElement = document.getElementById('frame');
+        var distanceElement = document.getElementById('distance-value');
+        var predictionElement = document.getElementById('prediction-json');
+        var statusElement = document.getElementById('status-json');
+        var speedField = document.getElementById('speed');
+        var steerField = document.getElementById('steer_angle');
 
-            // Funzione per aggiornare la distanza nel documento HTML
-            function updateDistance(distance) {
-                distanceElement.textContent = distance;
-            }
+        // Funzione per aggiornare la distanza nel documento HTML
+        function updateDistance(distance) {
+            distanceElement.textContent = distance;
+        }
 
-            function updatePrediction(prediction) {
-                // Otteni il riferimento alla tabella
-                var predictionTable = document.getElementById('prediction-table');
+        function updatePrediction(prediction) {
+            // Otteni il riferimento alla tabella
+            var predictionTable = document.getElementById('prediction-table');
 
-                // Pulizia del contenuto attuale della tabella
-                predictionTable.innerHTML = '';
+            // Pulizia del contenuto attuale della tabella
+            predictionTable.innerHTML = '';
 
-                // Itera attraverso gli oggetti numerati nel JSON e aggiungi righe alla tabella
-                for (var key in prediction) {
-                    if (prediction.hasOwnProperty(key)) {
-                        var predictionObj = prediction[key];
-                        var newRow = predictionTable.insertRow();
-                        var categoryCell = newRow.insertCell(0);
-                        var valueCell = newRow.insertCell(1);
+            // Itera attraverso gli oggetti numerati nel JSON e aggiungi righe alla tabella
+            for (var key in prediction) {
+                if (prediction.hasOwnProperty(key)) {
+                    var predictionObj = prediction[key];
+                    var newRow = predictionTable.insertRow();
+                    var categoryCell = newRow.insertCell(0);
+                    var valueCell = newRow.insertCell(1);
 
-                        categoryCell.innerHTML = `<b>${predictionObj.category}:</b>`;
-                        valueCell.textContent = predictionObj.value;
-                    }
+                    categoryCell.innerHTML = `<b>${predictionObj.category}:</b>`;
+                    valueCell.textContent = predictionObj.value;
                 }
             }
+        }
 
-            function updateStatus(status) {
-                var statusObj = JSON.parse(status);
+        function updateStatus(status) {
+            var statusObj = JSON.parse(status);
 
-                if (speedField) {
-                    speedField.value = statusObj.speed;
-                }
-
-                if (steerField) {
-                    steerField.value = statusObj.steer_angle;
-                }
+            if (speedField) {
+                speedField.value = statusObj.speed;
             }
 
-            // Aggiorna il frame immagine ogni secondo
-            setInterval(function () {
-                var currentTime = new Date().getTime();
-                frameElement.src = '/frame?' + currentTime;
-            }, 1000);
+            if (steerField) {
+                steerField.value = statusObj.steer_angle;
+            }
+        }
 
-            /* Aggiorna la distanza ogni 500 millisecondi
-            setInterval(getDistance, 500);*/
+        // Aggiorna il frame immagine ogni secondo
+        setInterval(function () {
+            var currentTime = new Date().getTime();
+            frameElement.src = '/frame?' + currentTime;
+        }, 1000);
 
-            // Aggiorna la distanza ogni 500 millisecondi utilizzando Fetch API
-            setInterval(function () {
-                fetch('/get_distance')
-                    .then(response => response.text())
-                    .then(data => updateDistance(data))
-                    .catch(error => console.log('Errore durante la richiesta della distanza:', error));
-            }, 1000);
+        /* Aggiorna la distanza ogni 500 millisecondi
+        setInterval(getDistance, 500);*/
 
-            setInterval(function () {
-                fetch('/get_predictions')
-                    .then(response => response.json())
-                    .then(data => updatePrediction(data))
-                    .catch(error => console.log('Errore durante la richiesta della distanza:', error));
-            }, 1000);
+        // Aggiorna la distanza ogni 500 millisecondi utilizzando Fetch API
+        setInterval(function () {
+            fetch('/get_distance')
+                .then(response => response.text())
+                .then(data => updateDistance(data))
+                .catch(error => console.log('Errore durante la richiesta della distanza:', error));
+        }, 1000);
 
-            setInterval(function () {
-                fetch('/get_status')
-                    .then(response => response.json())
-                    .then(data => updateStatus(data))
-                    .catch(error => console.log('Errore durante la richiesta della distanza:', error));
-            }, 1000);
-        </script>
+        setInterval(function () {
+            fetch('/get_predictions')
+                .then(response => response.json())
+                .then(data => updatePrediction(data))
+                .catch(error => console.log('Errore durante la richiesta della distanza:', error));
+        }, 1000);
 
-        </script>
+        setInterval(function () {
+            fetch('/get_status')
+                .then(response => response.json())
+                .then(data => updateStatus(data))
+                .catch(error => console.log('Errore durante la richiesta della distanza:', error));
+        }, 1000);
+    </script>
+
+    </script>
 
 </body>
 
