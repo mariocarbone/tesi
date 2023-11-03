@@ -52,6 +52,7 @@
                 <h3 class="mt-4">Comandi del rover</h3>
                 <div id="rover-commands">
                     <button id="rover-start" class="btn btn-primary">Start</button>
+                    <button id="rover-stop" class="btn btn-danger">Stop</button>
                 </div>
             </div>
 
@@ -69,9 +70,6 @@
     </div>
     </div>
     </div>
-
-
-
 
     <script type="text/javascript">
         var frameElement = document.getElementById('frame');
@@ -153,9 +151,10 @@
 
 
         //Azioni bottoni
-        var buttonRoverStart = document.getElementById('action-button');
+        var buttonRoverStart = document.getElementById('rover-start');
+        var buttonRoverStop = document.getElementById('rover-stop');
 
-        actionButton.addEventListener('click', function () {
+        buttonRoverStart.addEventListener('click', function () {
             fetch('/rover/start', {
                 method: 'POST'
             })
@@ -173,6 +172,26 @@
                     console.error('Errore:', error);
                 });
         });
+
+        buttonRoverStop.addEventListener('click', function () {
+            fetch('/rover/stop', {
+                method: 'POST'
+            })
+                .then(function (response) {
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        throw new Error('Errore nella richiesta');
+                    }
+                })
+                .then(function (data) {
+                    alert(data); // Mostra un messaggio di conferma
+                })
+                .catch(function (error) {
+                    console.error('Errore:', error);
+                });
+        });
+
 
     </script>
 

@@ -252,11 +252,15 @@ def get_status():
 @app.route('/rover/start', methods=['POST'])
 def rover_start():
 
-    # esegui_mia_azione()
-    
+    print("ROVER START")
     return jsonify({"message": "Rover partito!"})
 
+# API per far fermare il rover
+@app.route('/rover/stop', methods=['POST'])
+def rover_stop():
 
+    print("ROVER STOP")
+    return jsonify({"message": "Rover fermato!"})
 
 	
 def run_flask_app():
