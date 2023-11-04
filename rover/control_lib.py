@@ -12,7 +12,7 @@ class Vehicle_Control():
         self.rpi = Raspberry()
         self.status = {}
         self.status['braking'] = False
-        self.status['']
+        self.status['moving'] = False
         self.status_lock = Lock()
         self.distance = 0.0
         self.distance_lock = Lock()
