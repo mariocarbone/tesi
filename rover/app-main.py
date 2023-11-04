@@ -121,6 +121,7 @@ def old_update_vehicle_distance():
 		time.sleep(0.15)
 
 def update_vehicle_distance():
+	while True:
 		vehicle_control.update_distance()
 		time.sleep(0.1)
 
@@ -311,8 +312,9 @@ if __name__ == "__main__":
 
 	flask_thread.start()
 	status_thread.start()
-	capture_thread.start()
 	distance_thread.start()
+	capture_thread.start()
+
 
 	time.sleep(0.1)
 	detection_thread.start()
