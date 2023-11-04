@@ -97,8 +97,8 @@ class Vehicle_Control():
 				if self.get_ir_center() > 35:
 					onTrack = True
 					if not avviato:
-						self.arduino.speed(50)
 						avviato = True
+						self.arduino.speed(50)
 				else:
 					if self.get_ir_left() > 35:
 						onTrack = False
@@ -109,6 +109,7 @@ class Vehicle_Control():
 					time.sleep(0.1)
 			else:
 				self.arduino.stop()
+			time.sleep(0.2)
 
 			
 
