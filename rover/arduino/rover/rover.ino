@@ -99,59 +99,8 @@ void loop() {
           rightSpeed = speed;
       }
      
-
-
       analogWrite(ENA, leftSpeed);
       analogWrite(ENB, rightSpeed);
-
-
-      //Serial.println("speed:" + String(speed) + ",speed_left_side:" + String(leftSpeed)
-      //                + ",speed_right_side:" + String(rightSpeed) + ",steer_angle:" + String(steeringValue) + ",last_angle:" 
-      //               + String(lastSteeringValue) + ",ir_left:" + String(sx) + ",ir_center:" + String(center) + ",ir_right:"
-      //                + String(dx) + ",last_command:" + last_command);
-      
-      
-      /*
-      lastAngolo = angolo;
-      angolo = comando.substring(3).toInt();
-      last_command = (String)"TURN("+angolo+")";
-      //int angoloAssoluto = abs(angolo);
-    
-      // Calcolo la differenza di velocità tra i due motori per sterzare
-      float percentualeDecremento = map(angoloAssoluto, 0, 45, 0, 100);
-      float percentualeVelocita = 1.0 - (percentualeDecremento / 100.00);
-      //Serial.println(percentualeDecremento);
-      //Serial.println(percentualeVelocita);
-
-      if (angolo <50){
-        
-        velSinistra = (int)(velocita * percentualeVelocita);
-        //Serial.println(velSinistra);
-        velDestra = velocita;
-        analogWrite(ENA, velSinistra);
-        analogWrite(ENB, velocita);
-
-      } else if (angolo==0){
-        int velocitaTMP = 0;
-        if ( velocita > velDestra ){
-          velDestra = velocita;
-        }else{
-          velSinistra = velocita;
-        }
-      }
-      else{
-        
-        velDestra= (int)(velocita * percentualeVelocita);
-        velSinistra = velocita;
-        analogWrite(ENA, velocita);
-        analogWrite(ENB, velDestra);
-      }
-
-        /*Serial.println("speed:" + String(velocita) + ",speed_left_side:" + String(velSinistra)
-                      + ",speed_right_side:" + String(velDestra) + ",steer_angle:" + String(angolo) + ",last_angle:" 
-                      + String(lastAngolo) + ",ir_left:" + String(sx) + ",ir_center:" + String(center) + ",ir_right:"
-                      + String(dx) + ",last_command:" + last_command);
-        */
       
     } else if (comando.startsWith("SPD")) {
 

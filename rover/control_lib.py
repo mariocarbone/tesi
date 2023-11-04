@@ -133,8 +133,6 @@ class Vehicle_Control():
 				self.moving = False
 				self.arduino.stop()
 
-			time.sleep(0.5)
-
 			
 	def find_line(self,side):
 		if side == "LEFT":
