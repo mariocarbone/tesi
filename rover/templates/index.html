@@ -54,6 +54,7 @@
                             <div id="distance-value" class="h5">0</div>
                         </div>
                     </div>
+                    <h4 class="mt-4 text-center"">Line Following</h3>
                     <div class="row justify-content-center align-items-center">
                         <div class="status-field mx-2 my-2 text-center">
                             <h5>IR Sinistra</h5>
@@ -66,6 +67,17 @@
                         <div class="status-field mx-2 my-2 text-center">
                             <h5>IR Destra</h5>
                             <div id="ir_right" class="h5">0</div>
+                        </div>
+                    </div>
+                    <h4 class="mt-4 text-center"">Line Following</h3>
+                    <div class="row justify-content-center align-items-center">
+                        <div class="status-field mx-2 my-2 text-center">
+                            <h5>In movimento</h5>
+                            <div id="moving" class="h5">0</div>
+                        </div>
+                        <div class="status-field mx-2 my-2 text-center">
+                            <h5>In frenata</h5>
+                            <div id="braking" class="h5">0</div>
                         </div>
                     </div>
             </div>
@@ -157,6 +169,8 @@
                     var ssid = document.getElementById('ssid');
                     var ip = document.getElementById('ip');
                     var signal = document.getElementById('signal');
+                    var moving = document.getElementById('moving');
+                    var braking = document.getElementById('braking');
 
 
                     // Funzione per aggiornare la distanza nel documento HTML
@@ -186,6 +200,8 @@
                         irLDiv.textContent = statusObj.ir_left + " ";
                         irCDiv.textContent = statusObj.ir_center + " ";
                         irRDiv.textContent = statusObj.ir_right + " ";
+                        moving.textContent = statusObj.moving;
+                        braking.textContent = statusObj.braking;
                     }
 
                     function updatePiInfo(status) {
