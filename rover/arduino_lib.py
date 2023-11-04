@@ -46,8 +46,13 @@ class Arduino:
 		self.send_command(command)
 		response = self.ser.readline().decode('ascii')
 		print("ARDUINO", response)
-		return (response)
-		#return json.loads(response)
+
+		try:
+			data = json.loads(response)
+			return data
+		except json.JSONDecodeError as e:
+			print(f"Errore nella decodifica JSON: {e}")
+			return {}  # o restituisci un valore predefinito o esegui un'altra azione correttiva
 
 	def send_command(self, command):
 		newline = "\n"
