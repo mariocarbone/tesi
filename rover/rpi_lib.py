@@ -21,7 +21,10 @@ class Raspberry(str):
         GPIO.setup(self.echo_pin, GPIO.IN)
 
     def get_system_status(self):
-        self.system_status["ram"] = (self.pi.get_ram_info()[1])/(self.pi.get_ram_info()[0])
+        ram_usage = self.pi.get_ram_info()[1]
+        ram_total = self.pi.get_ram_info()[0]
+        
+        self.system_status["ram"] = round(ram_usage/ram_total)
         self.system_status["cpu"] = self.pi.get_cpu_usage()
         self.system_status["temp"] = round(self.pi.get_cpu_temp(),1)
         self.system_status["ssid"] = self.pi.get_wifi_status()
