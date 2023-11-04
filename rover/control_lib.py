@@ -11,6 +11,15 @@ class Vehicle_Control():
 		print("Vehicle Control avviato")
 		self.arduino = Arduino("/dev/ttyACM0", 9600, 1, 1)
 		self.rpi = Raspberry()
+		self.status_lock = Lock()
+		self.distance = 0.0
+		self.distance_lock = Lock()
+		self.stop = False
+		self.turn_min = 0
+		self.turn_max = 100
+		self.turn_step = 10
+		self.on_track = False
+		self.moving = False
 		self.status = {
 			"speed": 0,
 			"speed_left_side": 0,
@@ -26,10 +35,6 @@ class Vehicle_Control():
 			"moving" : False,
 
 		}
-		self.status_lock = Lock()
-		self.distance = 0.0
-		self.distance_lock = Lock()
-		self.stop = False
 
 	def update_distance(self):
 		#self.distance, self.distance_lock, self.rpi
@@ -81,47 +86,70 @@ class Vehicle_Control():
 	def stop_path(self):
 		self.stop = True
 		self.arduino.stop()
-		self.status.update({'moving':False})
 		self.path_thread.join()  # Attendere che il thread si completi
 
+	def get_side_by_steer(steer_angle):
+		if steer_angle < 50:
+			return "LEFT"
+		elif steer_angle == 50:
+			return "CENTER"
+		else :
+			return "RIGHT"
+		
+	def get_active_ir(self):
+		if self.get_ir_left > 35:
+			return "LEFT"
+		elif self.get_ir_right > 35:
+			return "RIGHT"
+		elif self.get_ir_center > 35:
+			return "CENTER"
+	
 	def start(self):
-		avviato = False
-		onTrack = False
-		turnAmount = 10
-		lastLeft = False
-		lastRight = False
-		alreadyTurn = False
 		while not self.stop:
 			if self.distance > 10:
-				if self.get_ir_center() > 35:
-					onTrack = True
-					if not avviato:
-						avviato = True
+				if self.get_active_ir() == "CENTER":  #Sto sulla linea centrale
+					self.on_track = True
+
+					if not self.moving:
 						self.arduino.speed(50)
-						self.status.update({'moving':True})
+						self.moving = True
 				else:
-					if self.get_ir_left() > 35:
-						onTrack = False
-						alreadyTurn = True
-						lastRight = True
-						lastLeft = False
-						self.arduino.steer(self.get_steer()+turnAmount)
-						if alreadyTurn:
-							turnAmount = turnAmount+10
-					elif self.get_ir_right() > 35:
-						onTrack = False
-						alreadyTurn = True
-						lastRight = False
-						lastLeft = True
-						self.arduino.steer(self.get_steer()-turnAmount)
-						if alreadyTurn:
-							turnAmount = turnAmount+10
-					time.sleep(0.5)
-			else:
+					if self.get_active_ir() == "LEFT": #Sto sulla linea da sinistra
+
+						self.on_track = False
+						line_found = self.find_line("LEFT")
+						if line_found:
+							self.on_track = True
+
+					elif self.get_active_ir() == "RIGHT": #Sto sulla linea da destra
+
+						self.on_track = False
+						line_found = self.find_line("RIGHT")
+						if line_found:
+							self.on_track = True
+
+			else: #Distanza di sicurezza
+				self.on_track = False
 				self.arduino.stop()
+
 			time.sleep(0.5)
 
 			
+	def find_line(self,side):
+		if side == "LEFT":
+			if self.get_steer() < self.turn_max:
+				self.arduino.steer(self.steer_value+self.turn_step)
+				time.sleep(0.2)
+				if self.get_active_ir() == "CENTER":
+					return True
+				else:
+					self.find_line("LEFT")
 
-
-		
+		elif side == "RIGHT":
+			if self.get_steer() > self.turn_min:
+				self.arduino.steer(self.steer_value+self.turn_step)
+				time.sleep(0.2)
+				if self.get_active_ir() == "CENTER":
+					return True
+				else:
+					self.find_line("RIGHT")
