@@ -39,15 +39,22 @@ class Vehicle_Control():
 		if self.arduino.ser.is_open:
 			response = self.arduino.get_status()
 			try:
-				stato_arduino = json.loads(response)
-				with self.status_lock:
-					self.status.update(stato_arduino)
-					if int(self.status.get('speed', 0)) == 0:
-						self.status.update({'moving': False})
-					else:
-						self.status.update({'moving': True})
+				response = response.strip()  # Rimuovi spazi bianchi all'inizio e alla fine
+				if response:
+					stato_arduino = json.loads(response)
+					with self.status_lock:
+						self.status.update(stato_arduino)
+						if int(self.status.get('speed', 0)) == 0:
+							self.status.update({'moving': False})
+						else:
+							self.status.update({'moving': True})
+				else:
+					print("La stringa JSON ricevuta è vuota o non valida.")
+					# Puoi gestire il caso in cui la stringa non sia un JSON valido
+					# Ad esempio, imposta uno stato predefinito o effettua altre azioni correttive
 			except json.JSONDecodeError as e:
 				print(f"Errore nella decodifica JSON: {e}")
+				# Puoi gestire ulteriormente l'eccezione qui se necessario
 					
 	def get_distance(self):
 		self.distance, self.distance_lock
