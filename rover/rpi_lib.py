@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import time
+import netifaces
 
 class Raspberry(str):
 
@@ -12,7 +13,7 @@ class Raspberry(str):
 		self.echo_pin = 11
 		GPIO.setup(self.trig_pin, GPIO.OUT)
 		GPIO.setup(self.echo_pin, GPIO.IN)
-		
+		self.network_info = {}
 	# Funzione per misurare la distanza
 	def measure_distance(self):
 		
@@ -32,3 +33,18 @@ class Raspberry(str):
 		#print("Distance = ", distance_value)
 		return round(distance_value,2)
 		GPIO.cleanup()
+
+	def get_network_info(self):
+	
+		# Ottieni tutti gli interfacce di rete
+		interfaces = netifaces.interfaces()
+		
+		for interface in interfaces:
+			addrs = netifaces.ifaddresses(interface)
+			if netifaces.AF_INET in addrs:
+				# Ottieni l'indirizzo IP IPv4
+				ip = addrs[netifaces.AF_INET][0]['addr']
+				# Ottieni il nome dell'interfaccia
+				self.network_info[interface] = ip
+		
+		return self.network_info

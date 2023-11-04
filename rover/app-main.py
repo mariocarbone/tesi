@@ -28,6 +28,27 @@ log = logging.getLogger('werkzeug')
 log.disabled = True
 CORS(app)
 
+# Variabili di utilità
+stop_threads = False
+
+# Inizializzazione Camera
+picam2 = Picamera2()
+picam2.configure(picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (640, 480)}))
+picam2.start()
+
+# Istanze Moduli
+tf_instance = Tensorflow()
+vehicle_control = Vehicle_Control()
+#mqtt = MQTTConnection("192.168.1.2", "8000", topic_alert, topic_auto, vehicle_id)
+
+topic_alert = "/alert/"
+topic_auto = "/smartcar/"
+vehicle_id = "ROVER"
+
+# Stato del veicolo
+status_json = {}
+status_lock = Lock()
+
 # Distanza Misurata con Sensore ad Ultrasuoni
 distance = 0.0
 distance_lock = Lock()
@@ -36,25 +57,10 @@ distance_lock = Lock()
 prediction_json = {}
 prediction_lock = Lock()
 
-# Stato del veicolo
-status_json = {}
-status_lock = Lock()
-
 # Code dei frame
 frame_queue = deque(maxlen=15) #Webcam
 tf_queue = deque(maxlen=15) #Tensorflow Output
 img_queue = deque(maxlen=15) #Web Output
-
-tf_instance = Tensorflow()
-vehicle_control = Vehicle_Control()
-
-topic_alert = "/alert/"
-topic_auto = "/smartcar/"
-vehicle_id = "ROVER"
-
-#mqtt = MQTTConnection("192.168.1.2", "8000", topic_alert, topic_auto, vehicle_id)
-
-stop_threads = False
 
 # Metodi per l'aggiunta dei frame alle relative code
 def add_frame(frame):
@@ -80,21 +86,13 @@ def add_image(img):
 def get_latest_image():
 	global img_queue
 	return img_queue[-1] if img_queue else None
-	
-#Coda Prediction
   
 # Contatore FPS
-counter, fps = 0, 0
 start_time = time.time()
 frame_counter = 1
 contatore_media = 0
 somma_tempi_frame = 0
 media_frame = 0
-
-# Inizializzazione Camera
-picam2 = Picamera2()
-picam2.configure(picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (640, 480)}))
-picam2.start()
 
 # Funzione per acquisire i frame dalla webcam e aggiungerli al buffer
 def capture_frames():
@@ -104,7 +102,7 @@ def capture_frames():
 		add_frame(frame)
 	picam2.stop()
 
-# Funzione per aggiornare lo stato del veicolo
+# Funzione per aggiornare lo stato del veicolo e la distanza
 def update_vehicle_status():
 	global distance, distance_lock,status_json, stop_threads
 	while not stop_threads:
@@ -115,8 +113,42 @@ def update_vehicle_status():
 		with status_lock:
 			status_json = vehicle_control.get_status()
 		time.sleep(0.5)
-		
-# Funzione per processare le immagini con OpenCV
+
+# Funzione per effettuare object detection sui frame della coda
+def detection():
+	global frame_counter,somma_tempi_frame, media_frame, contatore_media,prediction_json, prediction_lock, stop_threads
+	while not stop_threads:
+		if len(frame_queue) > 0:
+			inizio = round(time.time()*1000)
+			#print(inizio, "- App Main > Avvio detection del frame n.", frame_counter)
+			frame = get_latest_frame()
+			detected = tf_instance.detect(frame)
+			fine = round(time.time()*1000)
+			ms = fine-inizio
+			somma_tempi_frame = somma_tempi_frame + ms
+			if(contatore_media % 10 == 0):
+				media_frame = round(somma_tempi_frame/10)
+				somma_tempi_frame = 0
+				contatore_media = 0
+			logging.info(fine, "- App Main > Fine detection del frame - Tempo impiegato:", ms,"ms - Tempo medio:", media_frame , "ms") 
+			#print(fine, "- App Main > Fine detection del frame - Tempo impiegato:", ms,"ms - Tempo medio:", media_frame , "ms")
+			image = tf_instance.get_latest_image()
+			add_tf_frame(image)
+			json=tf_instance.get_predictions()
+			t_prediction = round(time.time()*1000)
+			t_final = t_prediction - fine
+			#print(t_prediction, "- App Main > Elaboro prediction del frame n.", frame_counter, "- Tempo impiegato:", t_final, "ms")
+			frame_counter = frame_counter+1 
+			contatore_media = contatore_media+1
+			if(detected):
+				with prediction_lock:
+					prediction_json = json
+		else:
+			#logging.warning('Coda dei frame vuota') 
+			#print(round(time.time()*1000), "- App Main > Coda dei frame vuota")
+			continue
+
+# Funzione per processare le immagini con OpenCV ed aggiungere linee
 def cv2Lines():
 	global stop_threads
 	green_color = (0, 255, 0, 50)  # BGR colore verde
@@ -174,39 +206,10 @@ def generate_frames():
 		else:
 			continue
 
-def detection():
-	global frame_counter,somma_tempi_frame, media_frame, contatore_media,prediction_json, prediction_lock, stop_threads
-	while not stop_threads:
-		if len(frame_queue) > 0:
-			inizio = round(time.time()*1000)
-			#print(inizio, "- App Main > Avvio detection del frame n.", frame_counter)
-			frame = get_latest_frame()
-			detected = tf_instance.detect(frame)
-			fine = round(time.time()*1000)
-			ms = fine-inizio
-			somma_tempi_frame = somma_tempi_frame + ms
-			if(contatore_media % 10 == 0):
-				media_frame = round(somma_tempi_frame/10)
-				somma_tempi_frame = 0
-				contatore_media = 0
-			logging.info(fine, "- App Main > Fine detection del frame - Tempo impiegato:", ms,"ms - Tempo medio:", media_frame , "ms") 
-			#print(fine, "- App Main > Fine detection del frame - Tempo impiegato:", ms,"ms - Tempo medio:", media_frame , "ms")
-			image = tf_instance.get_latest_image()
-			add_tf_frame(image)
-			json=tf_instance.get_predictions()
-			t_prediction = round(time.time()*1000)
-			t_final = t_prediction - fine
-			#print(t_prediction, "- App Main > Elaboro prediction del frame n.", frame_counter, "- Tempo impiegato:", t_final, "ms")
-			frame_counter = frame_counter+1 
-			contatore_media = contatore_media+1
-			if(detected):
-				with prediction_lock:
-					prediction_json = json
-		else:
-			#logging.warning('Coda dei frame vuota') 
-			#print(round(time.time()*1000), "- App Main > Coda dei frame vuota")
-			continue
-
+# Funzione per l'avvio di flask
+def run_flask_app():
+	global stop_threads
+	app.run(host='0.0.0.0', port=5000, debug=not stop_threads, use_reloader=False)
 
 # Homepage
 @app.route('/')
@@ -227,8 +230,18 @@ def get_distance():
 		distance_value = distance
 		
 	return str(distance_value)
+
+# API per ottenere lo stato 
+@app.route('/get_status', methods=['GET'])
+def get_status():
+	global status_json, status_lock
+
+	with status_lock:
+		status_obj = status_json
+		
+	return jsonify(status_obj)  
 	
-# API per ottenere la distanza
+# API per ottenere le prediction
 @app.route('/get_predictions', methods=['GET'])
 def get_predictions():
 	global prediction_json, prediction_lock
@@ -238,15 +251,15 @@ def get_predictions():
 		
 	return jsonify(predicted_objects)    
 
-# API per ottenere la distanza
-@app.route('/get_status', methods=['GET'])
-def get_status():
-	global status_json, status_lock
+# API per ottenere informazioni sulla connessione 
+@app.route('/connections/get_status', methods=['GET'])
+def get_connections():
+	#global status_json, status_lock
 
-	with status_lock:
-		status_obj = status_json
+	#with status_lock:
+		#status_obj = status_json
 		
-	return jsonify(status_obj)  
+	return jsonify(vehicle_control.rpi.get_network_info)  
 
 # API per far partire il rover
 @app.route('/rover/start', methods=['POST'])
@@ -262,18 +275,13 @@ def rover_stop():
 	print("ROVER STOP")
 	return jsonify({"message": "Rover fermato!"})
 
+# API per arrestare i threads
 @app.route('/stop_threads', methods=['POST'])
 def stop_all_threads():
 	global stop_threads
 	stop_threads = True
 	# Puoi aggiungere ulteriori azioni o pulizie se necessario prima di terminare i thread.
 	return jsonify({"message": "Tutti i thread verranno fermati."})
-
-def run_flask_app():
-	global stop_threads
-	app.run(host='0.0.0.0', port=5000, debug=not stop_threads, use_reloader=False)
-
-
 
 # Main
 if __name__ == "__main__":
@@ -284,12 +292,13 @@ if __name__ == "__main__":
 	status_thread = threading.Thread(target=update_vehicle_status)
 	cv2_thread = threading.Thread(target=cv2Lines)
 	flask_thread = threading.Thread(target=run_flask_app)
+
 	flask_thread.start()
 	status_thread.start()
-	capture_thread.start()   
+	capture_thread.start()
+
 	time.sleep(0.1)
 	detection_thread.start()
-	time.sleep(0.1)
 	cv2_thread.start()
 	
 	status_thread.join()
