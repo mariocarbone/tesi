@@ -102,16 +102,22 @@ def capture_frames():
 		add_frame(frame)
 	picam2.stop()
 
-# Funzione per aggiornare lo stato del veicolo e la distanza
+# Funzione per aggiornare lo stato del veicolo
 def update_vehicle_status():
-	global distance, distance_lock,status_json, stop_threads
+	global status_json, stop_threads
 	while not stop_threads:
-		vehicle_control.update_distance()
 		vehicle_control.update_status()
-		with distance_lock:
-			distance = vehicle_control.get_distance()
 		with status_lock:
 			status_json = vehicle_control.get_status()
+		time.sleep(0.2)
+
+# Funzione per aggiornare la distanza
+def update_vehicle_distance():
+	global distance, distance_lock
+	while not stop_threads:
+		vehicle_control.update_distance()
+		with distance_lock:
+			distance = vehicle_control.get_distance()
 		time.sleep(0.1)
 
 # Funzione per effettuare object detection sui frame della coda
@@ -292,18 +298,22 @@ if __name__ == "__main__":
 	capture_thread = threading.Thread(target=capture_frames)
 	detection_thread = threading.Thread(target=detection)
 	status_thread = threading.Thread(target=update_vehicle_status)
+	distance_thread = threading.Thread(target=update_vehicle_distance)
 	cv2_thread = threading.Thread(target=cv2Lines)
 	flask_thread = threading.Thread(target=run_flask_app)
 
 	flask_thread.start()
 	status_thread.start()
 	capture_thread.start()
+	distance_thread.start()
 
 	time.sleep(0.1)
 	detection_thread.start()
 	cv2_thread.start()
 	
 	status_thread.join()
+	distance_thread.join()
 	detection_thread.join()
 	cv2_thread.join()
 	flask_thread.join()
+
