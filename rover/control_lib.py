@@ -109,6 +109,7 @@ class Vehicle_Control():
 			if self.distance > 10:
 				if self.get_active_ir() == "CENTER":  #Sto sulla linea centrale
 					self.on_track = True
+					self.arduino.steer(50)
 
 					if not self.moving:
 						self.arduino.speed(50)
