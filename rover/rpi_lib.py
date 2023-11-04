@@ -48,7 +48,7 @@ class Raspberry(str):
 
         distance_value = pulse_duration * 17150
 
-        # print("Distance = ", distance_value)
+         print("Distance = ", distance_value)
         return round(distance_value, 2)
 
         GPIO.cleanup()

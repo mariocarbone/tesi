@@ -54,7 +54,7 @@ class Vehicle_Control():
 					
 	def get_distance(self):
 		self.distance, self.distance_lock
-
+	
 		with self.distance_lock:
 			return self.distance
 
