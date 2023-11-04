@@ -63,8 +63,8 @@ class Vehicle_Control():
 			return self.status
 	
 	def start_path(self):
-		path_thread = threading.Thread(target=self.start)
-		path_thread.start()
+		self.path_thread = threading.Thread(target=self.start)
+		self.path_thread.start()
 
 	def stop_path(self):
 		self.stop = True
