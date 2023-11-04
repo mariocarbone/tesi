@@ -26,7 +26,7 @@ int leftSpeed = 0;
 int rightSpeed = 0;
 int speed = 0;
 int maxSpeed = 254;
-int steeringValue = 0;
+int steeringValue = 50;
 int lastSteeringValue = 0;
 
 
