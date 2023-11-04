@@ -53,6 +53,16 @@
                             <h5>Distanza anteriore</h5>
                             <div id="distance-value" class="h5">0</div>
                         </div>
+                        <div class="row justify-content-center align-items-center">
+                            <div class="status-field mx-2 my-2 text-center">
+                                <h5>In movimento</h5>
+                                <div id="moving" class="h5">0</div>
+                            </div>
+                            <div class="status-field mx-2 my-2 text-center">
+                                <h5>In frenata</h5>
+                                <div id="braking" class="h5">0</div>
+                            </div>
+                        </div>
                     </div>
                     <h4 class="mt-4 text-center"">Line Following</h3>
                     <div class="row justify-content-center align-items-center">
@@ -67,17 +77,6 @@
                         <div class="status-field mx-2 my-2 text-center">
                             <h5>IR Destra</h5>
                             <div id="ir_right" class="h5">0</div>
-                        </div>
-                    </div>
-                    <h4 class="mt-4 text-center"">Line Following</h3>
-                    <div class="row justify-content-center align-items-center">
-                        <div class="status-field mx-2 my-2 text-center">
-                            <h5>In movimento</h5>
-                            <div id="moving" class="h5">0</div>
-                        </div>
-                        <div class="status-field mx-2 my-2 text-center">
-                            <h5>In frenata</h5>
-                            <div id="braking" class="h5">0</div>
                         </div>
                     </div>
             </div>
@@ -194,14 +193,15 @@
                     }
 
                     function updateStatus(status) {
-                        var statusObj = JSON.parse(status);
-                        speedDiv.textContent = statusObj.speed + " m/s";
-                        steerDiv.textContent = statusObj.steer_angle + " °";
-                        irLDiv.textContent = statusObj.ir_left + " ";
-                        irCDiv.textContent = statusObj.ir_center + " ";
-                        irRDiv.textContent = statusObj.ir_right + " ";
-                        moving.textContent = statusObj.moving;
-                        braking.textContent = statusObj.braking;
+                        //var statusObj = JSON.parse(status);
+                        
+                        speedDiv.textContent = status.speed + " m/s";
+                        steerDiv.textContent = status.steer_angle + " °";
+                        irLDiv.textContent = status.ir_left + " ";
+                        irCDiv.textContent = status.ir_center + " ";
+                        irRDiv.textContent = status.ir_right + " ";
+                        moving.textContent = status.moving;
+                        braking.textContent = status.braking;
                     }
 
                     function updatePiInfo(status) {
