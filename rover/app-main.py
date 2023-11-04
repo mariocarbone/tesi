@@ -112,12 +112,16 @@ def update_vehicle_status():
 		time.sleep(0.2)
 
 # Funzione per aggiornare la distanza
-def update_vehicle_distance():
+def old_update_vehicle_distance():
 	global distance, distance_lock
 	while not stop_threads:
 		vehicle_control.update_distance()
 		with distance_lock:
 			distance = vehicle_control.get_distance()
+		time.sleep(0.15)
+
+def update_vehicle_distance():
+		vehicle_control.update_distance()
 		time.sleep(0.1)
 
 # Funzione per effettuare object detection sui frame della coda
@@ -230,10 +234,13 @@ def video_feed():
 # API per ottenere la distanza
 @app.route('/get_distance', methods=['GET'])
 def get_distance():
-	global distance, distance_lock
+	global vehicle_control#, distance, distance_lock
 	
-	with distance_lock:
-		distance_value = distance
+	#with vehicle_control.distance_lock:
+	distance_value = vehicle_control.get_distance()
+	
+	#with distance_lock:
+	#	distance_value = distance
 		
 	return str(distance_value)
 

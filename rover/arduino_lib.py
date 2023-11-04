@@ -67,7 +67,7 @@ class Arduino:
 			print("Timeout nell'invio del comando", command)
 			self.reconnect()
 	
-	def reconnect(self):
+	def reconnect(self):	
 		print("Avvio una nuova connessione")
 		self.ser = serial.Serial(self.serial_port, self.baud_rate)
 		self.ser.timeout=self.timeout
