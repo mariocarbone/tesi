@@ -27,7 +27,7 @@ class Vehicle_Control():
         with self.status_lock:
             self.status.update(self.arduino.get_status())
             print(self.status)
-            if(self.status['speed']==0):
+            if(int(self.status['speed'])==0):
                 self.status.update(('moving', False))
             else:
                 self.status.update(('moving', True))
