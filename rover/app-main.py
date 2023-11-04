@@ -251,15 +251,15 @@ def get_predictions():
 		
 	return jsonify(predicted_objects)    
 
-# API per ottenere informazioni sulla connessione 
-@app.route('/connections/get_status', methods=['GET'])
+# API per ottenere informazioni su raspberry pi 
+@app.route('/pi/get_info', methods=['GET'])
 def get_connections():
 	#global status_json, status_lock
 
 	#with status_lock:
 		#status_obj = status_json
 		#wifi_info = json.dumps()
-	return jsonify(vehicle_control.rpi.get_wifi_network_info())  
+	return jsonify(vehicle_control.rpi.get_system_status())  
 
 # API per far partire il rover
 @app.route('/rover/start', methods=['POST'])

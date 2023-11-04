@@ -1,6 +1,8 @@
 import RPi.GPIO as GPIO
 import time
-import netifaces
+import netifaces #pip -r
+import subprocess
+from pyembedded.raspberry_pi_tools.raspberrypi import PI
 
 class Raspberry(str):
 
@@ -15,6 +17,19 @@ class Raspberry(str):
 		GPIO.setup(self.echo_pin, GPIO.IN)
 		self.network_info = {}
 		self.wifi_info = {}
+		self.system_status = {}
+		self.pi = PI()
+
+
+	def get_system_status(self):
+		self.system_status['ram']=self.pi.get_ram_info()
+		self.system_status['cpu']=self.pi.get_cpu_usage()
+		self.system_status['temp']=self.pi.get_cpu_temp()
+		self.system_status['ssid']=self.pi.get_wifi_status()
+		self.system_status['ip']=self.pi.get_connected_ip_addr(network='wlan0')
+		self.system_status['disk_space']=self.pi.get_disk_space()
+		return self.system_status
+	
 	# Funzione per misurare la distanza
 	def measure_distance(self):
 		
@@ -60,8 +75,15 @@ class Raspberry(str):
 			if netifaces.AF_INET in addrs:
 				ip = addrs[netifaces.AF_INET][0]['addr']
 				self.wifi_info['IP'] = ip
-			if netifaces.AF_INET in addrs:
-				essid = addrs[netifaces.AF_INET][0].get('essid', "N/A")
-				self.wifi_info['ESSID'] = essid
+			self.wifi_info['ESSID'] = self.get_current_ssid()
+			#if netifaces.AF_INET in addrs:
+			#	essid = addrs[netifaces.AF_INET][0].get('essid', "N/A")
+			#	self.wifi_info['ESSID'] = essid
 		return self.wifi_info
 		
+	def get_current_ssid():
+		try:
+			result = subprocess.check_output(['iwgetid', '-r'], universal_newlines=True)
+			return result.strip()
+		except subprocess.CalledProcessError:
+			return "N/A"

@@ -16,7 +16,6 @@
                 <div class="col-auto">
                     <img src="{{ url_for('static', filename='icona-rover.png') }}" style="max-width: 70px;"
                         class="header-icon" alt="Rover Manager">
-                    <!--img src="icona-rover.png" style="max-width: 70px;" class="header-icon" alt="Icona Personalizzata"-->
                 </div>
                 <div class="col">
                     <h1>Rover Manager</h1>
@@ -92,13 +91,19 @@
         </div>
         <div class="col-lg-4 text-center">
             <h3 class="mt-4">Connessione</h3>
-            <h5>SSID:</h5>            
+            <h5>SSID:</h5>
             <div id="ssid" class="h5">WiFi SSID</div>
             <h5>INDIRIZZO IP:</h5>
             <div id="ip" class="h5">0.0.0.0</div>
         </div>
         <div class="col-lg-4 text-center">
             <h3 class="mt-4 text-center">Raspberry Debug</h3>
+            <h5>CPU Usage</h5>
+            <div id="cpu" class="h5">0%</div>
+            <h5>CPU Temp.</h5>
+            <div id="temp" class="h5">0°</div>
+            <h5>Ram Usage</h5>
+            <div id="ram" class="h5">0%</div>
         </div>
     </div>
 
@@ -115,13 +120,19 @@
     <script type="text/javascript">
         var frameElement = document.getElementById('frame');
         var distanceElement = document.getElementById('distance-value');
+
         var predictionElement = document.getElementById('prediction-json');
+        var predictionTable = document.getElementById('prediction-table');
+
         var statusElement = document.getElementById('status-json');
         var speedDiv = document.getElementById('speed');
         var steerDiv = document.getElementById('steer_angle');
         var irLDiv = document.getElementById('ir_left');
         var irCDiv = document.getElementById('ir_center');
         var irRDiv = document.getElementById('ir_right');
+        var cpu = document.getElementById('cpu');
+        var temp = document.getElementById('temp');
+        var ram = document.getElementById('ram');
         var ssid = document.getElementById('ssid');
         var ip = document.getElementById('ip');
 
@@ -132,13 +143,7 @@
         }
 
         function updatePrediction(prediction) {
-            // Otteni il riferimento alla tabella
-            var predictionTable = document.getElementById('prediction-table');
-
-            // Pulizia del contenuto attuale della tabella
             predictionTable.innerHTML = '';
-
-            // Itera attraverso gli oggetti numerati nel JSON e aggiungi righe alla tabella
             for (var key in prediction) {
                 if (prediction.hasOwnProperty(key)) {
                     var predictionObj = prediction[key];
@@ -161,7 +166,10 @@
             irRDiv.textContent = statusObj.ir_right + " ";
         }
 
-        function updateConnection(status) {
+        function updatePiInfo(status) {
+            cpu.textContent = status.cpu+" %";
+            temp.textContent = status.temp+ " °";
+            ram.textContent = status.ram+" %";
             ssid.textContent = status.ESSID;
             ip.textContent = status.IP;
         }
@@ -172,10 +180,7 @@
             frameElement.src = '/frame?' + currentTime;
         }, 1000);
 
-        /* Aggiorna la distanza ogni 500 millisecondi
-        setInterval(getDistance, 500);*/
-
-        // Aggiorna la distanza ogni 500 millisecondi utilizzando Fetch API
+        // Aggiorna la distanza ogni secondo
         setInterval(function () {
             fetch('/get_distance')
                 .then(response => response.text())
@@ -183,6 +188,7 @@
                 .catch(error => console.log('Errore durante la richiesta della distanza:', error));
         }, 1000);
 
+        // Aggiorna le prediction ogni secondo
         setInterval(function () {
             fetch('/get_predictions')
                 .then(response => response.json())
@@ -190,6 +196,7 @@
                 .catch(error => console.log('Errore durante la richiesta della distanza:', error));
         }, 1000);
 
+        // Aggiorna lo stato del veicolo ogni secondo
         setInterval(function () {
             fetch('/get_status')
                 .then(response => response.json())
@@ -197,10 +204,11 @@
                 .catch(error => console.log('Errore durante la richiesta della distanza:', error));
         }, 1000);
 
+        // Aggiorna le informazioni sulla connessione ogni cinque secondi
         setInterval(function () {
-            fetch('/connections/get_status')
+            fetch('/pi/get_info')
                 .then(response => response.json())
-                .then(data => updateConnection(data))
+                .then(data => updatePiInfo(data))
                 .catch(error => console.log('Errore durante la richiesta delle informazioni di connessione:', error));
         }, 5000);
 
@@ -221,7 +229,7 @@
                     }
                 })
                 .then(function (data) {
-                    alert(data); // Mostra un messaggio di conferma
+                    alert(data.message); // Mostra un messaggio di conferma
                 })
                 .catch(function (error) {
                     console.error('Errore:', error);
@@ -240,7 +248,7 @@
                     }
                 })
                 .then(function (data) {
-                    alert(data); // Mostra un messaggio di conferma
+                    alert(data.message); // Mostra un messaggio di conferma
                 })
                 .catch(function (error) {
                     console.error('Errore:', error);
@@ -266,9 +274,6 @@
                 });
         });
     </script>
-
-
-
 </body>
 
 </html>
