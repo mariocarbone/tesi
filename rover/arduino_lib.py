@@ -51,7 +51,7 @@ class Arduino:
 			return data
 		except json.JSONDecodeError as e:
 			print(f"Errore nella decodifica JSON - Arduino ha restituito una stringa vuota: {e}")
-			return {}  # o restituisci un valore predefinito o esegui un'altra azione correttiva
+			return {}
 
 	def send_command(self, command):
 		newline = "\n"

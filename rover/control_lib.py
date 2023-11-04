@@ -36,7 +36,6 @@ class Vehicle_Control():
 			self.distance = round(self.rpi.measure_distance(), 2)
 
 	def update_status(self):
-
 		if self.arduino.ser.is_open:
 			response = self.arduino.get_status()
 			if response:
@@ -50,11 +49,7 @@ class Vehicle_Control():
 							self.status.update({'moving': True})
 				except json.JSONDecodeError as e:
 					print(f"Errore nella decodifica JSON: {e}")
-					self.status.update({})
-				
-				
-
-
+					
 	def get_distance(self):
 		self.distance, self.distance_lock
 
