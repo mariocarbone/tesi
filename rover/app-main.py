@@ -112,7 +112,7 @@ def update_vehicle_status():
 			distance = vehicle_control.get_distance()
 		with status_lock:
 			status_json = vehicle_control.get_status()
-		time.sleep(0.5)
+		time.sleep(0.1)
 
 # Funzione per effettuare object detection sui frame della coda
 def detection():
