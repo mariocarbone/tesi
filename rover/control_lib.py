@@ -15,7 +15,7 @@ class Vehicle_Control():
 			"speed": 0,
 			"speed_left_side": 0,
 			"speed_right_side": 0,
-			"steer_angle": 0,
+			"steer_angle": 50,
 			"last_angle": 0,
 			"ir_left": 6,
 			"ir_center": 6,
@@ -71,6 +71,9 @@ class Vehicle_Control():
 	def get_speed(self):
 		return int(self.status['speed'])
 	
+	def get_steer(self):
+		return int(self.status['steer'])
+	
 	def get_ir_left(self):
 		return int(self.status['ir_left'])
 	
@@ -92,6 +95,10 @@ class Vehicle_Control():
 	def start(self):
 		avviato = False
 		onTrack = False
+		turnAmount = 10
+		lastLeft = False
+		lastRight = False
+		alreadyTurn = False
 		while not self.stop:
 			if self.distance > 10:
 				if self.get_ir_center() > 35:
@@ -102,10 +109,20 @@ class Vehicle_Control():
 				else:
 					if self.get_ir_left() > 35:
 						onTrack = False
-						self.arduino.turn_right(20)
+						alreadyTurn = True
+						lastRight = True
+						lastLeft = False
+						self.arduino.steer(self.get_steer()+turnAmount)
+						if alreadyTurn:
+							turnAmount = turnAmount+10
 					elif self.get_ir_right() > 35:
 						onTrack = False
-						self.arduino.turn_left(20)
+						alreadyTurn = True
+						lastRight = False
+						lastLeft = True
+						self.arduino.steer(self.get_steer()-turnAmount)
+						if alreadyTurn:
+							turnAmount = turnAmount+10
 					time.sleep(0.5)
 			else:
 				self.arduino.stop()

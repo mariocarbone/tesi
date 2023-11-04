@@ -99,14 +99,16 @@ void loop() {
           rightSpeed = speed;
       }
      
-      
+
+
       analogWrite(ENA, leftSpeed);
       analogWrite(ENB, rightSpeed);
 
-      Serial.println("speed:" + String(speed) + ",speed_left_side:" + String(leftSpeed)
-                      + ",speed_right_side:" + String(rightSpeed) + ",steer_angle:" + String(steeringValue) + ",last_angle:" 
-                      + String(lastSteeringValue) + ",ir_left:" + String(sx) + ",ir_center:" + String(center) + ",ir_right:"
-                      + String(dx) + ",last_command:" + last_command);
+
+      //Serial.println("speed:" + String(speed) + ",speed_left_side:" + String(leftSpeed)
+      //                + ",speed_right_side:" + String(rightSpeed) + ",steer_angle:" + String(steeringValue) + ",last_angle:" 
+      //               + String(lastSteeringValue) + ",ir_left:" + String(sx) + ",ir_center:" + String(center) + ",ir_right:"
+      //                + String(dx) + ",last_command:" + last_command);
       
       
       /*
@@ -209,7 +211,7 @@ void loop() {
         center=analogRead(CENTER);
         
         Serial.println("{\"speed\":" + String(speed) + ",\"speed_left_side\":" + String(velSinistra)
-                      + ",\"speed_right_side\":" + String(velDestra) + ",\"steer_angle\":" + String(angolo) + ",\"last_angle\":" 
+                      + ",\"speed_right_side\":" + String(velDestra) + ",\"steer_angle\":" + String(steeringValue) + ",\"last_angle\":" 
                       + String(lastAngolo) + ",\"ir_left\":" + String(sx) + ",\"ir_center\":" + String(center) + ",\"ir_right\":"
                       + String(dx) + ",\"last_command\":\"" +last_command + "\"}");
 
