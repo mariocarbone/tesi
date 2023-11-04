@@ -89,12 +89,22 @@
                 <!-- Le righe delle previsioni saranno generate dinamicamente qui -->
             </table>
         </div>
-        <div class="col-lg-4 text-center">
+        <div class="col-lg-4 text-center" style="background-color: lightcyan;">
             <h3 class="mt-4">Connessione</h3>
-            <h5>SSID:</h5>
-            <div id="ssid" class="h5">WiFi SSID</div>
-            <h5>INDIRIZZO IP:</h5>
-            <div id="ip" class="h5">0.0.0.0</div>
+            <div class="row justify-content-center align-items-center">
+                    <div class="connection-field mx-2 my-2 text-center">
+                        <h5>SSID</h5>
+                        <div id="ssid" class="h5">WiFi SSID</div>
+                    </div>
+                    <div class="connection-field mx-2 my-2 text-center">
+                        <h5>Indirizzo IP:</h5>
+                        <div id="ip" class="h5">0.0.0.0</div>
+                    </div>
+                    <div class="status-field mx-2 my-2 text-center">
+                        <h5>Livello Segnale</h5>
+                        <div id="signal" class="h5">0</div>
+                    </div>
+                </div>
         </div>
         <div class="col-lg-4 text-center">
             <h3 class="mt-4 text-center">Raspberry Debug</h3>
@@ -135,6 +145,7 @@
         var ram = document.getElementById('ram');
         var ssid = document.getElementById('ssid');
         var ip = document.getElementById('ip');
+        var signal = document.getElementById('signal');
 
 
         // Funzione per aggiornare la distanza nel documento HTML
@@ -170,7 +181,8 @@
             cpu.textContent = status.cpu+" %";
             temp.textContent = status.temp+ " °";
             ram.textContent = status.ram+" %";
-            ssid.textContent = status.ssid[0];
+            ssid.textContent = status.wifi[0];
+            signal.textContent = status.wifi[1]+" dBm";
             ip.textContent = status.ip;
         }
 

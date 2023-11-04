@@ -23,12 +23,12 @@ class Raspberry(str):
     def get_system_status(self):
         ram_used = int(self.pi.get_ram_info()[1])
         ram_total = int(self.pi.get_ram_info()[0])
-        ram_usage = round((ram_used/ram_total)*100)
+        ram_usage = round((ram_used/ram_total)*100,1)
         
         self.system_status["ram"] = ram_usage
         self.system_status["cpu"] = self.pi.get_cpu_usage()
         self.system_status["temp"] = round(self.pi.get_cpu_temp(),1)
-        self.system_status["ssid"] = self.pi.get_wifi_status()
+        self.system_status["wifi"] = self.pi.get_wifi_status()
         self.system_status["ip"] = self.pi.get_connected_ip_addr(network="wlan0")
         self.system_status["disk_space"] = self.pi.get_disk_space()
         return self.system_status
