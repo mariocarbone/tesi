@@ -144,7 +144,6 @@ class Vehicle_Control():
 					return True
 				else:
 					self.arduino.steer(self.get_steer()+self.turn_step)
-					time.sleep(0.3)
 					self.find_line("LEFT")
 
 		elif side == "RIGHT":
@@ -154,5 +153,4 @@ class Vehicle_Control():
 					return True
 				else:
 					self.arduino.steer(self.get_steer()-self.turn_step)
-					time.sleep(0.3)
 					self.find_line("RIGHT")
