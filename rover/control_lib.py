@@ -38,17 +38,16 @@ class Vehicle_Control():
 	def update_status(self):
 		if self.arduino.ser.is_open:
 			response = self.arduino.get_status()
-			if response:
-				try:
-					stato_arduino = json.loads(response)
-					with self.status_lock:
-						self.status.update(stato_arduino)
-						if int(self.status.get('speed', 0)) == 0:
-							self.status.update({'moving': False})
-						else:
-							self.status.update({'moving': True})
-				except json.JSONDecodeError as e:
-					print(f"Errore nella decodifica JSON: {e}")
+			try:
+				stato_arduino = json.loads(response)
+				with self.status_lock:
+					self.status.update(stato_arduino)
+					if int(self.status.get('speed', 0)) == 0:
+						self.status.update({'moving': False})
+					else:
+						self.status.update({'moving': True})
+			except json.JSONDecodeError as e:
+				print(f"Errore nella decodifica JSON: {e}")
 					
 	def get_distance(self):
 		self.distance, self.distance_lock
