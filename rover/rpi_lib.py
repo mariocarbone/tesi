@@ -14,6 +14,7 @@ class Raspberry(str):
 		GPIO.setup(self.trig_pin, GPIO.OUT)
 		GPIO.setup(self.echo_pin, GPIO.IN)
 		self.network_info = {}
+		self.wifi_info = {}
 	# Funzione per misurare la distanza
 	def measure_distance(self):
 		
@@ -48,3 +49,20 @@ class Raspberry(str):
 				self.network_info[interface] = ip
 		
 		return self.network_info
+				
+
+	def get_wifi_network_info(self):
+		
+		wifi_interface = "wlan0"
+
+		if wifi_interface in netifaces.interfaces():
+			addrs = netifaces.ifaddresses(wifi_interface)
+			if netifaces.AF_INET in addrs:
+				ip = addrs[netifaces.AF_INET][0]['addr']
+				self.wifi_info['IP'] = ip
+			if netifaces.AF_INET in addrs:
+				essid = addrs[netifaces.AF_INET][0].get('essid', "N/A")
+				self.wifi_info['ESSID'] = essid
+
+		return self.wifi_info
+		
