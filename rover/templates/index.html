@@ -203,7 +203,7 @@
             fetch('/connections/get_status')
                 .then(response => response.json())
                 .then(data => updateConnection(data))
-                .catch(error => console.log('Errore durante la richiesta della distanza:', error));
+                .catch(error => console.log('Errore durante la richiesta delle informazioni di connessione:', error));
         }, 5000);
 
         //Azioni bottoni
