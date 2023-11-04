@@ -11,6 +11,8 @@ class Vehicle_Control():
         self.arduino = Arduino("/dev/ttyACM0", 9600, 1, 1)
         self.rpi = Raspberry()
         self.status = {}
+        self.status['braking'] = False
+        self.status['']
         self.status_lock = Lock()
         self.distance = 0.0
         self.distance_lock = Lock()
@@ -23,7 +25,11 @@ class Vehicle_Control():
     def update_status(self):
         #self.status, self.status_lock, self.rpi, self.arduino
         with self.status_lock:
-            self.status = self.arduino.get_status()
+            self.status.update(self.arduino.get_status())
+            if(self.status['speed']==0):
+                self.status.update(('moving', False))
+            else:
+                self.status.update(('moving', True))
 
     def get_distance(self):
         self.distance, self.distance_lock
