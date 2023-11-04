@@ -26,7 +26,7 @@ class Vehicle_Control():
         #self.status, self.status_lock, self.rpi, self.arduino
         if(self.arduino.ser.is_open):
             with self.status_lock:
-                #self.status.update(self.arduino.get_status())
+                self.status.update(self.arduino.get_status())
                 #print(self.arduino.get_status())
                 print("STATO AGGIORNATO", self.status)
                 #if(self.status):
