@@ -97,11 +97,11 @@ class Vehicle_Control():
 			return "RIGHT"
 		
 	def get_active_ir(self):
-		if self.get_ir_left > 35:
+		if self.get_ir_left() > 35:
 			return "LEFT"
-		elif self.get_ir_right > 35:
+		elif self.get_ir_right() > 35:
 			return "RIGHT"
-		elif self.get_ir_center > 35:
+		elif self.get_ir_center() > 35:
 			return "CENTER"
 	
 	def start(self):
