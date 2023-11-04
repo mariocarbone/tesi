@@ -91,8 +91,8 @@
         </div>
         <div class="col-lg-4 text-center">
             <h3 class="mt-4">Connessione</h3>
-            <div class=" column" id="connection-field" style="background-color: lightcyan;">
-            <div class="row justify-content-center align-items-center">
+            <div class=" column" id="connection-fields" style="background-color: lightcyan; padding: auto;">
+                <div class="row justify-content-center align-items-center">
                     <div class="connection-field mx-2 my-2 text-center">
                         <h5>SSID</h5>
                         <div id="ssid" class="h5">WiFi SSID</div>
@@ -110,184 +110,194 @@
         </div>
         <div class="col-lg-4 text-center">
             <h3 class="mt-4 text-center">Raspberry Debug</h3>
-            <h5>CPU Usage</h5>
-            <div id="cpu" class="h5">0%</div>
-            <h5>CPU Temp.</h5>
-            <div id="temp" class="h5">0°</div>
-            <h5>Ram Usage</h5>
-            <div id="ram" class="h5">0%</div>
-        </div>
-    </div>
+            <div class=" column" id="rpi-fields" style="background-color: lightcyan; padding: auto;">
+                <div class="row justify-content-center align-items-center">
+                    <div class="rpi-field mx-2 my-2 text-center">
+                        <h5>CPU Usage</h5>
+                        <div id="cpu" class="h5">0%</div>
+                    </div>
+                    <div class="row justify-content-center align-items-center">
+                        <div class="rpi-field mx-2 my-2 text-center">
+                            <h5>CPU Temp.</h5>
+                            <div id="temp" class="h5">0°</div>
+                        </div>
+                        <div class="row justify-content-center align-items-center">
+                            <div class="rpi-field mx-2 my-2 text-center">
+                                <h5>Ram Usage</h5>
+                                <div id="ram" class="h5">0%</div>
+                            </div>
+                        </div>
+                    </div>
 
-    <footer class="bg-light text-center text-lg-start fixed-bottom">
-        <!-- Copyright -->
-        <div class="text-center p-3">
-            © 2023 Copyright:
-            <a class="text-dark" href="https://mariocarbone.net/">Mario Carbone</a>
-        </div>
-        <!-- Copyright -->
-    </footer>
-
-
-    <script type="text/javascript">
-        var frameElement = document.getElementById('frame');
-        var distanceElement = document.getElementById('distance-value');
-
-        var predictionElement = document.getElementById('prediction-json');
-        var predictionTable = document.getElementById('prediction-table');
-
-        var statusElement = document.getElementById('status-json');
-        var speedDiv = document.getElementById('speed');
-        var steerDiv = document.getElementById('steer_angle');
-        var irLDiv = document.getElementById('ir_left');
-        var irCDiv = document.getElementById('ir_center');
-        var irRDiv = document.getElementById('ir_right');
-        var cpu = document.getElementById('cpu');
-        var temp = document.getElementById('temp');
-        var ram = document.getElementById('ram');
-        var ssid = document.getElementById('ssid');
-        var ip = document.getElementById('ip');
-        var signal = document.getElementById('signal');
+                    <footer class="bg-light text-center text-lg-start fixed-bottom">
+                        <!-- Copyright -->
+                        <div class="text-center p-3">
+                            © 2023 Copyright:
+                            <a class="text-dark" href="https://mariocarbone.net/">Mario Carbone</a>
+                        </div>
+                        <!-- Copyright -->
+                    </footer>
 
 
-        // Funzione per aggiornare la distanza nel documento HTML
-        function updateDistance(distance) {
-            distanceElement.textContent = distance + " cm";
-        }
+                    <script type="text/javascript">
+                        var frameElement = document.getElementById('frame');
+                        var distanceElement = document.getElementById('distance-value');
 
-        function updatePrediction(prediction) {
-            predictionTable.innerHTML = '';
-            for (var key in prediction) {
-                if (prediction.hasOwnProperty(key)) {
-                    var predictionObj = prediction[key];
-                    var newRow = predictionTable.insertRow();
-                    var categoryCell = newRow.insertCell(0);
-                    var valueCell = newRow.insertCell(1);
+                        var predictionElement = document.getElementById('prediction-json');
+                        var predictionTable = document.getElementById('prediction-table');
 
-                    categoryCell.innerHTML = `<b>${predictionObj.category}:</b>`;
-                    valueCell.textContent = predictionObj.value;
-                }
-            }
-        }
+                        var statusElement = document.getElementById('status-json');
+                        var speedDiv = document.getElementById('speed');
+                        var steerDiv = document.getElementById('steer_angle');
+                        var irLDiv = document.getElementById('ir_left');
+                        var irCDiv = document.getElementById('ir_center');
+                        var irRDiv = document.getElementById('ir_right');
+                        var cpu = document.getElementById('cpu');
+                        var temp = document.getElementById('temp');
+                        var ram = document.getElementById('ram');
+                        var ssid = document.getElementById('ssid');
+                        var ip = document.getElementById('ip');
+                        var signal = document.getElementById('signal');
 
-        function updateStatus(status) {
-            var statusObj = JSON.parse(status);
-            speedDiv.textContent = statusObj.speed + " m/s";
-            steerDiv.textContent = statusObj.steer_angle + " °";
-            irLDiv.textContent = statusObj.ir_left + " ";
-            irCDiv.textContent = statusObj.ir_center + " ";
-            irRDiv.textContent = statusObj.ir_right + " ";
-        }
 
-        function updatePiInfo(status) {
-            cpu.textContent = status.cpu+" %";
-            temp.textContent = status.temp+ " °";
-            ram.textContent = status.ram+" %";
-            ssid.textContent = status.wifi[0];
-            signal.textContent = status.wifi[1];
-            ip.textContent = status.ip;
-        }
+                        // Funzione per aggiornare la distanza nel documento HTML
+                        function updateDistance(distance) {
+                            distanceElement.textContent = distance + " cm";
+                        }
 
-        // Aggiorna il frame immagine ogni secondo
-        setInterval(function () {
-            var currentTime = new Date().getTime();
-            frameElement.src = '/frame?' + currentTime;
-        }, 1000);
+                        function updatePrediction(prediction) {
+                            predictionTable.innerHTML = '';
+                            for (var key in prediction) {
+                                if (prediction.hasOwnProperty(key)) {
+                                    var predictionObj = prediction[key];
+                                    var newRow = predictionTable.insertRow();
+                                    var categoryCell = newRow.insertCell(0);
+                                    var valueCell = newRow.insertCell(1);
 
-        // Aggiorna la distanza ogni secondo
-        setInterval(function () {
-            fetch('/get_distance')
-                .then(response => response.text())
-                .then(data => updateDistance(data))
-                .catch(error => console.log('Errore durante la richiesta della distanza:', error));
-        }, 1000);
+                                    categoryCell.innerHTML = `<b>${predictionObj.category}:</b>`;
+                                    valueCell.textContent = predictionObj.value;
+                                }
+                            }
+                        }
 
-        // Aggiorna le prediction ogni secondo
-        setInterval(function () {
-            fetch('/get_predictions')
-                .then(response => response.json())
-                .then(data => updatePrediction(data))
-                .catch(error => console.log('Errore durante la richiesta della distanza:', error));
-        }, 1000);
+                        function updateStatus(status) {
+                            var statusObj = JSON.parse(status);
+                            speedDiv.textContent = statusObj.speed + " m/s";
+                            steerDiv.textContent = statusObj.steer_angle + " °";
+                            irLDiv.textContent = statusObj.ir_left + " ";
+                            irCDiv.textContent = statusObj.ir_center + " ";
+                            irRDiv.textContent = statusObj.ir_right + " ";
+                        }
 
-        // Aggiorna lo stato del veicolo ogni secondo
-        setInterval(function () {
-            fetch('/get_status')
-                .then(response => response.json())
-                .then(data => updateStatus(data))
-                .catch(error => console.log('Errore durante la richiesta della distanza:', error));
-        }, 1000);
+                        function updatePiInfo(status) {
+                            cpu.textContent = status.cpu + " %";
+                            temp.textContent = status.temp + " °";
+                            ram.textContent = status.ram + " %";
+                            ssid.textContent = status.wifi[0];
+                            signal.textContent = status.wifi[1];
+                            ip.textContent = status.ip;
+                        }
 
-        // Aggiorna le informazioni sulla connessione ogni cinque secondi
-        setInterval(function () {
-            fetch('/pi/get_info')
-                .then(response => response.json())
-                .then(data => updatePiInfo(data))
-                .catch(error => console.log('Errore durante la richiesta delle informazioni di connessione:', error));
-        }, 5000);
+                        // Aggiorna il frame immagine ogni secondo
+                        setInterval(function () {
+                            var currentTime = new Date().getTime();
+                            frameElement.src = '/frame?' + currentTime;
+                        }, 1000);
 
-        //Azioni bottoni
-        var buttonRoverStart = document.getElementById('rover-start');
-        var buttonRoverStop = document.getElementById('rover-stop');
-        var buttonStop = document.getElementById('stop');
+                        // Aggiorna la distanza ogni secondo
+                        setInterval(function () {
+                            fetch('/get_distance')
+                                .then(response => response.text())
+                                .then(data => updateDistance(data))
+                                .catch(error => console.log('Errore durante la richiesta della distanza:', error));
+                        }, 1000);
 
-        buttonRoverStart.addEventListener('click', function () {
-            fetch('/rover/start', {
-                method: 'POST'
-            })
-                .then(function (response) {
-                    if (response.ok) {
-                        return response.text();
-                    } else {
-                        throw new Error('Errore nella richiesta');
-                    }
-                })
-                .then(function (data) {
-                    alert(data.message); // Mostra un messaggio di conferma
-                })
-                .catch(function (error) {
-                    console.error('Errore:', error);
-                });
-        });
+                        // Aggiorna le prediction ogni secondo
+                        setInterval(function () {
+                            fetch('/get_predictions')
+                                .then(response => response.json())
+                                .then(data => updatePrediction(data))
+                                .catch(error => console.log('Errore durante la richiesta della distanza:', error));
+                        }, 1000);
 
-        buttonRoverStop.addEventListener('click', function () {
-            fetch('/rover/stop', {
-                method: 'POST'
-            })
-                .then(function (response) {
-                    if (response.ok) {
-                        return response.text();
-                    } else {
-                        throw new Error('Errore nella richiesta');
-                    }
-                })
-                .then(function (data) {
-                    alert(data.message); // Mostra un messaggio di conferma
-                })
-                .catch(function (error) {
-                    console.error('Errore:', error);
-                });
-        });
+                        // Aggiorna lo stato del veicolo ogni secondo
+                        setInterval(function () {
+                            fetch('/get_status')
+                                .then(response => response.json())
+                                .then(data => updateStatus(data))
+                                .catch(error => console.log('Errore durante la richiesta della distanza:', error));
+                        }, 1000);
 
-        buttonStop.addEventListener('click', function () {
-            fetch('/stop_threads', {
-                method: 'POST'
-            })
-                .then(function (response) {
-                    if (response.ok) {
-                        return response.text();
-                    } else {
-                        throw new Error('Errore nella richiesta');
-                    }
-                })
-                .then(function (data) {
-                    alert(data); // Mostra un messaggio di conferma
-                })
-                .catch(function (error) {
-                    console.error('Errore:', error);
-                });
-        });
-    </script>
+                        // Aggiorna le informazioni sulla connessione ogni cinque secondi
+                        setInterval(function () {
+                            fetch('/pi/get_info')
+                                .then(response => response.json())
+                                .then(data => updatePiInfo(data))
+                                .catch(error => console.log('Errore durante la richiesta delle informazioni di connessione:', error));
+                        }, 5000);
+
+                        //Azioni bottoni
+                        var buttonRoverStart = document.getElementById('rover-start');
+                        var buttonRoverStop = document.getElementById('rover-stop');
+                        var buttonStop = document.getElementById('stop');
+
+                        buttonRoverStart.addEventListener('click', function () {
+                            fetch('/rover/start', {
+                                method: 'POST'
+                            })
+                                .then(function (response) {
+                                    if (response.ok) {
+                                        return response.text();
+                                    } else {
+                                        throw new Error('Errore nella richiesta');
+                                    }
+                                })
+                                .then(function (data) {
+                                    alert(data.message); // Mostra un messaggio di conferma
+                                })
+                                .catch(function (error) {
+                                    console.error('Errore:', error);
+                                });
+                        });
+
+                        buttonRoverStop.addEventListener('click', function () {
+                            fetch('/rover/stop', {
+                                method: 'POST'
+                            })
+                                .then(function (response) {
+                                    if (response.ok) {
+                                        return response.text();
+                                    } else {
+                                        throw new Error('Errore nella richiesta');
+                                    }
+                                })
+                                .then(function (data) {
+                                    alert(data.message); // Mostra un messaggio di conferma
+                                })
+                                .catch(function (error) {
+                                    console.error('Errore:', error);
+                                });
+                        });
+
+                        buttonStop.addEventListener('click', function () {
+                            fetch('/stop_threads', {
+                                method: 'POST'
+                            })
+                                .then(function (response) {
+                                    if (response.ok) {
+                                        return response.text();
+                                    } else {
+                                        throw new Error('Errore nella richiesta');
+                                    }
+                                })
+                                .then(function (data) {
+                                    alert(data); // Mostra un messaggio di conferma
+                                })
+                                .catch(function (error) {
+                                    console.error('Errore:', error);
+                                });
+                        });
+                    </script>
 </body>
 
 </html>
