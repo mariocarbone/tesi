@@ -23,7 +23,9 @@ class Raspberry(str):
     def get_system_status(self):
         ram_usage = int(self.pi.get_ram_info()[1])
         ram_total = int(self.pi.get_ram_info()[0])
-        
+        print (self.pi.get_ram_info())
+        print(ram_usage)
+
         self.system_status["ram"] = round(ram_usage/ram_total)
         self.system_status["cpu"] = self.pi.get_cpu_usage()
         self.system_status["temp"] = round(self.pi.get_cpu_temp(),1)
