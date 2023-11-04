@@ -130,8 +130,10 @@ class Vehicle_Control():
 							self.on_track = True
 
 			else: #Distanza di sicurezza
-				self.moving = False
-				self.arduino.stop()
+				if (self.moving):
+					self.arduino.stop()
+					self.moving = False
+
 
 			
 	def find_line(self,side):
