@@ -72,16 +72,22 @@ class Vehicle_Control():
 		self.path_thread.join()  # Attendere che il thread si completi
 
 	def start(self):
+		print(self.distance)
+		if self.distance > 10:
+			self.arduino.speed(20)
+		print(self.status['speed'])
 		while not self.stop:
-			if self.distance > 10:
-				self.arduino.speed(50)
+			self.arduino.speed(int(self.status['speed'])+10)
+		#while not self.stop:
+			#if self.distance > 10:
+				#self.arduino.speed(50)
 
-			if int(self.status['ir_center']) > 35:
-				print("SULLA TRACCIA")
-			elif int(self.status['ir_center']) < 35 :
-				if int(self.status['ir_left']) > 35 :
-					self.arduino.turn_right(20)
-				elif int(self.status['ir_right']) > 35 :
-					self.arduino.turn_left(20)
+			#if int(self.status['ir_center']) > 35:
+				#print("SULLA TRACCIA")
+			#elif int(self.status['ir_center']) < 35 :
+				#if int(self.status['ir_left']) > 35 :
+					#self.arduino.turn_right(20)
+				#elif int(self.status['ir_right']) > 35 :
+					#self.arduino.turn_left(20)
 
 		
