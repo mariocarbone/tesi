@@ -21,9 +21,9 @@ class Raspberry(str):
         GPIO.setup(self.echo_pin, GPIO.IN)
 
     def get_system_status(self):
-        ram_usage = int(self.pi.get_ram_info()[1])
+        ram_used = int(self.pi.get_ram_info()[1])
         ram_total = int(self.pi.get_ram_info()[0])
-        print (self.pi.get_ram_info())
+        ram_usage = ram_used/ram_total
         print(ram_usage)
 
         self.system_status["ram"] = round(ram_usage/ram_total)
