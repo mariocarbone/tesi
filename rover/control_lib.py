@@ -28,6 +28,7 @@ class Vehicle_Control():
 		self.status_lock = Lock()
 		self.distance = 0.0
 		self.distance_lock = Lock()
+		self.stop = False
 
 	def update_distance(self):
 		#self.distance, self.distance_lock, self.rpi
@@ -63,7 +64,7 @@ class Vehicle_Control():
 			return self.status
 		
 	def start_path(self):
-		while True:
+		while self.stop:
 			if self.distance > 10:
 				self.arduino.speed(50)
 
@@ -76,4 +77,5 @@ class Vehicle_Control():
 					self.arduino.turn_left(20)
 
 	def stop_path(self):
+		self.stop = True
 		self.arduino.stop()
