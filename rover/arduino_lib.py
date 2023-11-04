@@ -62,7 +62,7 @@ class Arduino:
 		complete_command = command+newline
 		try:
 			self.ser.write(complete_command.encode())
-		#print("COMANDO INVIATO",complete_command)
+			print("COMANDO INVIATO",complete_command)
 		except serial.SerialTimeoutException:
 			print("Timeout nell'invio del comando", command)
 			self.reconnect()
