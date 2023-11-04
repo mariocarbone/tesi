@@ -113,7 +113,7 @@ class Vehicle_Control():
 						self.arduino.steer(50)
 
 					if not self.moving:
-						self.arduino.speed(50)
+						self.arduino.speed(80)
 						self.moving = True
 				else:
 					if self.get_active_ir() == "LEFT": #Sto sulla linea da sinistra
