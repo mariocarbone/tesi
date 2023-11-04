@@ -96,7 +96,6 @@
             <div id="ssid" class="h5">WiFi SSID</div>
             <h5>INDIRIZZO IP:</h5>
             <div id="ip" class="h5">0.0.0.0</div>
-
         </div>
         <div class="col-lg-4 text-center">
             <h3 class="mt-4 text-center">Raspberry Debug</h3>
@@ -163,9 +162,8 @@
         }
 
         function updateConnection(status) {
-            var statusObj = JSON.parse(status);
-            ssid.textContent = statusObj.ESSID;
-            ip.textContent = statusObj.IP;
+            ssid.textContent = status.ESSID;
+            ip.textContent = status.IP;
         }
 
         // Aggiorna il frame immagine ogni secondo
