@@ -138,7 +138,7 @@ class Vehicle_Control():
 	def find_line(self,side):
 		if side == "LEFT":
 			if self.get_steer() < self.turn_max:
-				self.arduino.steer(self.steer_value+self.turn_step)
+				self.arduino.steer(self.get_steer()+self.turn_step)
 				time.sleep(0.2)
 				if self.get_active_ir() == "CENTER":
 					return True
@@ -147,7 +147,7 @@ class Vehicle_Control():
 
 		elif side == "RIGHT":
 			if self.get_steer() > self.turn_min:
-				self.arduino.steer(self.steer_value+self.turn_step)
+				self.arduino.steer(self.get_steer()+self.turn_step)
 				time.sleep(0.2)
 				if self.get_active_ir() == "CENTER":
 					return True
