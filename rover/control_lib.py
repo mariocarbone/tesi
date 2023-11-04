@@ -138,7 +138,7 @@ class Vehicle_Control():
 		if side == "LEFT":
 			if self.get_steer() < self.turn_max:
 				self.arduino.steer(self.get_steer()+self.turn_step)
-				time.sleep(0.2)
+				time.sleep(0.3)
 				if self.get_active_ir() == "CENTER":
 					self.arduino.steer(50)
 					return True
@@ -148,7 +148,7 @@ class Vehicle_Control():
 		elif side == "RIGHT":
 			if self.get_steer() > self.turn_min:
 				self.arduino.steer(self.get_steer()-self.turn_step)
-				time.sleep(0.2)
+				time.sleep(0.3)
 				if self.get_active_ir() == "CENTER":
 					self.arduino.steer(50)
 					return True
