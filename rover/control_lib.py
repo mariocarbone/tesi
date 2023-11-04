@@ -78,7 +78,8 @@ class Vehicle_Control():
 			self.arduino.speed(20)
 		print(self.status['speed'])
 		while not self.stop:
-			self.arduino.speed(int(self.status['speed'])+10)
+			continue
+			#self.arduino.speed(int(self.status['speed'])+10)
 		#while not self.stop:
 			#if self.distance > 10:
 				#self.arduino.speed(50)
