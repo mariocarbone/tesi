@@ -230,7 +230,7 @@ def video_feed():
 # API per ottenere la distanza
 @app.route('/get_distance', methods=['GET'])
 def get_distance():
-	global distance, distance_lock, rpi
+	global distance, distance_lock
 	
 	with distance_lock:
 		distance_value = distance
