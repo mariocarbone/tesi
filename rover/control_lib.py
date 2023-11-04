@@ -1,6 +1,7 @@
 from threading import Lock
 import threading
 import time
+import json
 from rpi_lib import Raspberry
 from arduino_lib import Arduino
 
@@ -34,14 +35,20 @@ class Vehicle_Control():
 			self.distance = round(self.rpi.measure_distance(), 2)
 
 	def update_status(self):
-		#self.status, self.status_lock, self.rpi, self.arduino
-		if(self.arduino.ser.is_open):
+
+		if self.arduino.ser.is_open:
 			with self.status_lock:
-				self.status.update(self.arduino.get_status())
-				if int(self.status['speed']) == 0:
-					self.status.update({'moving': False})
-				else:
-					self.status.update({'moving': True})
+				
+				response = self.arduino.get_status()
+				if response:
+					try:
+						self.status.update(json.loads(response))
+						if int(self.status.get('speed', 0)) == 0:
+							self.status.update({'moving': False})
+						else:
+							self.status.update({'moving': True})
+					except json.JSONDecodeError as e:
+						print(f"Errore nella decodifica JSON: {e}")
 
 	def get_distance(self):
 		self.distance, self.distance_lock
