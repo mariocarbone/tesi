@@ -92,12 +92,13 @@ class Vehicle_Control():
 	def start(self):
 		while not self.stop:
 			if self.distance > 10:
-				avviato = True
+				avviato = False
 				onTrack = False
 				if self.get_ir_center() > 35:
 					onTrack = True
 					if not avviato:
 						self.arduino.speed(50)
+						avviato = True
 				else:
 					if self.get_ir_left() > 35:
 						onTrack = False
@@ -108,7 +109,7 @@ class Vehicle_Control():
 					time.sleep(0.1)
 			else:
 				self.arduino.stop()
-				
+
 			
 
 
