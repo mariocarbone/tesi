@@ -23,7 +23,7 @@ class Raspberry(str):
     def get_system_status(self):
         ram_used = int(self.pi.get_ram_info()[1])
         ram_total = int(self.pi.get_ram_info()[0])
-        ram_usage = ram_used/ram_total
+        ram_usage = (ram_used/ram_total)/100
         print(ram_usage)
 
         self.system_status["ram"] = round(ram_usage/ram_total)
