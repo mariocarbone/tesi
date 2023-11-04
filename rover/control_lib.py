@@ -119,6 +119,7 @@ class Vehicle_Control():
 						self.on_track = False
 						line_found = self.find_line("LEFT")
 						if line_found:
+							self.arduino.steer(50)
 							self.on_track = True
 
 					elif self.get_active_ir() == "RIGHT": #Sto sulla linea da destra
@@ -126,6 +127,7 @@ class Vehicle_Control():
 						self.on_track = False
 						line_found = self.find_line("RIGHT")
 						if line_found:
+							self.arduino.steer(50)
 							self.on_track = True
 
 			else: #Distanza di sicurezza
@@ -147,7 +149,7 @@ class Vehicle_Control():
 
 		elif side == "RIGHT":
 			if self.get_steer() > self.turn_min:
-				self.arduino.steer(self.get_steer()+self.turn_step)
+				self.arduino.steer(self.get_steer()-self.turn_step)
 				time.sleep(0.2)
 				if self.get_active_ir() == "CENTER":
 					return True
