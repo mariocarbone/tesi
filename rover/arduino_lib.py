@@ -45,7 +45,9 @@ class Arduino:
 		command = "STA"
 		self.send_command(command)
 		response = self.ser.readline().decode('ascii')
-		return json.loads(response)
+		print(response)
+		return (response)
+		#return json.loads(response)
 
 	def send_command(self, command):
 		newline = "\n"
