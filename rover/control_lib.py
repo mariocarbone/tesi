@@ -72,7 +72,7 @@ class Vehicle_Control():
 		return int(self.status['speed'])
 	
 	def get_steer(self):
-		return int(self.status['steer'])
+		return int(self.status['steer_angle'])
 	
 	def get_ir_left(self):
 		return int(self.status['ir_left'])
