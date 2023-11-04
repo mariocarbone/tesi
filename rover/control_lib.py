@@ -25,7 +25,8 @@ class Vehicle_Control():
     def update_status(self):
         #self.status, self.status_lock, self.rpi, self.arduino
         with self.status_lock:
-            self.status.update(self.arduino.get_status())
+            self.status = self.arduino.get_status()
+            print(self.arduino.get_status())
             print(self.status)
             if(int(self.status['speed'])==0):
                 self.status.update(('moving', False))
