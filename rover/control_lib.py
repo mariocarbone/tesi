@@ -20,6 +20,7 @@ class Vehicle_Control():
 			"ir_left": 6,
 			"ir_center": 6,
 			"ir_right": 6,
+			"on_track" : False,
 			"last_command": "STATUS",
 			"braking" : False,
 			"moving" : False,
@@ -41,10 +42,15 @@ class Vehicle_Control():
 			if isinstance(response, dict):
 				with self.status_lock:
 					self.status.update(response)
-					if int(self.status.get('speed', 0)) == 0:
+					if self.get_speed() == 0:
 						self.status.update({'moving': False})
 					else:
 						self.status.update({'moving': True})
+					
+					if self.get_ir_center() < 35:
+						self.status.update({'on_track': True})
+					else:
+						self.status.update({'on_track': False})
 			else:
 				print("La risposta da Arduino non è un dizionario valido.")
 				# Puoi gestire il caso in cui la risposta non è un dizionario valido
@@ -61,6 +67,18 @@ class Vehicle_Control():
 
 		with self.status_lock:
 			return self.status
+
+	def get_speed(self):
+		return int(self.status['speed'])
+	
+	def get_ir_left(self):
+		return int(self.status['ir_left'])
+	
+	def get_ir_center(self):
+		return int(self.status['ir_center'])
+	
+	def get_ir_right(self):
+		return int(self.status['ir_right'])
 	
 	def start_path(self):
 		self.path_thread = threading.Thread(target=self.start)
@@ -72,20 +90,18 @@ class Vehicle_Control():
 		self.path_thread.join()  # Attendere che il thread si completi
 
 	def start(self):
-		print(self.distance)
 		if self.distance > 10:
-			print("imposto la velocità a 20")
-			self.arduino.speed(20)
-		print(self.status['speed'])
-		while not self.stop:
-			continue
-			#self.arduino.speed(int(self.status['speed'])+10)
-		#while not self.stop:
-			#if self.distance > 10:
-				#self.arduino.speed(50)
+			while not self.stop:
+				if self.get_ir_center() > 35:
+					print("Veicolo sulla Traccia")
+					self.arduino.speed(50)
+					time.sleep(0.1)
+				else:
+					if self.get_ir_left() > 35:
+						self.arduino.turn_right(20)
+					elif self.get_ir_right() > 35:
+						self.arduino.turn_left(20)
 
-			#if int(self.status['ir_center']) > 35:
-				#print("SULLA TRACCIA")
 			#elif int(self.status['ir_center']) < 35 :
 				#if int(self.status['ir_left']) > 35 :
 					#self.arduino.turn_right(20)
