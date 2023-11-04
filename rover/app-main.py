@@ -124,7 +124,7 @@ def update_vehicle_distance():
 	global vehicle_control
 	while True:
 		vehicle_control.update_distance()
-		time.sleep(0.1)
+		time.sleep(0.5)
 
 # Funzione per effettuare object detection sui frame della coda
 def detection():
