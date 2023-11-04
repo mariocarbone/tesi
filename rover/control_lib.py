@@ -35,14 +35,13 @@ class Vehicle_Control():
 
     def update_status(self):
         #self.status, self.status_lock, self.rpi, self.arduino
-        #if(self.arduino.ser.is_open):
-        with self.status_lock:
-            print(self.arduino.get_status())
-            #self.status.update()
-            if(int(self.status['speed'])==0):
-                self.status.update(('moving', False))
-            else:
-                self.status.update(('moving', True))
+        if(self.arduino.ser.is_open):
+            with self.status_lock:
+                self.status.update(self.arduino.get_status())
+                if(int(self.status['speed'])==0):
+                    self.status.update(('moving', False))
+                else:
+                    self.status.update(('moving', True))
 
     def get_distance(self):
         self.distance, self.distance_lock
