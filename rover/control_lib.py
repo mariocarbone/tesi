@@ -28,10 +28,10 @@ class Vehicle_Control():
             #self.status = self.arduino.get_status()
             print(self.arduino.get_status())
             print(self.status)
-            if(self.status):
-                self.status.update(('moving', False))
-            else:
-                self.status.update(('moving', True))
+            #if(self.status):
+            #    self.status.update(('moving', False))
+            #else:
+            #    self.status.update(('moving', True))
 
     def get_distance(self):
         self.distance, self.distance_lock
