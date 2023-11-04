@@ -63,6 +63,5 @@ class Raspberry(str):
 			if netifaces.AF_INET in addrs:
 				essid = addrs[netifaces.AF_INET][0].get('essid', "N/A")
 				self.wifi_info['ESSID'] = essid
-
 		return self.wifi_info
 		

@@ -258,8 +258,8 @@ def get_connections():
 
 	#with status_lock:
 		#status_obj = status_json
-		
-	return jsonify(vehicle_control.rpi.get_wifi_network_info)  
+		#wifi_info = json.dumps()
+	return jsonify(vehicle_control.rpi.get_wifi_network_info())  
 
 # API per far partire il rover
 @app.route('/rover/start', methods=['POST'])
