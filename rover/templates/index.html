@@ -170,8 +170,8 @@
             cpu.textContent = status.cpu+" %";
             temp.textContent = status.temp+ " °";
             ram.textContent = status.ram+" %";
-            ssid.textContent = status.ESSID;
-            ip.textContent = status.IP;
+            ssid.textContent = status.ssid[0];
+            ip.textContent = status.ip;
         }
 
         // Aggiorna il frame immagine ogni secondo
