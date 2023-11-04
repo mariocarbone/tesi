@@ -106,7 +106,7 @@ class Vehicle_Control():
 	
 	def start(self):
 		while not self.stop:
-			if self.distance > 10:
+			if self.distance > 20:
 				if self.get_active_ir() == "CENTER":  #Sto sulla linea centrale
 					self.on_track = True
 					if not self.get_steer() == 50: 
