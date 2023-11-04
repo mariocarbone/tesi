@@ -74,6 +74,7 @@ class Vehicle_Control():
 	def start(self):
 		print(self.distance)
 		if self.distance > 10:
+			print("imposto la velocità a 20")
 			self.arduino.speed(20)
 		print(self.status['speed'])
 		while not self.stop:
