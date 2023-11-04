@@ -90,10 +90,10 @@ class Vehicle_Control():
 		self.path_thread.join()  # Attendere che il thread si completi
 
 	def start(self):
+		avviato = False
+		onTrack = False
 		while not self.stop:
 			if self.distance > 10:
-				avviato = False
-				onTrack = False
 				if self.get_ir_center() > 35:
 					onTrack = True
 					if not avviato:
@@ -106,10 +106,10 @@ class Vehicle_Control():
 					elif self.get_ir_right() > 35:
 						onTrack = False
 						self.arduino.turn_left(20)
-					time.sleep(0.1)
+					time.sleep(0.5)
 			else:
 				self.arduino.stop()
-			time.sleep(0.2)
+			time.sleep(0.5)
 
 			
 
