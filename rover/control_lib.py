@@ -42,15 +42,6 @@ class Vehicle_Control():
 			if isinstance(response, dict):
 				with self.status_lock:
 					self.status.update(response)
-					if self.get_speed() == 0:
-						self.status.update({'moving': False})
-					else:
-						self.status.update({'moving': True})
-					
-					if self.get_ir_center() < 35:
-						self.status.update({'on_track': True})
-					else:
-						self.status.update({'on_track': False})
 			else:
 				print("La risposta da Arduino non è un dizionario valido.")
 				# Puoi gestire il caso in cui la risposta non è un dizionario valido
@@ -90,6 +81,7 @@ class Vehicle_Control():
 	def stop_path(self):
 		self.stop = True
 		self.arduino.stop()
+		self.status.update({'moving':False})
 		self.path_thread.join()  # Attendere che il thread si completi
 
 	def start(self):
@@ -106,6 +98,7 @@ class Vehicle_Control():
 					if not avviato:
 						avviato = True
 						self.arduino.speed(50)
+						self.status.update({'moving':True})
 				else:
 					if self.get_ir_left() > 35:
 						onTrack = False
