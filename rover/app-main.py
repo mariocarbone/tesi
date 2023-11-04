@@ -121,6 +121,7 @@ def old_update_vehicle_distance():
 		time.sleep(0.15)
 
 def update_vehicle_distance():
+	global vehicle_control
 	while True:
 		vehicle_control.update_distance()
 		time.sleep(0.1)
