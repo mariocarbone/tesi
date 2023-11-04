@@ -264,6 +264,7 @@ def get_connections():
 # API per far partire il rover
 @app.route('/rover/start', methods=['POST'])
 def rover_start():
+	global vehicle_control
 	vehicle_control.start_path()
 	print("ROVER START")
 	return jsonify({"message": "Rover partito!"})
@@ -271,6 +272,7 @@ def rover_start():
 # API per far fermare il rover
 @app.route('/rover/stop', methods=['POST'])
 def rover_stop():
+	global vehicle_control
 	vehicle_control.stop_path()
 	print("ROVER STOP")
 	return jsonify({"message": "Rover fermato!"})
