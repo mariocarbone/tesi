@@ -38,7 +38,7 @@ class Arduino:
 		self.send_command(command)
 
 	def brake(self):
-		command = "BRK"+speed
+		command = "BRK"
 		self.send_command(command)
 
 	def get_status(self):

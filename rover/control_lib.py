@@ -61,3 +61,19 @@ class Vehicle_Control():
 
 		with self.status_lock:
 			return self.status
+		
+	def start_path(self):
+		while True:
+			if self.distance > 10:
+				self.arduino.speed(50)
+
+			if int(self.status['ir_center']) > 35:
+				print("SULLA TRACCIA")
+			elif int(self.status['ir_center']) < 35 :
+				if int(self.status['ir_left']) > 35 :
+					self.arduino.turn_right(20)
+				elif int(self.status['ir_right']) > 35 :
+					self.arduino.turn_left(20)
+
+	def stop_path(self):
+		self.arduino.stop()
