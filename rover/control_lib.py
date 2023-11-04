@@ -39,9 +39,9 @@ class Vehicle_Control():
 			with self.status_lock:
 				self.status.update(self.arduino.get_status())
 				if int(self.status['speed']) == 0:
-					self.status.update({'moving', False})
+					self.status.update({'moving': False})
 				else:
-					self.status.update({'moving', True})
+					self.status.update({'moving': True})
 
 	def get_distance(self):
 		self.distance, self.distance_lock
