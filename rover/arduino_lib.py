@@ -47,11 +47,15 @@ class Arduino:
 		response = self.ser.readline().decode('ascii')
 
 		try:
-			data = json.loads(response)
+			if response.strip():  # Verifica se la stringa non è vuota o contiene solo spazi
+				data = json.loads(response)
+			else:
+				data = {}  # Restituisci un dizionario vuoto per una stringa vuota
 			return data
 		except json.JSONDecodeError as e:
-			print(f"Errore nella decodifica JSON - Arduino ha restituito una stringa vuota: {e}")
-			return {}
+			print(f"Errore nella decodifica JSON: {e}")
+			data = {}  # Puoi restituire un dizionario vuoto o effettuare altre azioni correttive
+			return data
 
 	def send_command(self, command):
 		newline = "\n"
