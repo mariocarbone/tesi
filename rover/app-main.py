@@ -5,6 +5,8 @@ import subprocess
 import os
 import numpy as np
 import logging
+import distancesensor
+
 from multiprocessing import Value
 from threading import Lock
 from threading import Thread
@@ -119,16 +121,6 @@ def old_update_vehicle_distance():
 		with distance_lock:
 			distance = vehicle_control.get_distance()
 		time.sleep(0.15)
-
-#def update_vehicle_distance():	
-	#global vehicle_control, distance
-	#vehicle_control.update_dis()
-	#while not stop_threads:
-		#vehicle_control.update_distance()
-	#	distance_value = vehicle_control.rpi.measure_distance()
-	#	print("AGGIORNO DISTANZA", distance_value)
-	#	distance = distance_value
-	#	time.sleep(0.2)
 
 # Funzione per effettuare object detection sui frame della coda
 def detection():
@@ -290,12 +282,22 @@ def stop_all_threads():
 	# Puoi aggiungere ulteriori azioni o pulizie se necessario prima di terminare i thread.
 	return jsonify({"message": "Tutti i thread verranno fermati."})
 
+def update_distance(self):
+		#ultrasonic = DistanceSensor(echo=17, trigger=4, queue_len=3)
+		while True:
+			with self.distance_lock:
+				distance_value = distancesensor.get_distance()
+				time.sleep(0.1)
+				print(distance_value)
+				#self.distance = distance_value
+			time.sleep(0.1)
+
 if __name__ == "__main__":
 	capture_thread = threading.Thread(target=capture_frames)
 	cv2_thread = threading.Thread(target=cv2Lines)
 	detection_thread = threading.Thread(target=detection)
 	status_thread = threading.Thread(target=update_vehicle_status)
-	distance_thread = threading.Thread(target=vehicle_control.update_distance)
+	distance_thread = threading.Thread(target=update_distance)
 	flask_thread = threading.Thread(target=run_flask_app)
 
 	flask_thread.start()

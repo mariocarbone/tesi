@@ -4,7 +4,7 @@ import time
 import json
 from rpi_lib import Raspberry
 from arduino_lib import Arduino
-import distancesensor
+#import distancesensor
 
 
 class Vehicle_Control():
