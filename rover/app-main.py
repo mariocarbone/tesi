@@ -104,11 +104,13 @@ def capture_frames():
 
 # Funzione per aggiornare lo stato del veicolo
 def update_vehicle_status():
-	global status_json, stop_threads
+	global status_json, distance, stop_threads
 	while not stop_threads:
 		vehicle_control.update_status()
+		vehicle_control.update_distance()
 		#with status_lock:
 		status_json = vehicle_control.status
+		distance = vehicle_control.distance
 		time.sleep(0.2)
 
 # Funzione per aggiornare la distanza
@@ -239,12 +241,12 @@ def get_distance():
 	global vehicle_control#, distance, distance_lock
 	
 	#with vehicle_control.distance_lock:
-	distance_value = vehicle_control.distance
+	distance = vehicle_control.distance
 	
 	#with distance_lock:
 	#	distance_value = distance
 		
-	return str(distance_value)
+	return str(distance)
 
 # API per ottenere lo stato 
 @app.route('/get_status', methods=['GET'])
@@ -311,8 +313,8 @@ if __name__ == "__main__":
 	flask_thread = threading.Thread(target=run_flask_app)
 
 	flask_thread.start()
-	status_thread.start()
 	distance_thread.start()
+	status_thread.start()
 	capture_thread.start()
 
 
