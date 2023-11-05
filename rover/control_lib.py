@@ -35,6 +35,10 @@ class Vehicle_Control():
 
 		}
 
+	def calculate_distance(self):
+		thread_distanza = threading.Thread(target= self.update_distance)
+		thread_distanza.start()
+
 	def update_distance(self):
 		while True:
 			distance_value = self.rpi.measure_distance()	
