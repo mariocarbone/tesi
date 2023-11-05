@@ -43,9 +43,9 @@ class Vehicle_Control():
 			while True:
 				with self.distance_lock:
 					distance_value = distancesensor.get_distance()
+					print(distance_value)
 					time.sleep(0.1)
 					self.distance = distance_value
-					print(self.distance)
 				time.sleep(0.1)
 
 	def update_status(self):
