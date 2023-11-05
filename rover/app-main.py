@@ -307,7 +307,7 @@ if __name__ == "__main__":
 	flask_thread.start()
 	capture_thread.start()
 	time.sleep(0.1)
-	detection_thread.start()
+#	detection_thread.start()
 	cv2_thread.start()
 #	status_thread.start()
 	distance_thread.start()
