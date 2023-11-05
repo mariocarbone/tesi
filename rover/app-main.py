@@ -5,7 +5,7 @@ import subprocess
 import os
 import numpy as np
 import logging
-from distancesensor import get_distance
+from distancesensor import get_distance_value
 
 from multiprocessing import Process, Value
 from threading import Lock
