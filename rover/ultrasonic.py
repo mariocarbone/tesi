@@ -52,7 +52,7 @@ try:
         time.sleep(0.1)
 
         # Your main loop code here
-        print("Distance:", distance, "cm")
+       # print("Distance:", distance, "cm")
 
 except KeyboardInterrupt:
     print("Measurement stopped")
