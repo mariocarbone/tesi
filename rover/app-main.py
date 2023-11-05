@@ -7,7 +7,7 @@ import numpy as np
 import logging
 import distancesensor
 
-from multiprocessing import Value
+from multiprocessing import Process, Value
 from threading import Lock
 from threading import Thread
 from collections import deque
@@ -54,6 +54,7 @@ status_lock = Lock()
 # Distanza Misurata con Sensore ad Ultrasuoni
 distance = 0.0
 distance_lock = Lock()
+distance_value = Value('d', 0.0)
 
 # Prediction trovate su frame
 prediction_json = {}
@@ -301,8 +302,13 @@ if __name__ == "__main__":
 	cv2_thread = threading.Thread(target=cv2Lines)
 	detection_thread = threading.Thread(target=detection)
 	status_thread = threading.Thread(target=update_vehicle_status)
-	distance_thread = threading.Thread(target=update_distance)
+	#distance_thread = threading.Thread(target=update_distance)
 	flask_thread = threading.Thread(target=run_flask_app)
+
+	distance_process = Process(target=update_distance, args=(distance_value,))
+	distance_process.start()
+
+
 
 	flask_thread.start()
 	capture_thread.start()
@@ -310,4 +316,4 @@ if __name__ == "__main__":
 #	detection_thread.start()
 	cv2_thread.start()
 #	status_thread.start()
-	distance_thread.start()
+#	distance_thread.start()
