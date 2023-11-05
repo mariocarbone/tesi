@@ -47,7 +47,7 @@ class Vehicle_Control():
 	# Funzione per ottenere la distanza misurata
 	def update_distance(self):
 		while True:
-			self.distance = self.ultrasonic.distance
+			self.distance = self.ultrasonic.distance*100
 			print("distanza:", self.distance)
 			time.sleep(0.5)
 
