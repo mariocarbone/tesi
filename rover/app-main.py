@@ -233,6 +233,7 @@ def video_feed():
 # API per ottenere la distanza
 @app.route('/get_distance', methods=['GET'])
 def get_distance():
+	global distance, distance_lock
 	with distance_lock:
 		distance_value = distance
 	return str(distance_value)
@@ -284,6 +285,7 @@ def stop_all_threads():
 	return jsonify({"message": "Tutti i thread verranno fermati."})
 
 def update_distance():
+		global distance, distance_lock
 		#ultrasonic = DistanceSensor(echo=17, trigger=4, queue_len=3)
 		while True:
 			with distance_lock:
