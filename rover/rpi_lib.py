@@ -1,4 +1,4 @@
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 import time
 import subprocess
 from pyembedded.raspberry_pi_tools.raspberrypi import PI
