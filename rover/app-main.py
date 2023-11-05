@@ -107,8 +107,8 @@ def update_vehicle_status():
 	global status_json, stop_threads
 	while not stop_threads:
 		vehicle_control.update_status()
-		with status_lock:
-			status_json = vehicle_control.get_status()
+		#with status_lock:
+		status_json = vehicle_control.status
 		time.sleep(0.2)
 
 # Funzione per aggiornare la distanza
@@ -124,7 +124,7 @@ def update_vehicle_distance():
 	global vehicle_control
 	while True:
 		vehicle_control.update_distance()
-		time.sleep(0.5)
+		time.sleep(0.2)
 
 # Funzione per effettuare object detection sui frame della coda
 def detection():
@@ -153,8 +153,8 @@ def detection():
 			frame_counter = frame_counter+1 
 			contatore_media = contatore_media+1
 			if(detected):
-				with prediction_lock:
-					prediction_json = json
+				#with prediction_lock:
+				prediction_json = json
 		else:
 			#logging.warning('Coda dei frame vuota') 
 			#print(round(time.time()*1000), "- App Main > Coda dei frame vuota")
@@ -239,7 +239,7 @@ def get_distance():
 	global vehicle_control#, distance, distance_lock
 	
 	#with vehicle_control.distance_lock:
-	distance_value = vehicle_control.get_distance()
+	distance_value = vehicle_control.distance
 	
 	#with distance_lock:
 	#	distance_value = distance
@@ -249,20 +249,19 @@ def get_distance():
 # API per ottenere lo stato 
 @app.route('/get_status', methods=['GET'])
 def get_status():
-	global status_json, status_lock
+	global status_json#, status_lock
 
-	with status_lock:
-		status_obj = status_json
+	status_obj = vehicle_control.status#status_json
 		
 	return jsonify(status_obj)  
 	
 # API per ottenere le prediction
 @app.route('/get_predictions', methods=['GET'])
 def get_predictions():
-	global prediction_json, prediction_lock
+	global prediction_json#, prediction_lock
 
-	with prediction_lock:
-		predicted_objects = prediction_json
+	#with prediction_lock:
+	predicted_objects = prediction_json
 		
 	return jsonify(predicted_objects)    
 

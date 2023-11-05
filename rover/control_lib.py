@@ -13,7 +13,6 @@ class Vehicle_Control():
 		self.rpi = Raspberry()
 		self.status_lock = Lock()
 		self.distance = 0.0
-		self.distance_lock = Lock()
 		self.stop = False
 		self.turn_min = 0
 		self.turn_max = 100
@@ -38,31 +37,15 @@ class Vehicle_Control():
 
 	def update_distance(self):
 		#self.distance, self.distance_lock, self.rpi
-		with self.distance_lock:
-			self.distance = round(self.rpi.measure_distance(), 2)
+		self.distance = round(self.rpi.measure_distance(), 2)
 
 	def update_status(self):
 		if self.arduino.ser.is_open:
 			response = self.arduino.get_status()
 			if isinstance(response, dict):
-				with self.status_lock:
-					self.status.update(response)
+				self.status.update(response)
 			else:
-				print("La risposta da Arduino non è un dizionario valido.")
-				# Puoi gestire il caso in cui la risposta non è un dizionario valido
-
-					
-	def get_distance(self):
-		self.distance, self.distance_lock
-	
-		with self.distance_lock:
-			return self.distance
-
-	def get_status(self):
-		self.status, self.status_lock
-
-		with self.status_lock:
-			return self.status
+				print("Lo stato di Arduino non è un dizionario valido.")
 
 	def get_speed(self):
 		return int(self.status['speed'])
