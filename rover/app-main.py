@@ -290,7 +290,7 @@ def stop_all_threads():
 	# Puoi aggiungere ulteriori azioni o pulizie se necessario prima di terminare i thread.
 	return jsonify({"message": "Tutti i thread verranno fermati."})
 
-def rover_start():
+if __name__ == "__main__":
 	capture_thread = threading.Thread(target=capture_frames)
 	cv2_thread = threading.Thread(target=cv2Lines)
 	detection_thread = threading.Thread(target=detection)
@@ -305,8 +305,3 @@ def rover_start():
 	cv2_thread.start()
 	status_thread.start()
 	distance_thread.start()
-
-# Main
-if __name__ == "__main__":
-
-	rover_start()
