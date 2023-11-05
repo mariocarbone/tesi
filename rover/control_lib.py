@@ -39,6 +39,7 @@ class Vehicle_Control():
 	def calculate_distance(self):
 		thread_distanza = threading.Thread(target= self.update_distance2)
 		thread_distanza.start()
+		thread_distanza.join()
 
 	def update_distance2(self):
 		while True:
