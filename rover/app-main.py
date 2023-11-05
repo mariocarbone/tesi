@@ -252,8 +252,8 @@ def video_feed():
 # API per ottenere la distanza
 @app.route('/get_distance', methods=['GET'])
 def get_distance():
-	distance_value = vehicle_control.distance
-	return str(distance_value)
+	#distance_value = vehicle_control.distance
+	return str(distance)
 
 # API per ottenere lo stato 
 @app.route('/get_status', methods=['GET'])
