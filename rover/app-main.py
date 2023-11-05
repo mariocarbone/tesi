@@ -19,7 +19,6 @@ from libcamera import controls
 from detection import Tensorflow
 from control_lib import Vehicle_Control
 from mqtt_lib import MQTTConnection
-import ultrasonic
 
 #Web-UI
 from flask import Flask, render_template, jsonify, Response
