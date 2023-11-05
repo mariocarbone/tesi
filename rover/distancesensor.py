@@ -1,4 +1,6 @@
 from gpiozero import DistanceSensor
+
 ultrasonic = DistanceSensor(echo=17, trigger=4)
-while True:
-    print(ultrasonic.distance*100)
+
+def get_distance()
+    return round(ultrasonic.distance*100,2)
