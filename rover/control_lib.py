@@ -46,7 +46,7 @@ class Vehicle_Control():
 
 	# Funzione per ottenere la distanza misurata
 	def update_distance(self):
-			ultrasonic = DistanceSensor(echo=17, trigger=4)
+			ultrasonic = DistanceSensor(echo=17, trigger=4, max_distance=1)
 			while True:
 				self.distance= round(ultrasonic.distance*100,2)
 				time.sleep(0.5)
