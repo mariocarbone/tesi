@@ -35,15 +35,12 @@ class Vehicle_Control():
 
 		}
 
-	def update_dis(self):
-		distance_thread = threading.Thread(target=self.update_distance)
-		distance_thread.start()
-		distance_thread.join()
-
 	def update_distance(self):
-		while not self.stop:
-			self.distance = self.rpi.measure_distance()
-			print("Ho misurato la distanza",self.distance)
+		distance_value = self.rpi.measure_distance()
+		self.distance = distance_value
+		print(self.rpi.distance)
+		print(self.rpi.get_distance())
+		print("Ho misurato la distanza",self.distance)
 
 	def update_status(self):
 		if self.arduino.ser.is_open:

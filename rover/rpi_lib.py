@@ -34,6 +34,8 @@ class Raspberry(str):
 		return self.system_status
 
 	def get_distance(self):
+		distanza = self.measure_distance()
+		self.distance = distanza
 		return self.distance
 
 	# Funzione per misurare la distanza
