@@ -238,7 +238,7 @@ def video_feed():
 # API per ottenere la distanza
 @app.route('/get_distance', methods=['GET'])
 def get_distance():
-	global vehicle_control#, distance, distance_lock
+	global vehicle_control, distance#, distance_lock
 	
 	#with vehicle_control.distance_lock:
 	distance = vehicle_control.distance

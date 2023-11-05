@@ -54,10 +54,7 @@ class Raspberry(str):
 
 		print("Distance = ", distance_value)
 		
-		self.distance = round(distance_value,2)
-		#return round(distance_value, 2)
-
-		GPIO.cleanup()
+		return round(distance_value, 2)
 
 	def get_network_info(self):
 		# Ottieni tutti gli interfacce di rete
