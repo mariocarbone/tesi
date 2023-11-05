@@ -20,7 +20,7 @@ class Vehicle_Control():
 		self.turn_step = 10
 		self.on_track = False
 		self.moving = False
-		self.ultrasonic = DistanceSensor(echo=17, trigger=4)
+		#self.ultrasonic = DistanceSensor(echo=17, trigger=4)
 		self.status = {
 			"speed": 0,
 			"speed_left_side": 0,
@@ -46,10 +46,13 @@ class Vehicle_Control():
 
 	# Funzione per ottenere la distanza misurata
 	def update_distance(self):
-		while True:
-			self.distance = self.ultrasonic.distance*100
-			print("distanza:", self.distance)
-			time.sleep(0.5)
+			ultrasonic = DistanceSensor(echo=17, trigger=4)
+			while True:
+				print(ultrasonic.distance*100)
+#		while True:
+#			self.distance = self.ultrasonic.distance*100
+#			print("distanza:", self.distance)
+#			time.sleep(0.5)
 
 	def update_status(self):
 		if self.arduino.ser.is_open:
