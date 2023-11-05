@@ -46,7 +46,7 @@ class Vehicle_Control():
 			distance_value = ultrasonic.distance()	
 			self.distance = distance_value
 			print("Ho aggiornato la distanza:", self.distance)
-			time.sleep(1)
+			time.sleep(0.5)
 
 	def update_distance(self):
 		while True:
