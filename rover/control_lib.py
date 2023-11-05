@@ -36,24 +36,11 @@ class Vehicle_Control():
 			"moving" : False,
 		}
 
-#	def update_distance(self):
-#		while True:
-#			self.distance = get_distance()
-#			print(f"Distance: {self.distance} cm")
-#			time.sleep(1)
-
-	# GPIO pin configuration
-
-	# Funzione per ottenere la distanza misurata
 	def update_distance(self):
 			ultrasonic = DistanceSensor(echo=17, trigger=4)
 			while True:
 				self.distance= round(ultrasonic.distance*100,2)
-				time.sleep(0.5)
-#		while True:
-#			self.distance = self.ultrasonic.distance*100
-#			print("distanza:", self.distance)
-#			time.sleep(0.5)
+				time.sleep(0.1)
 
 	def update_status(self):
 		if self.arduino.ser.is_open:
