@@ -14,7 +14,7 @@ class Raspberry(str):
 		self.pi = PI()
 		self.distance = 0
 		GPIO.setwarnings(False)
-		GPIO.cleanup()
+		#GPIO.cleanup()
 		GPIO.setmode(GPIO.BOARD)
 		self.trig_pin = 7
 		self.echo_pin = 11
