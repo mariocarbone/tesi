@@ -149,6 +149,7 @@ def detection():
 			logging.info(fine, "- App Main > Fine detection del frame - Tempo impiegato:", ms,"ms - Tempo medio:", media_frame , "ms") 
 			#print(fine, "- App Main > Fine detection del frame - Tempo impiegato:", ms,"ms - Tempo medio:", media_frame , "ms")
 			image = tf_instance.get_latest_image()
+			image = cv2.flip(image, 1)
 			add_tf_frame(image)
 			json=tf_instance.get_predictions()
 			t_prediction = round(time.time()*1000)
