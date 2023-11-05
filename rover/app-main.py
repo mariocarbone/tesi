@@ -124,8 +124,9 @@ def update_vehicle_distance():
 	global vehicle_control, distance
 	while not stop_threads:
 		#vehicle_control.update_distance()
-		distance = vehicle_control.rpi.measure_distance
-		print("AGGIORNO DISTANZA")
+		distance_value = vehicle_control.rpi.measure_distance()
+		print("AGGIORNO DISTANZA", distance_value)
+		distance = distance_value
 		time.sleep(0.2)
 
 # Funzione per effettuare object detection sui frame della coda
@@ -238,8 +239,8 @@ def video_feed():
 # API per ottenere la distanza
 @app.route('/get_distance', methods=['GET'])
 def get_distance():
-	global distance
-	distance_value = distance		
+	#global distance
+	distance_value = vehicle_control.rpi.get_distance()		
 	return str(distance_value)
 
 # API per ottenere lo stato 

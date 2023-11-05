@@ -34,6 +34,9 @@ class Raspberry(str):
 		self.system_status["disk_space"] = self.pi.get_disk_space()
 		return self.system_status
 
+	def get_distance(self):
+		return self.distance
+
 	# Funzione per misurare la distanza
 	def measure_distance(self):
 		GPIO.output(self.trig_pin, GPIO.HIGH)
