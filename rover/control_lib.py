@@ -4,7 +4,7 @@ import time
 import json
 from rpi_lib import Raspberry
 from arduino_lib import Arduino
-from ultrasonic import distance_measurement, get_distance
+from ultrasonic import get_distance
 
 class Vehicle_Control():
 
