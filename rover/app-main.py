@@ -291,8 +291,8 @@ def update_distance(distance_value):
 			get_distance_value(distance_value)
 			if distance_value.value != previous_distance:
 				print("Distance updated to:", distance_value.value)
-			else:
-				print("Distance value is the same as before.")
+			#else:
+				#print("Distance value is the same as before.")
 			time.sleep(0.1)
 		except Exception as e:
 			print("Error updating distance:", e)
