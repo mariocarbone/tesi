@@ -309,5 +309,5 @@ if __name__ == "__main__":
 	time.sleep(0.1)
 	detection_thread.start()
 	cv2_thread.start()
-	status_thread.start()
+#	status_thread.start()
 	distance_thread.start()
