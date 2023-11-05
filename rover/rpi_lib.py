@@ -1,6 +1,5 @@
 import RPi.GPIO as GPIO
 import time
-import netifaces  # pip -r
 import subprocess
 from pyembedded.raspberry_pi_tools.raspberrypi import PI
 
@@ -60,20 +59,6 @@ class Raspberry(str):
 		
 		return self.distance
 
-	def get_network_info(self):
-		# Ottieni tutti gli interfacce di rete
-		interfaces = netifaces.interfaces()
-
-		for interface in interfaces:
-			addrs = netifaces.ifaddresses(interface)
-			if netifaces.AF_INET in addrs:
-				# Ottieni l'indirizzo IP IPv4
-				ip = addrs[netifaces.AF_INET][0]["addr"]
-				# Ottieni il nome dell'interfaccia
-				self.network_info[interface] = ip
-
-		return self.network_info
-
 	def get_wifi_network_info(self):
 		wifi_interface = "wlan0"
 
@@ -83,9 +68,7 @@ class Raspberry(str):
 				ip = addrs[netifaces.AF_INET][0]["addr"]
 				self.wifi_info["IP"] = ip
 			self.wifi_info["ESSID"] = self.get_current_ssid()
-			# if netifaces.AF_INET in addrs:
-			# 	essid = addrs[netifaces.AF_INET][0].get('essid', "N/A")
-			# 	self.wifi_info['ESSID'] = essid
+
 		return self.wifi_info
 
 	def get_current_ssid():

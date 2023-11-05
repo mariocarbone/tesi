@@ -26,8 +26,6 @@ def distance():
         stop_time = time.time()
  
     time_elapsed = stop_time - start_time
-    # multiply with the sonic speed (34300 cm/s)
-    # and divide by 2, because there and back
     distance = (time_elapsed * 34300) / 2
  
     return distance
