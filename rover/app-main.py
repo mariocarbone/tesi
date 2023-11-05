@@ -285,10 +285,19 @@ def stop_all_threads():
 	return jsonify({"message": "Tutti i thread verranno fermati."})
 
 def update_distance(distance_value):
+	global distance_value
 	while True:
-		get_distance_value(distance_value)
-		print("La distanza è:", distance_value.value)
-		time.sleep(0.1)
+		try:
+			previous_distance = distance_value.value
+			get_distance_value(distance_value)
+			if distance_value.value != previous_distance:
+				print("Distance updated to:", distance_value.value)
+			else:
+				print("Distance value is the same as before.")
+			time.sleep(0.1)
+		except Exception as e:
+			print("Error updating distance:", e)
+			#break  # Or handle the exception accordingly
 
 if __name__ == "__main__":
 	capture_thread = threading.Thread(target=capture_frames)
