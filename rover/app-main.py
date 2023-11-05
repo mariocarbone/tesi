@@ -228,7 +228,8 @@ def generate_frames():
 def update_distance2():
     global distance
     while not stop_threads:
-        distance_value = ultrasonic.distance()
+        print("calcolo distanza")
+		distance_value = ultrasonic.distance()
         with distance_lock:
             distance = distance_value
         time.sleep(0.5)
