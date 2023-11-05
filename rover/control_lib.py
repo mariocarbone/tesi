@@ -15,6 +15,7 @@ class Vehicle_Control():
 		self.rpi = Raspberry()
 		self.status_lock = Lock()
 		self.distance = 0.0
+		self.distance_lock = Lock()
 		self.stop = False
 		self.turn_min = 0
 		self.turn_max = 100
@@ -40,9 +41,10 @@ class Vehicle_Control():
 	def update_distance(self):
 			#ultrasonic = DistanceSensor(echo=17, trigger=4, queue_len=3)
 			while True:
-				distance_value = distancesensor.get_distance()
-				print(distance_value)
-				self.distance = distance_value
+				with self.distance_lock:
+					distance_value = distancesensor.get_distance()
+					self.distance = distance_value
+					print(self.distance)
 				time.sleep(0.1)
 
 	def update_status(self):
