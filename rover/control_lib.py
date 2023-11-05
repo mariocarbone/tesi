@@ -20,7 +20,7 @@ class Vehicle_Control():
 		self.turn_step = 10
 		self.on_track = False
 		self.moving = False
-		self.ultrasonic = DistanceSensor(echo=11, trigger=17, max_distance=2)
+		self.ultrasonic = DistanceSensor(echo=11, trigger=7, max_distance=2)
 		self.status = {
 			"speed": 0,
 			"speed_left_side": 0,
