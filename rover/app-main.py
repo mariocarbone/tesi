@@ -303,7 +303,7 @@ if __name__ == "__main__":
 	cv2_thread = threading.Thread(target=cv2Lines)
 	detection_thread = threading.Thread(target=detection)
 	status_thread = threading.Thread(target=update_vehicle_status)
-	distance_thread = threading.Thread(target=update_distance, args=(distance_value))
+	distance_thread = threading.Thread(target=update_distance, args=(distance_value,))
 	flask_thread = threading.Thread(target=run_flask_app)
 
 	#distance_process = Process(target=update_distance, args=(distance_value,))
