@@ -8,10 +8,25 @@ GPIO_ECHO = 11
 
 # Initialize GPIO pins
 GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
-GPIO.setup(GPIO_ECHO, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(GPIO_ECHO, GPIO.IN)
 
-start_time = 0
-stop_time = 0
+# Allow the sensor to settle
+print("Waiting for sensor to settle...")
+time.sleep(2)
+
+# Function to trigger a distance measurement
+def trigger_measurement():
+    GPIO.output(GPIO_TRIGGER, True)
+    time.sleep(0.00001)
+    GPIO.output(GPIO_TRIGGER, False)
+
+# Initialize the sensor
+print("Initializing the sensor...")
+trigger_measurement()
+print("Sensor ready")
+
+start_time = time.time()
+stop_time = time.time()
 distance = 0
 
 # Callback function for echo pin
@@ -26,13 +41,18 @@ def echo_callback(channel):
         distance = (time_elapsed * 34300) / 2
 
 # Register the callback function for the falling edge of the echo signal
-GPIO.add_event_detect(GPIO_ECHO, GPIO.FALLING, callback=echo_callback)
+GPIO.add_event_detect(GPIO_ECHO, GPIO.BOTH, callback=echo_callback)
 
 try:
     while True:
+        # Trigger a distance measurement
+        trigger_measurement()
+
+        # Wait for a short time to allow the measurement to complete
+        time.sleep(0.1)
+
         # Your main loop code here
         print("Distance:", distance, "cm")
-        time.sleep(1)
 
 except KeyboardInterrupt:
     print("Measurement stopped")
