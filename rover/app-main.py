@@ -122,12 +122,13 @@ def old_update_vehicle_distance():
 
 def update_vehicle_distance():
 	global vehicle_control, distance
-	while not stop_threads:
+	vehicle_control.update_dis()
+	#while not stop_threads:
 		#vehicle_control.update_distance()
-		distance_value = vehicle_control.rpi.measure_distance()
-		print("AGGIORNO DISTANZA", distance_value)
-		distance = distance_value
-		time.sleep(0.2)
+	#	distance_value = vehicle_control.rpi.measure_distance()
+	#	print("AGGIORNO DISTANZA", distance_value)
+	#	distance = distance_value
+	#	time.sleep(0.2)
 
 # Funzione per effettuare object detection sui frame della coda
 def detection():
