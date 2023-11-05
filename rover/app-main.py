@@ -291,6 +291,7 @@ def update_distance():
 			with distance_lock:
 				distance_value = distancesensor.get_distance()
 				time.sleep(0.1)
+				distance = distance_value
 				print(distance_value)
 				#self.distance = distance_value
 			time.sleep(0.1)
