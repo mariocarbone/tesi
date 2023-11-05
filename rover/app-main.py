@@ -224,7 +224,7 @@ def generate_frames():
 			continue
 
 
-def update_distance2(self):
+def update_distance2():
 	global distance
 	while True:
 		distance_value = ultrasonic.distance()	
