@@ -121,10 +121,11 @@ def old_update_vehicle_distance():
 		time.sleep(0.15)
 
 def update_vehicle_distance():
-	global vehicle_control,distance
+	global vehicle_control, distance
 	while True:
 		vehicle_control.update_distance()
 		distance = vehicle_control.distance
+		print("AGGIORNO DISTANZA")
 		time.sleep(0.2)
 
 # Funzione per effettuare object detection sui frame della coda
@@ -315,8 +316,6 @@ if __name__ == "__main__":
 	distance_thread.start()
 	status_thread.start()
 	capture_thread.start()
-
-
 	time.sleep(0.1)
 	detection_thread.start()
 	cv2_thread.start()
