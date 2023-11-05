@@ -242,7 +242,9 @@ def video_feed():
 def get_distance():
 	#global distance
 	print("Ho richiesto la distanza", time.time())
-	distance_value = vehicle_control.rpi.get_distance()		
+	vehicle_control.update_distance()
+	time.sleep(0.3)
+	distance_value = vehicle_control.distance
 	print("Ho ottenuto", distance_value, time.time())
 	return str(distance_value)
 
