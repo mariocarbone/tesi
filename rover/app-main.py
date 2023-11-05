@@ -240,12 +240,12 @@ def get_distance():
 	global vehicle_control, distance#, distance_lock
 	
 	#with vehicle_control.distance_lock:
-	distance = vehicle_control.distance
+	distance_value = distance
 	
 	#with distance_lock:
 	#	distance_value = distance
 		
-	return str(distance)
+	return str(distance_value)
 
 # API per ottenere lo stato 
 @app.route('/get_status', methods=['GET'])
