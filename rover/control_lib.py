@@ -36,7 +36,7 @@ class Vehicle_Control():
 		}
 
 	def update_dis(self):
-		distance_thread = threading.Thread(target=update_distance)
+		distance_thread = threading.Thread(target=self.update_distance)
 		distance_thread.start()
 		distance_thread.join()
 
