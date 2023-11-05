@@ -5,7 +5,7 @@ import subprocess
 import os
 import numpy as np
 import logging
-import distancesensor
+from distancesensor import get_distance
 
 from multiprocessing import Process, Value
 from threading import Lock
@@ -285,8 +285,10 @@ def stop_all_threads():
 	return jsonify({"message": "Tutti i thread verranno fermati."})
 
 def update_distance(distance_value):
-	get_distance(distance_value)
-	print("La distanza è:", distance_value.value)
+	while True:
+		get_distance(distance_value)
+		print("La distanza è:", distance_value.value)
+		time.sleep(0.1)
 		
 if __name__ == "__main__":
 	capture_thread = threading.Thread(target=capture_frames)
