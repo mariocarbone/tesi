@@ -14,11 +14,11 @@ class Raspberry(str):
 		self.distance = 0
 		#GPIO.setwarnings(False)
 		#GPIO.cleanup()
-		GPIO.setmode(GPIO.BOARD)
-		self.trig_pin = 7
-		self.echo_pin = 11
-		GPIO.setup(self.trig_pin, GPIO.OUT)
-		GPIO.setup(self.echo_pin, GPIO.IN)
+		#GPIO.setmode(GPIO.BOARD)
+		#self.trig_pin = 7
+		#self.echo_pin = 11
+		#GPIO.setup(self.trig_pin, GPIO.OUT)
+		#GPIO.setup(self.echo_pin, GPIO.IN)
 
 	def get_system_status(self):
 		ram_used = int(self.pi.get_ram_info()[1])
