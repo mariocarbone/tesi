@@ -4,7 +4,7 @@ import time
 import json
 from rpi_lib import Raspberry
 from arduino_lib import Arduino
-from ultrasonic import get_distance
+from gpiozero import DistanceSensor
 
 class Vehicle_Control():
 
@@ -20,6 +20,7 @@ class Vehicle_Control():
 		self.turn_step = 10
 		self.on_track = False
 		self.moving = False
+		self.ultrasonic = DistanceSensor(echo=11, trigger=17, max_distance=2)
 		self.status = {
 			"speed": 0,
 			"speed_left_side": 0,
@@ -33,15 +34,22 @@ class Vehicle_Control():
 			"last_command": "STATUS",
 			"braking" : False,
 			"moving" : False,
-
 		}
 
+#	def update_distance(self):
+#		while True:
+#			self.distance = get_distance()
+#			print(f"Distance: {self.distance} cm")
+#			time.sleep(1)
+
+	# GPIO pin configuration
+
+	# Funzione per ottenere la distanza misurata
 	def update_distance(self):
 		while True:
-			self.distance = get_distance()
-			print(f"Distance: {self.distance} cm")
-			time.sleep(1)
-
+			self.distance = self.ultrasonic.distance
+			print("distanza:", self.distance)
+			time.sleep(0.5)
 
 	def update_status(self):
 		if self.arduino.ser.is_open:
