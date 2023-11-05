@@ -305,7 +305,7 @@ if __name__ == "__main__":
 	#distance_thread = threading.Thread(target=update_distance)
 	flask_thread = threading.Thread(target=run_flask_app)
 
-	distance_process = Process(target=update_distance, args=(distance_value,))
+	distance_process = Process(target=update_distance, args=(distance_value))
 	distance_process.start()
 
 
