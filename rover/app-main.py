@@ -286,10 +286,10 @@ def stop_all_threads():
 
 def update_distance(distance_value):
 	while True:
-		get_distance(distance_value)
+		get_distance_value(distance_value)
 		print("La distanza è:", distance_value.value)
 		time.sleep(0.1)
-		
+
 if __name__ == "__main__":
 	capture_thread = threading.Thread(target=capture_frames)
 	cv2_thread = threading.Thread(target=cv2Lines)
