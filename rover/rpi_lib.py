@@ -12,6 +12,7 @@ class Raspberry(str):
 		self.wifi_info = {}
 		self.system_status = {}
 		self.pi = PI()
+		self.distance = 0
 		GPIO.setwarnings(False)
 		GPIO.cleanup()
 		GPIO.setmode(GPIO.BOARD)
@@ -52,7 +53,9 @@ class Raspberry(str):
 		distance_value = pulse_duration * 17150
 
 		print("Distance = ", distance_value)
-		return round(distance_value, 2)
+		
+		self.distance = round(distance_value,2)
+		#return round(distance_value, 2)
 
 		GPIO.cleanup()
 
