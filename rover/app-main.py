@@ -241,8 +241,9 @@ def video_feed():
 @app.route('/get_distance', methods=['GET'])
 def get_distance():
 	#global distance
+	print("Ho richiesto la distanza", time.time())
 	distance_value = vehicle_control.rpi.get_distance()		
-	print("Ho ottenuto", distance_value)
+	print("Ho ottenuto", distance_value, time.time())
 	return str(distance_value)
 
 # API per ottenere lo stato 
