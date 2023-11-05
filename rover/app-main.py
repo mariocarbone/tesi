@@ -104,13 +104,11 @@ def capture_frames():
 
 # Funzione per aggiornare lo stato del veicolo
 def update_vehicle_status():
-	global status_json, distance, stop_threads
+	global status_json, vehicle_control, distance, stop_threads
 	while not stop_threads:
 		vehicle_control.update_status()
-		vehicle_control.update_distance()
 		#with status_lock:
 		status_json = vehicle_control.status
-		distance = vehicle_control.distance
 		time.sleep(0.2)
 
 # Funzione per aggiornare la distanza
@@ -123,9 +121,10 @@ def old_update_vehicle_distance():
 		time.sleep(0.15)
 
 def update_vehicle_distance():
-	global vehicle_control
+	global vehicle_control,distance
 	while True:
 		vehicle_control.update_distance()
+		distance = vehicle_control.distance
 		time.sleep(0.2)
 
 # Funzione per effettuare object detection sui frame della coda
