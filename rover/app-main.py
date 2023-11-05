@@ -296,15 +296,14 @@ if __name__ == "__main__":
 	capture_thread = threading.Thread(target=capture_frames)
 	detection_thread = threading.Thread(target=detection)
 	status_thread = threading.Thread(target=update_vehicle_status)
-#	distance_thread = threading.Thread(target=vehicle_control.update_distance)
+	distance_thread = threading.Thread(target=vehicle_control.update_distance2)
 #	distance_thread = threading.Thread(target=update_vehicle_distance)
 	cv2_thread = threading.Thread(target=cv2Lines)
 	flask_thread = threading.Thread(target=run_flask_app)
 
-	vehicle_control.calculate_distance()
 
 	flask_thread.start()
-#	distance_thread.start()
+	distance_thread.start()
 	status_thread.start()
 	capture_thread.start()
 	time.sleep(0.1)
@@ -312,7 +311,7 @@ if __name__ == "__main__":
 	cv2_thread.start()
 	
 	status_thread.join()
-#	distance_thread.join()
+	distance_thread.join()
 	detection_thread.join()
 	cv2_thread.join()
 	flask_thread.join()
