@@ -19,6 +19,7 @@ from libcamera import controls
 from detection import Tensorflow
 from control_lib import Vehicle_Control
 from mqtt_lib import MQTTConnection
+import ultrasonic
 
 #Web-UI
 from flask import Flask, render_template, jsonify, Response
@@ -222,6 +223,16 @@ def generate_frames():
 		else:
 			continue
 
+
+def update_distance2(self):
+	global distance
+	while True:
+		distance_value = ultrasonic.distance()	
+		distance = distance_value
+		print("Ho aggiornato la distanza:", distance)
+		time.sleep(0.5)
+
+
 # Funzione per l'avvio di flask
 def run_flask_app():
 	global stop_threads
@@ -296,7 +307,7 @@ if __name__ == "__main__":
 	capture_thread = threading.Thread(target=capture_frames)
 	detection_thread = threading.Thread(target=detection)
 	status_thread = threading.Thread(target=update_vehicle_status)
-	distance_thread = threading.Thread(target=vehicle_control.update_distance2)
+	distance_thread = threading.Thread(target=update_distance2)
 #	distance_thread = threading.Thread(target=update_vehicle_distance)
 	cv2_thread = threading.Thread(target=cv2Lines)
 	flask_thread = threading.Thread(target=run_flask_app)
