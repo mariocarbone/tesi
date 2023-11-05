@@ -37,7 +37,7 @@ class Vehicle_Control():
 		}
 
 	def update_distance(self):
-			ultrasonic = DistanceSensor(echo=17, trigger=4)
+			ultrasonic = DistanceSensor(echo=17, trigger=4, queue_len=3)
 			while True:
 				self.distance= round(ultrasonic.distance*100,2)
 				time.sleep(0.1)
