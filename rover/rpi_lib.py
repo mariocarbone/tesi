@@ -38,29 +38,6 @@ class Raspberry(str):
 		self.distance = distanza
 		return self.distance
 
-	# Funzione per misurare la distanza
-	def measure_distance(self):
-		GPIO.output(self.trig_pin, GPIO.HIGH)
-		time.sleep(0.00001)
-		GPIO.output(self.trig_pin, GPIO.LOW)
-
-		pulse_start = time.time()
-		pulse_end = time.time()
-
-		while GPIO.input(self.echo_pin) == 0:
-			pulse_start = time.time()
-		while GPIO.input(self.echo_pin) == 1:
-			pulse_end = time.time()
-
-		pulse_duration = pulse_end - pulse_start
-
-		distance_value = pulse_duration * 17150
-
-		self.distance = round(distance_value, 2)
-		print("Distance = ", distance_value, time.time())
-		
-		return self.distance
-
 	def get_wifi_network_info(self):
 		wifi_interface = "wlan0"
 

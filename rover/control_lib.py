@@ -36,19 +36,10 @@ class Vehicle_Control():
 
 		}
 
-	def update_distance2(self):
-		while True:
-			distance_value = ultrasonic.distance()	
-			self.distance = distance_value
-			print("Ho aggiornato la distanza:", self.distance)
-			time.sleep(0.5)
-
 	def update_distance(self):
-		while True:
-			distance_value = self.rpi.measure_distance()	
-			self.distance = distance_value
-			print("Ho aggiornato la distanza:", self.distance)
-			time.sleep(1)
+		distance_thread = threading.Thread(target=ultrasonic.distance_measurement)
+		distance_thread.start()
+
 
 	def update_status(self):
 		if self.arduino.ser.is_open:
