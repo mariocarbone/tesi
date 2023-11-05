@@ -37,8 +37,8 @@ class Vehicle_Control():
 
 	def update_distance(self):
 		#self.distance, self.distance_lock, self.rpi
-	
-		self.distance = self.rpi.distance#round(self.rpi.measure_distance(), 2)
+		self.distance = self.rpi.measure_distance()
+		#self.distance = self.rpi.distance#round(self.rpi.measure_distance(), 2)
 
 	def update_status(self):
 		if self.arduino.ser.is_open:
