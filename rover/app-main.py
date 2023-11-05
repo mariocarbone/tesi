@@ -290,30 +290,23 @@ def stop_all_threads():
 	# Puoi aggiungere ulteriori azioni o pulizie se necessario prima di terminare i thread.
 	return jsonify({"message": "Tutti i thread verranno fermati."})
 
-# Main
-if __name__ == "__main__":
-	
-	# Avvia i thread
+def rover_start():
 	capture_thread = threading.Thread(target=capture_frames)
+	cv2_thread = threading.Thread(target=cv2Lines)
 	detection_thread = threading.Thread(target=detection)
 	status_thread = threading.Thread(target=update_vehicle_status)
 	distance_thread = threading.Thread(target=vehicle_control.update_distance)
-#	distance_thread = threading.Thread(target=update_vehicle_distance)
-	cv2_thread = threading.Thread(target=cv2Lines)
 	flask_thread = threading.Thread(target=run_flask_app)
 
-
 	flask_thread.start()
-	distance_thread.start()
-	status_thread.start()
 	capture_thread.start()
 	time.sleep(0.1)
 	detection_thread.start()
 	cv2_thread.start()
-	
-#	status_thread.join()
-#	distance_thread.join()
-#	detection_thread.join()
-#	cv2_thread.join()
-#	flask_thread.join()
+	status_thread.start()
+	distance_thread.start()
 
+# Main
+if __name__ == "__main__":
+
+	rover_start()
