@@ -123,8 +123,8 @@ def old_update_vehicle_distance():
 def update_vehicle_distance():
 	global vehicle_control, distance
 	while not stop_threads:
-		vehicle_control.update_distance()
-		distance = vehicle_control.distance
+		#vehicle_control.update_distance()
+		distance = vehicle_control.rpi.measure_distance
 		print("AGGIORNO DISTANZA")
 		time.sleep(0.2)
 
