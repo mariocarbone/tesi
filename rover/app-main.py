@@ -121,8 +121,8 @@ def old_update_vehicle_distance():
 		time.sleep(0.15)
 
 def update_vehicle_distance():
-	global vehicle_control, distance
-	vehicle_control.update_dis()
+	#global vehicle_control, distance
+	#vehicle_control.update_dis()
 	#while not stop_threads:
 		#vehicle_control.update_distance()
 	#	distance_value = vehicle_control.rpi.measure_distance()
