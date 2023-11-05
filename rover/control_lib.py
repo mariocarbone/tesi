@@ -4,6 +4,7 @@ import time
 import json
 from rpi_lib import Raspberry
 from arduino_lib import Arduino
+import ultrasonic
 
 class Vehicle_Control():
 
@@ -36,8 +37,15 @@ class Vehicle_Control():
 		}
 
 	def calculate_distance(self):
-		thread_distanza = threading.Thread(target= self.update_distance)
+		thread_distanza = threading.Thread(target= self.update_distance2)
 		thread_distanza.start()
+
+	def update_distance2(self):
+		while True:
+			distance_value = ultrasonic.distance()	
+			self.distance = distance_value
+			print("Ho aggiornato la distanza:", self.distance)
+			time.sleep(1)
 
 	def update_distance(self):
 		while True:
