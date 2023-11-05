@@ -234,10 +234,9 @@ def video_feed():
 # API per ottenere la distanza
 @app.route('/get_distance', methods=['GET'])
 def get_distance():
-	global distance, distance_lock
-	with distance_lock:
-		distance_value = distance
-	return str(distance_value)
+	with distance_value.get_lock():
+		distance_value_copy = distance_value.value
+	return str(distance_value_copy)
 
 # API per ottenere lo stato 
 @app.route('/get_status', methods=['GET'])
@@ -286,9 +285,8 @@ def stop_all_threads():
 	return jsonify({"message": "Tutti i thread verranno fermati."})
 
 def update_distance(distance_value):
-    while True:
-        distance_value.value = distancesensor.get_distance()
-        time.sleep(0.1)
+	get_distance(distance_value)
+	print("La distanza è:", distance_value.value)
 		
 if __name__ == "__main__":
 	capture_thread = threading.Thread(target=capture_frames)
@@ -298,10 +296,8 @@ if __name__ == "__main__":
 	#distance_thread = threading.Thread(target=update_distance)
 	flask_thread = threading.Thread(target=run_flask_app)
 
-	distance_process = Process(target=update_distance, args=(distance_value))
+	distance_process = Process(target=update_distance, args=(distance_value,))
 	distance_process.start()
-
-
 
 	flask_thread.start()
 	capture_thread.start()
