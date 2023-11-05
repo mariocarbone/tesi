@@ -1,7 +1,7 @@
 import cv2
 import threading
 import time
-import multiprocessing
+import subprocess
 import os
 import numpy as np
 import logging
@@ -297,16 +297,14 @@ if __name__ == "__main__":
 	capture_thread = threading.Thread(target=capture_frames)
 	detection_thread = threading.Thread(target=detection)
 	status_thread = threading.Thread(target=update_vehicle_status)
-	distance_process = multiprocessing.Process(target=vehicle_control.update_distance)
-#	distance_thread = threading.Thread(target=vehicle_control.update_distance)
+	distance_thread = threading.Thread(target=vehicle_control.update_distance)
 #	distance_thread = threading.Thread(target=update_vehicle_distance)
 	cv2_thread = threading.Thread(target=cv2Lines)
 	flask_thread = threading.Thread(target=run_flask_app)
 
 
 	flask_thread.start()
-#	distance_thread.start()
-	distance_process.start()
+	distance_thread.start()
 	status_thread.start()
 	capture_thread.start()
 	time.sleep(0.1)
