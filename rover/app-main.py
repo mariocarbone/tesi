@@ -226,13 +226,13 @@ def generate_frames():
 
 # Function to update the distance variable
 def update_distance2():
-    global distance
-    while not stop_threads:
-        print("calcolo distanza")
+	global distance
+	while not stop_threads:
+		print("calcolo distanza")
 		distance_value = ultrasonic.distance()
-        with distance_lock:
-            distance = distance_value
-        time.sleep(0.5)
+		with distance_lock:
+			distance = distance_value
+		time.sleep(0.5)
 
 # Funzione per l'avvio di flask
 def run_flask_app():
