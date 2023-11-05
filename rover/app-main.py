@@ -282,10 +282,10 @@ def stop_all_threads():
 	# Puoi aggiungere ulteriori azioni o pulizie se necessario prima di terminare i thread.
 	return jsonify({"message": "Tutti i thread verranno fermati."})
 
-def update_distance(self):
+def update_distance():
 		#ultrasonic = DistanceSensor(echo=17, trigger=4, queue_len=3)
 		while True:
-			with self.distance_lock:
+			with distance_lock:
 				distance_value = distancesensor.get_distance()
 				time.sleep(0.1)
 				print(distance_value)
