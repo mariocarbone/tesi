@@ -1,58 +1,45 @@
 import RPi.GPIO as GPIO
 import time
+from threading import Thread, Lock
 
 # GPIO pin configuration
 GPIO.setmode(GPIO.BOARD)
 GPIO_TRIGGER = 7
 GPIO_ECHO = 11
 
-def distance_measurement():
+# Variabile globale per la distanza misurata
+distance_value = 0.0
+distance_lock = Lock()
+
+# Funzione per misurare la distanza utilizzando il sensore ad ultrasuoni
+def distance_measurement(stop_threads):
     GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
     GPIO.setup(GPIO_ECHO, GPIO.IN)
 
-    # Allow the sensor to settle
-    print("Waiting for sensor to settle...")
-    time.sleep(2)
-
-    # Function to trigger a distance measurement
-    def trigger_measurement():
+    while not stop_threads:
         GPIO.output(GPIO_TRIGGER, True)
         time.sleep(0.00001)
         GPIO.output(GPIO_TRIGGER, False)
 
-    # Initialize the sensor
-    print("Initializing the sensor...")
-    trigger_measurement()
-    print("Sensor ready")
+        start_time = time.time()
+        stop_time = time.time()
 
-    start_time = time.time()
-    stop_time = time.time()
-    distance = 0
-
-    # Callback function for echo pin
-    def echo_callback(channel):
-        nonlocal start_time, stop_time, distance
-
-        if GPIO.input(GPIO_ECHO):
+        while GPIO.input(GPIO_ECHO) == 0:
             start_time = time.time()
-        else:
+
+        while GPIO.input(GPIO_ECHO) == 1:
             stop_time = time.time()
-            time_elapsed = stop_time - start_time
-            distance = (time_elapsed * 34300) / 2
 
-    # Register the callback function for the falling edge of the echo signal
-    GPIO.add_event_detect(GPIO_ECHO, GPIO.BOTH, callback=echo_callback)
+        time_elapsed = stop_time - start_time
+        distance = (time_elapsed * 34300) / 2
 
-    try:
-        while True:  # Ensure that you exit the loop when `stop_threads` is set to True
-            # Trigger a distance measurement
-            trigger_measurement()
+        # Aggiorna la variabile globale `distance_value` con il valore misurato
+        with distance_lock:
+            distance_value = distance
 
-            # Wait for a short time to allow the measurement to complete
-            time.sleep(0.1)
+        time.sleep(0.5)
 
-            print(distance)
-
-    except KeyboardInterrupt:
-        print("Measurement stopped")
-        GPIO.cleanup()
+# Funzione per ottenere la distanza misurata
+def get_distance():
+    global distance_value
+    return distance_value

@@ -255,8 +255,8 @@ def video_feed():
 # API per ottenere la distanza
 @app.route('/get_distance', methods=['GET'])
 def get_distance():
-	#distance_value = vehicle_control.distance
-	return str(distance)
+	distance_value = vehicle_control.distance
+	return str(distance_value)
 
 # API per ottenere lo stato 
 @app.route('/get_status', methods=['GET'])
@@ -311,7 +311,7 @@ if __name__ == "__main__":
 	capture_thread = threading.Thread(target=capture_frames)
 	detection_thread = threading.Thread(target=detection)
 	status_thread = threading.Thread(target=update_vehicle_status)
-	distance_thread = threading.Thread(target=update_distance2)
+	distance_thread = threading.Thread(target=vehicle_control.update_distance)
 #	distance_thread = threading.Thread(target=update_vehicle_distance)
 	cv2_thread = threading.Thread(target=cv2Lines)
 	flask_thread = threading.Thread(target=run_flask_app)
@@ -325,9 +325,9 @@ if __name__ == "__main__":
 	detection_thread.start()
 	cv2_thread.start()
 	
-	status_thread.join()
+#	status_thread.join()
 #	distance_thread.join()
-	detection_thread.join()
-	cv2_thread.join()
-	flask_thread.join()
+#	detection_thread.join()
+#	cv2_thread.join()
+#	flask_thread.join()
 
