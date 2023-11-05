@@ -122,7 +122,7 @@ def old_update_vehicle_distance():
 
 def update_vehicle_distance():
 	global vehicle_control, distance
-	while True:
+	while not stop_threads:
 		vehicle_control.update_distance()
 		distance = vehicle_control.distance
 		print("AGGIORNO DISTANZA")
@@ -238,23 +238,15 @@ def video_feed():
 # API per ottenere la distanza
 @app.route('/get_distance', methods=['GET'])
 def get_distance():
-	global vehicle_control, distance#, distance_lock
-	
-	#with vehicle_control.distance_lock:
-	distance_value = distance
-	
-	#with distance_lock:
-	#	distance_value = distance
-		
+	global distance
+	distance_value = distance		
 	return str(distance_value)
 
 # API per ottenere lo stato 
 @app.route('/get_status', methods=['GET'])
 def get_status():
 	global status_json#, status_lock
-
-	status_obj = vehicle_control.status#status_json
-		
+	status_obj = vehicle_control.status
 	return jsonify(status_obj)  
 	
 # API per ottenere le prediction

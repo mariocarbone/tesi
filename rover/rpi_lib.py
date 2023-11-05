@@ -52,9 +52,10 @@ class Raspberry(str):
 
 		distance_value = pulse_duration * 17150
 
-		print("Distance = ", distance_value)
+		self.distance = round(distance_value, 2)
+		#print("Distance = ", distance_value)
 		
-		return round(distance_value, 2)
+		return self.distance
 
 	def get_network_info(self):
 		# Ottieni tutti gli interfacce di rete
