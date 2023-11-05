@@ -12,11 +12,11 @@ distance_value = 0.0
 distance_lock = Lock()
 
 # Funzione per misurare la distanza utilizzando il sensore ad ultrasuoni
-def distance_measurement(stop_threads):
+def distance_measurement():
     GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
     GPIO.setup(GPIO_ECHO, GPIO.IN)
 
-    while not stop_threads:
+    while True:
         GPIO.output(GPIO_TRIGGER, True)
         time.sleep(0.00001)
         GPIO.output(GPIO_TRIGGER, False)
