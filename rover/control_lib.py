@@ -44,7 +44,7 @@ class Vehicle_Control():
 			distance_value = self.rpi.measure_distance()	
 			self.distance = distance_value
 			print("Ho aggiornato la distanza:", self.distance)
-			time.sleep(0.5)
+			time.sleep(1)
 
 	def update_status(self):
 		if self.arduino.ser.is_open:
