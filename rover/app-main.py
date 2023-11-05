@@ -285,7 +285,6 @@ def stop_all_threads():
 	return jsonify({"message": "Tutti i thread verranno fermati."})
 
 def update_distance(distance_value):
-	global distance_value
 	while True:
 		try:
 			previous_distance = distance_value.value
