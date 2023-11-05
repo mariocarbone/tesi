@@ -57,7 +57,7 @@ class Raspberry(str):
 		distance_value = pulse_duration * 17150
 
 		self.distance = round(distance_value, 2)
-		#print("Distance = ", distance_value)
+		print("Distance = ", distance_value)
 		
 		return self.distance
 
