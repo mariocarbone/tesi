@@ -326,7 +326,7 @@ if __name__ == "__main__":
 	cv2_thread.start()
 	
 	status_thread.join()
-	distance_thread.join()
+#	distance_thread.join()
 	detection_thread.join()
 	cv2_thread.join()
 	flask_thread.join()
