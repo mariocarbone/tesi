@@ -90,6 +90,7 @@ void loop() {
   if (Serial.available() > 0) {
     String command = Serial.readStringUntil('\n');
     command.trim(); // Rimuovi eventuali spazi iniziali o finali
+    print("COMANDO RICEVUTO: "+command)
 
     if (command.startsWith("LEFT")) {
       lastSteeringValue = steeringValue;
@@ -103,9 +104,9 @@ void loop() {
       analogWrite(ENA, leftSpeed);
       analogWrite(ENB, rightSpeed);
       
-    } //TURNING RIGHT
+    } //TURNING LEFT
 
-    if (command.startsWith("CENTER")) {
+    else if (command.startsWith("CENTER")) {
       lastSteeringValue = steeringValue;
       steeringValue = command.substring(6).toInt();
       last_command = command;
@@ -119,7 +120,7 @@ void loop() {
       
     } //RETURN TO CENTER
 
-    if (command.startsWith("RIGHT")) {
+    else if (command.startsWith("RIGHT")) {
       lastSteeringValue = steeringValue;
       steeringValue = command.substring(5).toInt();
       last_command = command;
@@ -196,10 +197,10 @@ void loop() {
 
         Serial.println("{\"speed\":" + String(speed) + ",\"speed_left_side\":" + String(leftSpeed)
                       + ",\"speed_right_side\":" + String(rightSpeed) + ",\"steer_angle\":" + String(steeringValue) 
-                      + ",\"last_angle\":" + String(lastAngle) + ",\"ir_left\":" + String(sx) 
-                      + ",\"ir_center\":" + String(center) + ",\"ir_right\":" + String(dx) 
-                      + ",\"distance\":" + String(distance) + ",\"braking\":" + braking 
-                      + ",\"moving\":" + moving + ",\"last_command\":\"" +last_command + "\"}");
+                      + ",\"steer_side\":" + steer_side + ",\"last_angle\":" + String(lastAngle) 
+                      + ",\"ir_left\":" + String(sx) + ",\"ir_center\":" + String(center) 
+                      + ",\"ir_right\":" + String(dx) + ",\"distance\":" + String(distance) 
+                      + ",\"braking\":" + braking + ",\"moving\":" + moving + ",\"last_command\":\"" +last_command + "\"}");
       } //STATUS
       
     else {
