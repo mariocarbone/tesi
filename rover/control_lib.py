@@ -4,8 +4,6 @@ import time
 import json
 from rpi_lib import Raspberry
 from arduino_lib import Arduino
-#import distancesensor
-
 
 class Vehicle_Control():
 
@@ -22,7 +20,6 @@ class Vehicle_Control():
 		self.turn_step = 10
 		self.on_track = False
 		self.moving = False
-		#self.ultrasonic = DistanceSensor(echo=17, trigger=4)
 		self.status = {
 			"speed": 0,
 			"speed_left_side": 0,
@@ -33,20 +30,12 @@ class Vehicle_Control():
 			"ir_center": 6,
 			"ir_right": 6,
 			"on_track" : False,
-			"last_command": "STATUS",
 			"braking" : False,
 			"moving" : False,
+			"distance" : 0,
+			"last_command": "STATUS"
 		}
 
-	def update_distance(self):
-			#ultrasonic = DistanceSensor(echo=17, trigger=4, queue_len=3)
-			while True:
-				with self.distance_lock:
-					distance_value = distancesensor.get_distance()
-					print(distance_value)
-					time.sleep(0.1)
-					self.distance = distance_value
-				time.sleep(0.1)
 
 	def update_status(self):
 		if self.arduino.ser.is_open:
