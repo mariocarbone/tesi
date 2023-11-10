@@ -5,7 +5,7 @@ import subprocess
 import os
 import numpy as np
 import logging
-from distancesensor import get_distance_value
+#from distancesensor import get_distance_value
 
 from multiprocessing import Process, Value
 from threading import Lock
@@ -52,9 +52,9 @@ status_json = {}
 status_lock = Lock()
 
 # Distanza Misurata con Sensore ad Ultrasuoni
-distance = 0.0
-distance_lock = Lock()
-distance_value = Value('d', 0.0)
+#distance = 0.0
+#distance_lock = Lock()
+#distance_value = Value('d', 0.0)
 
 # Prediction trovate su frame
 prediction_json = {}
@@ -115,13 +115,13 @@ def update_vehicle_status():
 		time.sleep(0.2)
 
 # Funzione per aggiornare la distanza
-def old_update_vehicle_distance():
-	global distance, distance_lock
-	while not stop_threads:
-		vehicle_control.update_distance()
-		with distance_lock:
-			distance = vehicle_control.get_distance()
-		time.sleep(0.15)
+#def old_update_vehicle_distance():
+#	global distance, distance_lock
+#	while not stop_threads:
+#		vehicle_control.update_distance()
+#		with distance_lock:
+#			distance = vehicle_control.get_distance()
+#		time.sleep(0.15)
 
 # Funzione per effettuare object detection sui frame della coda
 def detection():
@@ -232,11 +232,11 @@ def video_feed():
 	return Response(generate_frames(),mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # API per ottenere la distanza
-@app.route('/get_distance', methods=['GET'])
-def get_distance():
-	with distance_value.get_lock():
-		distance_value_copy = distance_value.value
-	return str(distance_value_copy)
+#@app.route('/get_distance', methods=['GET'])
+#def get_distance():
+#	with distance_value.get_lock():
+#		distance_value_copy = distance_value.value
+#	return str(distance_value_copy)
 
 # API per ottenere lo stato 
 @app.route('/get_status', methods=['GET'])
@@ -284,26 +284,26 @@ def stop_all_threads():
 	# Puoi aggiungere ulteriori azioni o pulizie se necessario prima di terminare i thread.
 	return jsonify({"message": "Tutti i thread verranno fermati."})
 
-def update_distance(distance_value):
-	while True:
-		try:
-			previous_distance = distance_value.value
-			get_distance_value(distance_value)
-			if distance_value.value != previous_distance:
-				print("Distance updated to:", distance_value.value)
-			#else:
-				#print("Distance value is the same as before.")
-			time.sleep(0.1)
-		except Exception as e:
-			print("Error updating distance:", e)
-			#break  # Or handle the exception accordingly
+#def update_distance(distance_value):
+#	while True:
+#		try:
+#			previous_distance = distance_value.value
+#			get_distance_value(distance_value)
+#			if distance_value.value != previous_distance:
+#				print("Distance updated to:", distance_value.value)
+#			#else:
+#				#print("Distance value is the same as before.")
+#			time.sleep(0.1)
+#		except Exception as e:
+#			print("Error updating distance:", e)
+#			#break  # Or handle the exception accordingly
 
 if __name__ == "__main__":
 	capture_thread = threading.Thread(target=capture_frames)
 	cv2_thread = threading.Thread(target=cv2Lines)
 	detection_thread = threading.Thread(target=detection)
 	status_thread = threading.Thread(target=update_vehicle_status)
-	distance_thread = threading.Thread(target=update_distance, args=(distance_value,))
+	#distance_thread = threading.Thread(target=update_distance, args=(distance_value,))
 	flask_thread = threading.Thread(target=run_flask_app)
 
 	#distance_process = Process(target=update_distance, args=(distance_value,))
@@ -315,4 +315,4 @@ if __name__ == "__main__":
 	detection_thread.start()
 	cv2_thread.start()
 	status_thread.start()
-	distance_thread.start()
+	#distance_thread.start()
