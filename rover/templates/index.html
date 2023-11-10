@@ -173,9 +173,9 @@
 
 
                     // Funzione per aggiornare la distanza nel documento HTML
-                    function updateDistance(distance) {
-                        distanceElement.textContent = distance + " cm";
-                    }
+                    //function updateDistance(distance) {
+                    //    distanceElement.textContent = distance + " cm";
+                    //}
 
                     function updatePrediction(prediction) {
                         predictionTable.innerHTML = '';
@@ -202,6 +202,7 @@
                         irRDiv.textContent = status.ir_right + " ";
                         moving.textContent = status.moving;
                         braking.textContent = status.braking;
+                        distanceElement.textContent = status.distance + " cm";
                     }
 
                     function updatePiInfo(status) {

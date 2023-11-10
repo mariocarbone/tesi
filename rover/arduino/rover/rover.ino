@@ -171,8 +171,8 @@ void loop() {
         dx=analogRead(RIGHT);
         center=analogRead(CENTER);
         distance = hc.dist();
-        moving = isMoving();
-        braking = isBraking();
+        moving = isMoving(speed);
+        braking = false;
 
         Serial.println("{\"speed\":" + String(speed) + ",\"speed_left_side\":" + String(velSinistra)
                       + ",\"speed_right_side\":" + String(velDestra) + ",\"steer_angle\":" + String(steeringValue) 
