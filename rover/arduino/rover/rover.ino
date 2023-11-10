@@ -14,7 +14,6 @@ int CENTER= A1; //CENTER sensor connected to analog pin A3
 int RIGHT = A2; // RIGHT sensor connected to analog pin A0
 
 HCSR04 hc(10, 11);
-int angolo = 0;
 int lastAngle = 0;
 int brake = 0;
 int leftSpeed = 0;
@@ -135,12 +134,16 @@ void loop() {
     } //TURNING LEFT
 
     else if (command.startsWith("SPEED")) {
-
-      if (command.length() >= 4){
-        tmp_speed = command.substring(3).toInt();
+      
+      tmp_speed = 0;
+      if (command.length() >= 5){
+        tmp_speed = command.substring(5).toInt();
+        if(tmp_speed > maxSpeed){
+          tmp_speed = maxSpeed
+        }
       }
       last_command = command;
-      speed = command.substring(3).toInt();
+      speed = tmp_speed;
  
       leftSpeed = speed;
       rightSpeed = speed;
