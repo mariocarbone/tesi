@@ -1,0 +1,41 @@
+
+    if (comando.startsWith("TRN")) {
+      lastSteeringValue = steeringValue;
+      steeringValue = comando.substring(3).toInt();
+      
+      if (steeringValue < 50){ //Decremento la velocità del Lato Sinistro
+        leftSpeed = getSideSpeed(steeringValue,speed);
+        rightSpeed = speed; 
+      }
+      else if (steeringValue > 50){ //Decremento la veloctià del Lato Destro
+        leftSpeed = speed;
+        rightSpeed = getSideSpeed(steeringValue,speed);
+      } else{
+          leftSpeed = speed;
+          rightSpeed = speed;
+      }
+     
+      analogWrite(ENA, leftSpeed);
+      analogWrite(ENB, rightSpeed);
+      
+    } //TRN
+
+    int getSideSpeed(int steeringValue, int speed){
+
+  if (steeringValue == 0 || steeringValue == 100){
+    return 0;
+  }
+  else if(steeringValue == 10 || steeringValue == 90){
+     return round(speed*0.2);
+  }  
+  else if(steeringValue == 20 || steeringValue == 80){
+     return round(speed*0.4);
+  } 
+  else if(steeringValue == 30 || steeringValue == 70){
+     return round(speed*0.6);
+  }  
+  else if(steeringValue == 40 || steeringValue == 60){
+     return round(speed*0.8);
+  }  
+  else return speed;
+}

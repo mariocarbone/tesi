@@ -12,37 +12,46 @@ class Arduino:
 		self.baud_rate = baud_rate
 		self.timeout = timeout
 		self.write_timeout = write_timeout
+		self.str_left="LEFT"
+		self.str_right="RIGHT"
+		self.str_center="CENTER"
 
-	def steer(self, angle):
-		command = "TRN"+str(angle)
+
+	def steer(self, side, value):
+		if(side == self.str_left):
+			command = self.str_left+str(value)
+		elif(side == self.str_right):
+			command = self.str_right+str(value)
+		else:
+			print("Side not recognized")
 		self.send_command(command)
 
 	def turn_left(self):
-		command = "TRN45"
+		command = self.str_left+"5"
 		self.send_command(command)
 
 	def turn_right(self):
-		command = "TRN-45"
+		command = self.str_right+"5"
 		self.send_command(command)
 
 	def speed(self, speed):
-		command = "SPD"+str(speed)
+		command = "SPEED"+str(speed)
 		self.send_command(command)
 
 	def backward(self, speed):
-		command = "BAK"+str(speed)
+		command = "BACK"+str(speed)
 		self.send_command(command)
 
 	def stop(self):
-		command = "STP"
+		command = "STOP"
 		self.send_command(command)
 
 	def brake(self):
-		command = "BRK"
+		command = "BRAKE"
 		self.send_command(command)
 
 	def get_status(self):
-		command = "STA"
+		command = "STATUS"
 		self.send_command(command)
 		response = self.ser.readline().decode('ascii')
 
