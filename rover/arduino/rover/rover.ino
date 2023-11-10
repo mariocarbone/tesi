@@ -135,11 +135,11 @@ void loop() {
 
     else if (command.startsWith("SPEED")) {
       
-      tmp_speed = 0;
+      int tmp_speed = 0;
       if (command.length() >= 5){
         tmp_speed = command.substring(5).toInt();
         if(tmp_speed > maxSpeed){
-          tmp_speed = maxSpeed
+          tmp_speed = maxSpeed;
         }
       }
       last_command = command;
@@ -198,8 +198,8 @@ void loop() {
                       + ",\"speed_right_side\":" + String(rightSpeed) + ",\"steer_angle\":" + String(steeringValue) 
                       + ",\"last_angle\":" + String(lastAngle) + ",\"ir_left\":" + String(sx) 
                       + ",\"ir_center\":" + String(center) + ",\"ir_right\":" + String(dx) 
-                      + ",\"distance\":" + String(distance) + ",\"braking\":" + String(braking) 
-                      + ",\"moving\":" + String(moving) + ",\"last_command\":\"" +last_command + "\"}");
+                      + ",\"distance\":" + String(distance) + ",\"braking\":" + braking 
+                      + ",\"moving\":" + moving + ",\"last_command\":\"" +last_command + "\"}");
       } //STATUS
       
     else {
