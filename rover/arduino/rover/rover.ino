@@ -13,8 +13,7 @@ int LEFT = A0; // LEFT sensor connected to analog pin A1
 int CENTER= A1; //CENTER sensor connected to analog pin A3
 int RIGHT = A2; // RIGHT sensor connected to analog pin A0
 
-int TRIG = 10; // TRIGGER PIN for ultrasonic sensor
-int ECHO = 11; // ECHO PIN for ultrasonic sensor
+HCSR04 hc(10, 11);
 
 int ingressoSeriale = 0;
 String data = "";
