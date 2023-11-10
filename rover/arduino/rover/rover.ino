@@ -90,7 +90,7 @@ void loop() {
   if (Serial.available() > 0) {
     String command = Serial.readStringUntil('\n');
     command.trim(); // Rimuovi eventuali spazi iniziali o finali
-    print("COMANDO RICEVUTO: "+command)
+    Serial.println("COMANDO RICEVUTO: "+command);
 
     if (command.startsWith("LEFT")) {
       lastSteeringValue = steeringValue;
@@ -141,6 +141,9 @@ void loop() {
         tmp_speed = command.substring(5).toInt();
         if(tmp_speed > maxSpeed){
           tmp_speed = maxSpeed;
+        }
+        else if(tmp_speed == 0){
+          stopped = true;
         }
       }
       last_command = command;
@@ -199,7 +202,7 @@ void loop() {
                       + ",\"speed_right_side\":" + String(rightSpeed) + ",\"steer_angle\":" + String(steeringValue) 
                       + ",\"steer_side\":" + steer_side + ",\"last_angle\":" + String(lastAngle) 
                       + ",\"ir_left\":" + String(sx) + ",\"ir_center\":" + String(center) 
-                      + ",\"ir_right\":" + String(dx) + ",\"distance\":" + String(distance) 
+                      + ",\"ir_right\":" + String(dx) + ",\"distance\":" + String(distance) + ",\"stopped\":" + stopped
                       + ",\"braking\":" + braking + ",\"moving\":" + moving + ",\"last_command\":\"" +last_command + "\"}");
       } //STATUS
       
