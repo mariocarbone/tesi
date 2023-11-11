@@ -67,8 +67,8 @@ def game_loop():
                     else:
                         arduino.backward(speed)
                 elif event.key == pygame.K_LEFT:  # Tasto "Sinistra" per girare a sinistra
-                    if steer_angle > min_degree:
-                        steer_angle -= degree_step
+                    if steer_angle < max_degree:
+                        steer_angle += degree_step
                     print("LEFT",steer_angle)
                     arduino.steer(arduino.str_left, steer_angle)
                 elif event.key == pygame.K_RIGHT:  # Tasto "Destra" per girare a destra
