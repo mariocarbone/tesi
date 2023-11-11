@@ -19,7 +19,7 @@ arduino = Arduino("/dev/ttyACM0", 9600, 1, 1)
 acceleration_step = 15 # Incremento/decremento della velocità ad ogni click
 degree_step = 10 
 max_speed = 249  # Velocità massima dell'auto
-max_degree = 100
+max_degree = 5
 min_degree = 0
 
 # Ciclo principale del gioco
