@@ -26,7 +26,8 @@ min_degree = 0
 def game_loop():
     game_exit = False
     speed = 0
-    steer_angle = 0
+    steer_angle_right = 0
+    steer_angle_left = 0
     reverse = False
 
     while not game_exit:
@@ -67,15 +68,17 @@ def game_loop():
                     else:
                         arduino.backward(speed)
                 elif event.key == pygame.K_LEFT:  # Tasto "Sinistra" per girare a sinistra
-                    if steer_angle < max_degree:
-                        steer_angle += degree_step
-                    print("LEFT",steer_angle)
-                    arduino.steer(arduino.str_left, steer_angle)
+                    steer_angle_right -= degree_step
+                    if steer_angle_left < max_degree:
+                        steer_angle_left += degree_step
+                    print("LEFT",steer_angle_left)
+                    arduino.steer(arduino.str_left, steer_angle_left)
                 elif event.key == pygame.K_RIGHT:  # Tasto "Destra" per girare a destra
-                    if steer_angle < max_degree:
-                        steer_angle += degree_step
-                    print("RIGHT",steer_angle)
-                    arduino.steer(arduino.str_right, steer_angle)
+                    steer_angle_left -= degree_step
+                    if steer_angle_right < max_degree:
+                        steer_angle_right += degree_step
+                    print("RIGHT",steer_angle_right)
+                    arduino.steer(arduino.str_right, steer_angle_right)
                 elif event.key == pygame.K_SPACE:  # Tasto "Spazio" per fermare l'auto
                     speed = 0
                     arduino.stop()
