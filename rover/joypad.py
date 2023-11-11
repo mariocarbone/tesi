@@ -17,7 +17,7 @@ arduino = Arduino("/dev/ttyACM0", 9600, 1, 1)
 
 # Variabili per la gestione della velocità
 acceleration_step = 15 # Incremento/decremento della velocità ad ogni click
-degree_step = 10 
+degree_step = 1 
 max_speed = 249  # Velocità massima dell'auto
 max_degree = 5
 min_degree = 0
@@ -26,7 +26,7 @@ min_degree = 0
 def game_loop():
     game_exit = False
     speed = 0
-    steer_angle = 50
+    steer_angle = 0
     reverse = False
 
     while not game_exit:
