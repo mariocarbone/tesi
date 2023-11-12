@@ -98,8 +98,9 @@ void loop() {
       last_command = command;
       steer_side = command;
 
-      leftSpeed = speed; 
-      rightSpeed = getSideSpeed(steeringValue,speed);
+
+      leftSpeed = getSideSpeed(steeringValue,speed);
+      rightSpeed = speed; 
      
       analogWrite(ENA, leftSpeed);
       analogWrite(ENB, rightSpeed);
@@ -126,8 +127,8 @@ void loop() {
       last_command = command;
       steer_side = command;
       
-      leftSpeed = getSideSpeed(steeringValue,speed);
-      rightSpeed = speed; 
+      leftSpeed = speed; 
+      rightSpeed = getSideSpeed(steeringValue,speed);
      
       analogWrite(ENA, leftSpeed);
       analogWrite(ENB, rightSpeed);
