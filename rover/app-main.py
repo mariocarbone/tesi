@@ -201,7 +201,6 @@ def generate_frames():
 		else:
 			continue
 
-
 # Funzione per l'avvio di flask
 def run_flask_app():
 	global stop_threads
