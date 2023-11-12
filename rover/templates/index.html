@@ -190,11 +190,6 @@
             var braking = document.getElementById('braking');
 
 
-            // Funzione per aggiornare la distanza nel documento HTML
-            //function updateDistance(distance) {
-            //    distanceElement.textContent = distance + " cm";
-            //}
-
             function updatePrediction(prediction) {
                 predictionTable.innerHTML = '';
                 for (var key in prediction) {
@@ -236,14 +231,6 @@
             setInterval(function () {
                 var currentTime = new Date().getTime();
                 frameElement.src = '/frame?' + currentTime;
-            }, 1000);
-
-            // Aggiorna la distanza ogni secondo
-            setInterval(function () {
-                fetch('/get_distance')
-                    .then(response => response.text())
-                    .then(data => updateDistance(data))
-                    .catch(error => console.log('Errore durante la richiesta della distanza:', error));
             }, 1000);
 
             // Aggiorna le prediction ogni secondo
