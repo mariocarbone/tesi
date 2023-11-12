@@ -46,8 +46,8 @@
                             <div id="speed" class="h5">0</div>
                         </div>
                         <div class="status-field mx-2 my-2 text-center">
-                            <h5>Angolo di sterzo</h5>
-                            <div id="steer_angle" class="h5">0</div>
+                            <h5>Direzione sterzo</h5>
+                            <div id="steer_side" class="h5">CENTER</div>
                         </div>
                         <div class="status-field mx-2 my-2 text-center">
                             <h5>Distanza anteriore</h5>
@@ -61,6 +61,14 @@
                             <div class="status-field mx-2 my-2 text-center">
                                 <h5>In frenata</h5>
                                 <div id="braking" class="h5">0</div>
+                            </div>
+                            <div class="status-field mx-2 my-2 text-center">
+                                <h5>Fermo</h5>
+                                <div id="stopped" class="h5">0</div>
+                            </div>
+                            <div class="status-field mx-2 my-2 text-center">
+                                <h5>Sulla Traccia</h5>
+                                <div id="on_track" class="h5">0</div>
                             </div>
                         </div>
                     </div>
@@ -176,7 +184,7 @@
 
         var statusElement = document.getElementById('status-json');
         var speedDiv = document.getElementById('speed');
-        var steerDiv = document.getElementById('steer_angle');
+        var steerDiv = document.getElementById('steer_side');
         var irLDiv = document.getElementById('ir_left');
         var irCDiv = document.getElementById('ir_center');
         var irRDiv = document.getElementById('ir_right');
@@ -188,6 +196,8 @@
         var signal = document.getElementById('signal');
         var moving = document.getElementById('moving');
         var braking = document.getElementById('braking');
+        var stopped = document.getElementById('stopped');
+        var onTrack = document.getElementById('on_track');
 
 
         function updatePrediction(prediction) {
@@ -209,12 +219,14 @@
             //var statusObj = JSON.parse(status);
 
             speedDiv.textContent = status.speed + " m/s";
-            steerDiv.textContent = status.steer_angle + " °";
+            steerDiv.textContent = status.steer_side + "";
             irLDiv.textContent = status.ir_left + " ";
             irCDiv.textContent = status.ir_center + " ";
             irRDiv.textContent = status.ir_right + " ";
             moving.textContent = status.moving;
             braking.textContent = status.braking;
+            onTrack.textContent = status.on_track;
+            stopped.textContent = status.stopped;
             distanceElement.textContent = status.distance + " cm";
         }
 
