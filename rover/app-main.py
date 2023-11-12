@@ -51,11 +51,6 @@ vehicle_id = "ROVER"
 status_json = {}
 status_lock = Lock()
 
-# Distanza Misurata con Sensore ad Ultrasuoni
-#distance = 0.0
-#distance_lock = Lock()
-#distance_value = Value('d', 0.0)
-
 # Prediction trovate su frame
 prediction_json = {}
 prediction_lock = Lock()
@@ -113,15 +108,6 @@ def update_vehicle_status():
 		#with status_lock:
 		status_json = vehicle_control.status
 		time.sleep(0.2)
-
-# Funzione per aggiornare la distanza
-#def old_update_vehicle_distance():
-#	global distance, distance_lock
-#	while not stop_threads:
-#		vehicle_control.update_distance()
-#		with distance_lock:
-#			distance = vehicle_control.get_distance()
-#		time.sleep(0.15)
 
 # Funzione per effettuare object detection sui frame della coda
 def detection():
@@ -231,13 +217,6 @@ def index():
 def video_feed():
 	return Response(generate_frames(),mimetype='multipart/x-mixed-replace; boundary=frame')
 
-# API per ottenere la distanza
-#@app.route('/get_distance', methods=['GET'])
-#def get_distance():
-#	with distance_value.get_lock():
-#		distance_value_copy = distance_value.value
-#	return str(distance_value_copy)
-
 # API per ottenere lo stato 
 @app.route('/get_status', methods=['GET'])
 def get_status():
@@ -281,33 +260,58 @@ def rover_stop():
 def stop_all_threads():
 	global stop_threads
 	stop_threads = True
-	# Puoi aggiungere ulteriori azioni o pulizie se necessario prima di terminare i thread.
+	# azioni o pulizie se necessario prima di terminare i thread.
 	return jsonify({"message": "Tutti i thread verranno fermati."})
 
-#def update_distance(distance_value):
-#	while True:
-#		try:
-#			previous_distance = distance_value.value
-#			get_distance_value(distance_value)
-#			if distance_value.value != previous_distance:
-#				print("Distance updated to:", distance_value.value)
-#			#else:
-#				#print("Distance value is the same as before.")
-#			time.sleep(0.1)
-#		except Exception as e:
-#			print("Error updating distance:", e)
-#			#break  # Or handle the exception accordingly
+# COMANDI MANUALI ROVER
+@app.route('/rover/commands/forward', methods=['POST'])
+def rover_manual_forward():
+	global vehicle_control
+	vehicle_control.arduino.speed(70)
+	print("Rover Forward")
+	return jsonify({"message": "Rover Forward!"})
+
+@app.route('/rover/commands/left', methods=['POST'])
+def rover_manual_left():
+	global vehicle_control
+	vehicle_control.arduino.steer(vehicle_control.arduino.str_left,3)
+	print("Rover Left")
+	return jsonify({"message": "Rover Left!"})
+
+@app.route('/rover/commands/right', methods=['POST'])
+def rover_manual_right():
+	global vehicle_control
+	vehicle_control.arduino.steer(vehicle_control.arduino.str_right,3)
+	print("Rover Right")
+	return jsonify({"message": "Rover Right!"})
+
+@app.route('/rover/commands/brake', methods=['POST'])
+def rover_manual_brake():
+	global vehicle_control
+	vehicle_control.arduino.stop()
+	print("Rover Brake")
+	return jsonify({"message": "Rover Brake!"})
+
+@app.route('/rover/commands/stop', methods=['POST'])
+def rover_manual_stop():
+	global vehicle_control
+	vehicle_control.arduino.stop()
+	print("Rover Stop")
+	return jsonify({"message": "Rover Stop!"})
+
+@app.route('/rover/commands/reverse', methods=['POST'])
+def rover_manual_reverse():
+	global vehicle_control
+	vehicle_control.arduino.backward()
+	print("Rover Reverse")
+	return jsonify({"message": "Rover Reverse!"})
 
 if __name__ == "__main__":
 	capture_thread = threading.Thread(target=capture_frames)
 	cv2_thread = threading.Thread(target=cv2Lines)
 	detection_thread = threading.Thread(target=detection)
 	status_thread = threading.Thread(target=update_vehicle_status)
-	#distance_thread = threading.Thread(target=update_distance, args=(distance_value,))
 	flask_thread = threading.Thread(target=run_flask_app)
-
-	#distance_process = Process(target=update_distance, args=(distance_value,))
-	#distance_process.start()
 
 	flask_thread.start()
 	capture_thread.start()
@@ -315,4 +319,3 @@ if __name__ == "__main__":
 	detection_thread.start()
 	cv2_thread.start()
 	status_thread.start()
-	#distance_thread.start()

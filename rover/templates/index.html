@@ -65,7 +65,7 @@
                         </div>
                     </div>
                     <h4 class="mt-4 text-center"">Line Following</h3>
-                    <div class="row justify-content-center align-items-center">
+                    <div class=" row justify-content-center align-items-center">
                         <div class="status-field mx-2 my-2 text-center">
                             <h5>IR Sinistra</h5>
                             <div id="ir_left" class="h5">0</div>
@@ -78,19 +78,19 @@
                             <h5>IR Destra</h5>
                             <div id="ir_right" class="h5">0</div>
                         </div>
-                    </div>
             </div>
-            <h3 class="mt-4 text-center">Comandi</h3>
-            <div class=" column" id="status-fields" style="background-color: lightcyan;">
-                <!-- Comandi Rover-->
-                <div id="rover-commands" class="row justify-content-center align-items-center"
-                    style="background-color: lightcyan;">
-                    <button id="rover-start" class="btn btn-primary mx-2 my-2">Start</button>
-                    <button id="rover-stop" class="btn btn-danger mx-2 my-2">Stop</button>
-                </div>
-            </div>
-
         </div>
+        <h3 class="mt-4 text-center">Comandi</h3>
+        <div class=" column" id="status-fields" style="background-color: lightcyan;">
+            <!-- Comandi Rover-->
+            <div id="rover-commands" class="row justify-content-center align-items-center"
+                style="background-color: lightcyan;">
+                <button id="rover-start" class="btn btn-primary mx-2 my-2">Start</button>
+                <button id="rover-stop" class="btn btn-danger mx-2 my-2">Stop</button>
+            </div>
+        </div>
+
+    </div>
     </div>
 
     <div class="row">
@@ -139,181 +139,304 @@
             </div>
         </div>
 
-                <footer class="bg-light text-center text-lg-start fixed-bottom">
-                    <!-- Copyright -->
-                    <div class="text-center p-3">
-                        © 2023 Copyright:
-                        <a class="text-dark" href="https://mariocarbone.net/">Mario Carbone</a>
-                    </div>
-                    <!-- Copyright -->
-                </footer>
+        <div class="row">
+            <div class="col-lg-12" style="padding-bottom: 100px;">
+                <h3 class="mt-4 text-center">Controlli Manuali</h3>
+                <div id="rover-commands" class="row justify-content-center align-items-center"
+                    style="background-color: lightcyan;">
+                    <button id="rover-manual-stop" class="btn btn-danger mx-2 my-2">S</button>
+                    <button id="rover-manual-forward" class="btn btn-primary mx-2 my-2">⇧</button>
+                    <button id="rover-manual-reverse" class="btn btn-danger mx-2 my-2">R</button>
+                </div>
+                <div id="rover-commands" class="row justify-content-center align-items-center"
+                    style="background-color: lightcyan;">
+                    <button id="rover-manual-left" class="btn btn-primary mx-2 my-2">⇦</button>
+                    <button id="rover-manual-brake" class="btn btn-primary mx-2 my-2">⇩</button>
+                    <button id="rover-manual-right" class="btn btn-primary mx-2 my-2">⇨</button>
+                </div>
+            </div>
+        </div>
+
+        <footer class="bg-light text-center text-lg-start fixed-bottom">
+            <!-- Copyright -->
+            <div class="text-center p-3">
+                © 2023 Copyright:
+                <a class="text-dark" href="https://mariocarbone.net/">Mario Carbone</a>
+            </div>
+            <!-- Copyright -->
+        </footer>
 
 
-                <script type="text/javascript">
-                    var frameElement = document.getElementById('frame');
-                    var distanceElement = document.getElementById('distance-value');
+        <script type="text/javascript">
+            var frameElement = document.getElementById('frame');
+            var distanceElement = document.getElementById('distance-value');
 
-                    var predictionElement = document.getElementById('prediction-json');
-                    var predictionTable = document.getElementById('prediction-table');
+            var predictionElement = document.getElementById('prediction-json');
+            var predictionTable = document.getElementById('prediction-table');
 
-                    var statusElement = document.getElementById('status-json');
-                    var speedDiv = document.getElementById('speed');
-                    var steerDiv = document.getElementById('steer_angle');
-                    var irLDiv = document.getElementById('ir_left');
-                    var irCDiv = document.getElementById('ir_center');
-                    var irRDiv = document.getElementById('ir_right');
-                    var cpu = document.getElementById('cpu');
-                    var temp = document.getElementById('temp');
-                    var ram = document.getElementById('ram');
-                    var ssid = document.getElementById('ssid');
-                    var ip = document.getElementById('ip');
-                    var signal = document.getElementById('signal');
-                    var moving = document.getElementById('moving');
-                    var braking = document.getElementById('braking');
+            var statusElement = document.getElementById('status-json');
+            var speedDiv = document.getElementById('speed');
+            var steerDiv = document.getElementById('steer_angle');
+            var irLDiv = document.getElementById('ir_left');
+            var irCDiv = document.getElementById('ir_center');
+            var irRDiv = document.getElementById('ir_right');
+            var cpu = document.getElementById('cpu');
+            var temp = document.getElementById('temp');
+            var ram = document.getElementById('ram');
+            var ssid = document.getElementById('ssid');
+            var ip = document.getElementById('ip');
+            var signal = document.getElementById('signal');
+            var moving = document.getElementById('moving');
+            var braking = document.getElementById('braking');
 
 
-                    // Funzione per aggiornare la distanza nel documento HTML
-                    //function updateDistance(distance) {
-                    //    distanceElement.textContent = distance + " cm";
-                    //}
+            // Funzione per aggiornare la distanza nel documento HTML
+            //function updateDistance(distance) {
+            //    distanceElement.textContent = distance + " cm";
+            //}
 
-                    function updatePrediction(prediction) {
-                        predictionTable.innerHTML = '';
-                        for (var key in prediction) {
-                            if (prediction.hasOwnProperty(key)) {
-                                var predictionObj = prediction[key];
-                                var newRow = predictionTable.insertRow();
-                                var categoryCell = newRow.insertCell(0);
-                                var valueCell = newRow.insertCell(1);
+            function updatePrediction(prediction) {
+                predictionTable.innerHTML = '';
+                for (var key in prediction) {
+                    if (prediction.hasOwnProperty(key)) {
+                        var predictionObj = prediction[key];
+                        var newRow = predictionTable.insertRow();
+                        var categoryCell = newRow.insertCell(0);
+                        var valueCell = newRow.insertCell(1);
 
-                                categoryCell.innerHTML = `<b>${predictionObj.category}:</b>`;
-                                valueCell.textContent = predictionObj.value;
-                            }
+                        categoryCell.innerHTML = `<b>${predictionObj.category}:</b>`;
+                        valueCell.textContent = predictionObj.value;
+                    }
+                }
+            }
+
+            function updateStatus(status) {
+                //var statusObj = JSON.parse(status);
+
+                speedDiv.textContent = status.speed + " m/s";
+                steerDiv.textContent = status.steer_angle + " °";
+                irLDiv.textContent = status.ir_left + " ";
+                irCDiv.textContent = status.ir_center + " ";
+                irRDiv.textContent = status.ir_right + " ";
+                moving.textContent = status.moving;
+                braking.textContent = status.braking;
+                distanceElement.textContent = status.distance + " cm";
+            }
+
+            function updatePiInfo(status) {
+                cpu.textContent = status.cpu + " %";
+                temp.textContent = status.temp + " °";
+                ram.textContent = status.ram + " %";
+                ssid.textContent = status.wifi[0];
+                signal.textContent = status.wifi[1];
+                ip.textContent = status.ip;
+            }
+
+            // Aggiorna il frame immagine ogni secondo
+            setInterval(function () {
+                var currentTime = new Date().getTime();
+                frameElement.src = '/frame?' + currentTime;
+            }, 1000);
+
+            // Aggiorna la distanza ogni secondo
+            setInterval(function () {
+                fetch('/get_distance')
+                    .then(response => response.text())
+                    .then(data => updateDistance(data))
+                    .catch(error => console.log('Errore durante la richiesta della distanza:', error));
+            }, 1000);
+
+            // Aggiorna le prediction ogni secondo
+            setInterval(function () {
+                fetch('/get_predictions')
+                    .then(response => response.json())
+                    .then(data => updatePrediction(data))
+                    .catch(error => console.log('Errore durante la richiesta della distanza:', error));
+            }, 1000);
+
+            // Aggiorna lo stato del veicolo ogni secondo
+            setInterval(function () {
+                fetch('/get_status')
+                    .then(response => response.json())
+                    .then(data => updateStatus(data))
+                    .catch(error => console.log('Errore durante la richiesta della distanza:', error));
+            }, 1000);
+
+            // Aggiorna le informazioni sulla connessione ogni cinque secondi
+            setInterval(function () {
+                fetch('/pi/get_info')
+                    .then(response => response.json())
+                    .then(data => updatePiInfo(data))
+                    .catch(error => console.log('Errore durante la richiesta delle informazioni di connessione:', error));
+            }, 5000);
+
+            //Azioni bottoni
+            var buttonRoverStart = document.getElementById('rover-start');
+            var buttonRoverStop = document.getElementById('rover-stop');
+            var buttonStop = document.getElementById('stop');
+
+            buttonRoverStart.addEventListener('click', function () {
+                fetch('/rover/start', {
+                    method: 'POST'
+                })
+                    .then(function (response) {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error('Errore nella richiesta');
                         }
-                    }
-
-                    function updateStatus(status) {
-                        //var statusObj = JSON.parse(status);
-                        
-                        speedDiv.textContent = status.speed + " m/s";
-                        steerDiv.textContent = status.steer_angle + " °";
-                        irLDiv.textContent = status.ir_left + " ";
-                        irCDiv.textContent = status.ir_center + " ";
-                        irRDiv.textContent = status.ir_right + " ";
-                        moving.textContent = status.moving;
-                        braking.textContent = status.braking;
-                        distanceElement.textContent = status.distance + " cm";
-                    }
-
-                    function updatePiInfo(status) {
-                        cpu.textContent = status.cpu + " %";
-                        temp.textContent = status.temp + " °";
-                        ram.textContent = status.ram + " %";
-                        ssid.textContent = status.wifi[0];
-                        signal.textContent = status.wifi[1];
-                        ip.textContent = status.ip;
-                    }
-
-                    // Aggiorna il frame immagine ogni secondo
-                    setInterval(function () {
-                        var currentTime = new Date().getTime();
-                        frameElement.src = '/frame?' + currentTime;
-                    }, 1000);
-
-                    // Aggiorna la distanza ogni secondo
-                    setInterval(function () {
-                        fetch('/get_distance')
-                            .then(response => response.text())
-                            .then(data => updateDistance(data))
-                            .catch(error => console.log('Errore durante la richiesta della distanza:', error));
-                    }, 1000);
-
-                    // Aggiorna le prediction ogni secondo
-                    setInterval(function () {
-                        fetch('/get_predictions')
-                            .then(response => response.json())
-                            .then(data => updatePrediction(data))
-                            .catch(error => console.log('Errore durante la richiesta della distanza:', error));
-                    }, 1000);
-
-                    // Aggiorna lo stato del veicolo ogni secondo
-                    setInterval(function () {
-                        fetch('/get_status')
-                            .then(response => response.json())
-                            .then(data => updateStatus(data))
-                            .catch(error => console.log('Errore durante la richiesta della distanza:', error));
-                    }, 1000);
-
-                    // Aggiorna le informazioni sulla connessione ogni cinque secondi
-                    setInterval(function () {
-                        fetch('/pi/get_info')
-                            .then(response => response.json())
-                            .then(data => updatePiInfo(data))
-                            .catch(error => console.log('Errore durante la richiesta delle informazioni di connessione:', error));
-                    }, 5000);
-
-                    //Azioni bottoni
-                    var buttonRoverStart = document.getElementById('rover-start');
-                    var buttonRoverStop = document.getElementById('rover-stop');
-                    var buttonStop = document.getElementById('stop');
-
-                    buttonRoverStart.addEventListener('click', function () {
-                        fetch('/rover/start', {
-                            method: 'POST'
-                        })
-                            .then(function (response) {
-                                if (response.ok) {
-                                    return response.text();
-                                } else {
-                                    throw new Error('Errore nella richiesta');
-                                }
-                            })
-                            //.then(function (data) {
-                            //    alert(data); // Mostra un messaggio di conferma
-                            //})
-                            .catch(function (error) {
-                                console.error('Errore:', error);
-                            });
+                    })
+                    //.then(function (data) {
+                    //    alert(data); // Mostra un messaggio di conferma
+                    //})
+                    .catch(function (error) {
+                        console.error('Errore:', error);
                     });
+            });
 
-                    buttonRoverStop.addEventListener('click', function () {
-                        fetch('/rover/stop', {
-                            method: 'POST'
-                        })
-                            .then(function (response) {
-                                if (response.ok) {
-                                    return response.text();
-                                } else {
-                                    throw new Error('Errore nella richiesta');
-                                }
-                            })
-                            //.then(function (data) {
-                            //    alert(data); // Mostra un messaggio di conferma
-                            //})
-                            .catch(function (error) {
-                                console.error('Errore:', error);
-                            });
+            buttonRoverStop.addEventListener('click', function () {
+                fetch('/rover/stop', {
+                    method: 'POST'
+                })
+                    .then(function (response) {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error('Errore nella richiesta');
+                        }
+                    })
+                    //.then(function (data) {
+                    //    alert(data); // Mostra un messaggio di conferma
+                    //})
+                    .catch(function (error) {
+                        console.error('Errore:', error);
                     });
+            });
 
-                    buttonStop.addEventListener('click', function () {
-                        fetch('/stop_threads', {
-                            method: 'POST'
-                        })
-                            .then(function (response) {
-                                if (response.ok) {
-                                    return response.text();
-                                } else {
-                                    throw new Error('Errore nella richiesta');
-                                }
-                            })
-                            //.then(function (data) {
-                            //    alert(data); // Mostra un messaggio di conferma
-                            //})
-                            .catch(function (error) {
-                                console.error('Errore:', error);
-                            });
+            buttonStop.addEventListener('click', function () {
+                fetch('/stop_threads', {
+                    method: 'POST'
+                })
+                    .then(function (response) {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error('Errore nella richiesta');
+                        }
+                    })
+                    //.then(function (data) {
+                    //    alert(data); // Mostra un messaggio di conferma
+                    //})
+                    .catch(function (error) {
+                        console.error('Errore:', error);
                     });
-                </script>
+            });
+
+            //COMANDI MANUALI
+            var buttonManualStop = document.getElementById('rover-manual-stop');
+            var buttonManualForward = document.getElementById('rover-manual-forward');
+            var buttonManualReverse = document.getElementById('rover-manual-reverse');
+            var buttonManualLeft = document.getElementById('rover-manual-left');
+            var buttonManualRight = document.getElementById('rover-manual-right');
+            var buttonManualBrake = document.getElementById('rover-manual-brake');
+
+            buttonManualStop.addEventListener('click', function () {
+                fetch('/rover/commands/stop', {
+                    method: 'POST'
+                })
+                    .then(function (response) {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error('Errore nella richiesta');
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Errore:', error);
+                    });
+            });
+
+            buttonManualForward.addEventListener('click', function () {
+                fetch('/rover/commands/forward', {
+                    method: 'POST'
+                })
+                    .then(function (response) {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error('Errore nella richiesta');
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Errore:', error);
+                    });
+            });
+
+            buttonManualReverse.addEventListener('click', function () {
+                fetch('/rover/commands/reverse', {
+                    method: 'POST'
+                })
+                    .then(function (response) {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error('Errore nella richiesta');
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Errore:', error);
+                    });
+            });
+
+            buttonManualLeft.addEventListener('click', function () {
+                fetch('/rover/commands/left', {
+                    method: 'POST'
+                })
+                    .then(function (response) {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error('Errore nella richiesta');
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Errore:', error);
+                    });
+            });
+
+            buttonManualRight.addEventListener('click', function () {
+                fetch('/rover/commands/right', {
+                    method: 'POST'
+                })
+                    .then(function (response) {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error('Errore nella richiesta');
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Errore:', error);
+                    });
+            });
+
+            buttonManualBrake.addEventListener('click', function () {
+                fetch('/rover/commands/brake', {
+                    method: 'POST'
+                })
+                    .then(function (response) {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error('Errore nella richiesta');
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Errore:', error);
+                    });
+            });
+
+        </script>
 </body>
 
 </html>
