@@ -14,7 +14,7 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <img src="{{ url_for('static', filename='rsu-icon.png') }}" style="max-width: 70px;"
+                    <img src="{{ url_for('static', filename='rsu_icon.png') }}" style="max-width: 70px;"
                         class="header-icon" alt="RSU Manager">
                 </div>
                 <div class="col">
@@ -37,16 +37,16 @@
             </div>
 
             <div class="col-lg-6">
-                <!-- Stato Rover-->
+                <!-- Stato RSU-->
                 <h3 class="mt-4 text-center"">Stato</h3>
                 <div class=" column" id="status-fields" style="background-color: lightcyan;">
                     <div class="row justify-content-center align-items-center">
                         <div class="status-field mx-2 my-2 text-center">
-                            <h5>Velocità</h5>
+                            <h5>Veicoli connessi</h5>
                             <div id="speed" class="h5">0</div>
                         </div>
                         <div class="status-field mx-2 my-2 text-center">
-                            <h5>Direzione sterzo</h5>
+                            <h5>Velocita massima</h5>
                             <div id="steer_side" class="h5">CENTER</div>
                         </div>
                         <div class="status-field mx-2 my-2 text-center">
@@ -261,7 +261,7 @@
                 .catch(error => console.log('Errore durante la richiesta della distanza:', error));
         }, 1000);
         */
-       
+
         // Aggiorna le informazioni sulla connessione ogni cinque secondi
         setInterval(function () {
             fetch('/pi/get_info')
