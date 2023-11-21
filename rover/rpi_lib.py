@@ -11,7 +11,7 @@ class Raspberry(str):
 		self.wifi_info = {}
 		self.system_status = {}
 		self.pi = PI()
-		self.distance = 0
+		#self.distance = 0
 		#GPIO.setwarnings(False)
 		#GPIO.cleanup()
 		#GPIO.setmode(GPIO.BOARD)
@@ -32,11 +32,20 @@ class Raspberry(str):
 		self.system_status["ip"] = self.pi.get_connected_ip_addr(network="wlan0")
 		self.system_status["disk_space"] = self.pi.get_disk_space()
 		return self.system_status
-
-	def get_distance(self):
-		distanza = self.measure_distance()
-		self.distance = distanza
-		return self.distance
+	
+	def calculate_distance(self, rssi, n=2):
+		if rssi is None:
+			return None
+		A = -30  # Valore RSSI tipico a 1 metro
+		distance = 10 ** ((A - rssi) / (10 * n))
+		return distance
+	
+	def get_rsu_distance(self):
+		#Aggiorno lo stato del wifi
+		self.system_status["wifi"] = self.pi.get_wifi_status()	
+		#Calcolo una stima dlla distanza basandomi sugli rssi
+		print(self.system_status)
+		self.system_status["ap_distance"] = self.calculate_distance(self.system_status["wifi"]["rssi"])
 
 	def get_wifi_network_info(self):
 		wifi_interface = "wlan0"
@@ -56,3 +65,4 @@ class Raspberry(str):
 			return result.strip()
 		except subprocess.CalledProcessError:
 			return "N/A"
+
