@@ -31,27 +31,28 @@ class Raspberry(str):
 		self.system_status["wifi"] = self.pi.get_wifi_status()
 		self.system_status["ip"] = self.pi.get_connected_ip_addr(network="wlan0")
 		self.system_status["disk_space"] = self.pi.get_disk_space()
+		self.system_status["ap_distance"] = self.get_rsu_distance()
 		self.get_rsu_distance()
 		return self.system_status
 	
 	def calculate_distance(self, rssi, n=2):
 		if rssi is None:
 			return None
-		A = -30  # Valore RSSI tipico a 1 metro
+		A = -30  # Valore RSSI misurato ad un metro
 		distance = 10 ** ((A - rssi) / (10 * n))
 		return round(distance,2)
 	
 	def get_rsu_distance(self):
+		rssi_str = self.system_status["wifi"][1]
+		rssi = int(rssi_str.split(' ')[0]) # RSSI in intero
+		return self.calculate_distance(rssi)
+	
+	def get_rsu_distance_with_update(self):
 		# Aggiorno lo stato del wifi
 		self.system_status["wifi"] = self.pi.get_wifi_status()
 		rssi_str = self.system_status["wifi"][1]
 		rssi = int(rssi_str.split(' ')[0])  # RSSI a intero
-
-		# Calcolo una stima della distanza basandomi sugli RSSI
-		print(self.system_status)
-		self.system_status["ap_distance"] = self.calculate_distance(rssi)
-
-		return self.system_status["ap_distance"]
+		return self.calculate_distance(rssi)
 
 	def get_wifi_network_info(self):
 		wifi_interface = "wlan0"
