@@ -39,7 +39,7 @@ class Raspberry(str):
 			return None
 		A = -30  # Valore RSSI tipico a 1 metro
 		distance = 10 ** ((A - rssi) / (10 * n))
-		return distance
+		return round(distance,2)
 	
 	def get_rsu_distance(self):
 		# Aggiorno lo stato del wifi
