@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Mappa dei Veicoli</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" type="text/css" href="static/style.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Monitoraggio Veicoli</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">RSU LOG</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Smart Car</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#"></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div style="padding-top: 10px;" class="container-fluid">
+    <div class="row">
+      <div class="col-9">
+        <div id="map"></div>
+      </div>
+      <div class="col-3">
+        <div id="sidebar">
+          <div id="rsu-details" class="rsu-details"></div>
+          <h4>Lista Veicoli connessi:</h4>
+          <ul id="vehicle-list" class="list-group">Nessuno</ul>
+          <button style="margin-top:10px" id="center-button">Centra Mappa</button>
+        </div>
+        <div id="vehicle-details" class="vehicle-details"></div>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="static/script.js"></script>
+
+</body>
+
+</html>
