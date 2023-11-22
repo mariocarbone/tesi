@@ -36,9 +36,26 @@ tf_instance = Tensorflow()
 rpi = Raspberry()
 #mqtt = MQTTConnection("192.168.1.2", "8000", topic_alert, topic_auto, vehicle_id)
 
+#MQTT INFO
 topic_alert = "/alert/"
 topic_auto = "/smartcar/"
-rsu_id = "RSU_001"
+rsu_id = "RSU_01"
+rsu_deatils = {
+    "id": rsu_id,
+    "connected_clients": 0,
+    "ssid": "RSU_PI01",
+    "gps": {"lat": 39.35613, "lon": 16.22815}
+}
+
+veicoli_connessi = {}
+
+# Broker MQTT e Topic
+broker_address = "localhost"
+broker_port = 1883
+topic_auto = "/smartcar/#"
+topic_rsu = "/rsu/#"
+topic_rsu_topub = "/rsu/"
+alert_topic = "/alert/"
 
 # Stato del veicolo
 status_json = {}

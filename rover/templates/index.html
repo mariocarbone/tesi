@@ -87,13 +87,15 @@
                             <div id="ir_right" class="h5">0</div>
                         </div>
             </div>
-            <h3 class="mt-4 text-center">Comandi</h3>
+            <h3 class="mt-4 text-center">Guida Autonoma</h3>
             <div class=" column" id="status-fields" style="background-color: lightcyan;">
                 <!-- Comandi Rover-->
                 <div id="rover-commands" class="row justify-content-center align-items-center"
                     style="background-color: lightcyan;">
                     <button id="rover-start" class="btn btn-primary mx-2 my-2">Start</button>
                     <button id="rover-stop" class="btn btn-danger mx-2 my-2">Stop</button>
+                    <button id="rover-log"  class="btn btn-light" disabled>Log:</button>
+                    <span id="self-driving-log">Errori</span>
                 </div>
             </div>
         </div>
@@ -105,6 +107,33 @@
             <table id="prediction-table">
                 <!-- Le righe delle previsioni saranno generate dinamicamente qui -->
             </table>
+        </div>
+
+        <div class="col-lg-4">
+            <h3 class="mt-4 text-center">Gestion Alert</h3>
+            <table id="prediction-table">
+                <!-- Le righe delle previsioni saranno generate dinamicamente qui -->
+            </table>
+        </div>
+
+        <div class="col-lg-4 text-center">
+            <h3 class="mt-4">RSU Debug</h3>
+            <div class=" column" id="connection-fields" style="background-color: lightcyan; padding: auto;">
+                <div class="row justify-content-center align-items-center">
+                    <div class="connection-field mx-2 my-2 text-center">
+                        <h5>RSU Disponibili:</h5>
+                        <div id="ssid" class="h5">WiFi SSID</div>
+                    </div>
+                    <div class="connection-field mx-2 my-2 text-center">
+                        <h5>Distanza Stimata:</h5>
+                        <div id="distance-rsu" class="h5">0m</div>
+                    </div>
+                    <div class="status-field mx-2 my-2 text-center">
+                        <h5>Livello Segnale</h5>
+                        <div id="signal" class="h5">0</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="col-lg-4 text-center">
@@ -161,6 +190,13 @@
                 <button id="rover-manual-brake" class="btn btn-primary mx-2 my-2">⇩</button>
                 <button id="rover-manual-right" class="btn btn-primary mx-2 my-2">⇨</button>
             </div>
+            <div id="rover-speed-command" class="row justify-content-center align-items-center" style="background-color: lightcyan;">
+                <div class="col-12 text-center">
+                    <label for="speedRange" class="form-label">Velocità</label>
+                    <input type="range" class="form-range" min="0" max="254" step="20" id="speedRange">
+                    <span id="speedDisplay">0 m/s</span>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -193,6 +229,7 @@
         var ram = document.getElementById('ram');
         var ssid = document.getElementById('ssid');
         var ip = document.getElementById('ip');
+        var distanceRSU = document.getElementById('distance-rsu');
         var signal = document.getElementById('signal');
         var moving = document.getElementById('moving');
         var braking = document.getElementById('braking');
@@ -237,6 +274,7 @@
             ssid.textContent = status.wifi[0];
             signal.textContent = status.wifi[1];
             ip.textContent = status.ip;
+            distanceRSU = status.ap_distance;
         }
 
         // Aggiorna il frame immagine ogni secondo
@@ -258,7 +296,7 @@
             fetch('/get_status')
                 .then(response => response.json())
                 .then(data => updateStatus(data))
-                .catch(error => console.log('Errore durante la richiesta della distanza:', error));
+                .catch(error => console.log('Errore durante la richiesta dello stato:', error));
         }, 1000);
 
         // Aggiorna le informazioni sulla connessione ogni cinque secondi
@@ -338,6 +376,10 @@
         var buttonManualLeft = document.getElementById('rover-manual-left');
         var buttonManualRight = document.getElementById('rover-manual-right');
         var buttonManualBrake = document.getElementById('rover-manual-brake');
+
+        document.getElementById('speedRange').addEventListener('input', function() {
+            document.getElementById('speedDisplay').textContent = this.value + " m/s";
+        });
 
         buttonManualStop.addEventListener('click', function () {
             fetch('/rover/commands/stop', {
@@ -434,6 +476,8 @@
                     console.error('Errore:', error);
                 });
         });
+
+        
 
     </script>
 </body>

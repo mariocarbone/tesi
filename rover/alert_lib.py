@@ -1,6 +1,13 @@
 from mqtt_lib import MQTTConnection
 class Alert:
     
+    def __init__(self, zone):
+        self.zone=zone
+
+    
+    def generate_alert(self, predictions):
+        
+
     def check_zona(self, punto):
         for zona in self.zone :
             # Estrai le coordinate dei quattro vertici
@@ -44,5 +51,4 @@ class Alert:
             if (zona != None):
                 print(zona[0])
 
-    def __init__(self, zone):
-        self.zone=zone
+
