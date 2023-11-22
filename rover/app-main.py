@@ -41,11 +41,16 @@ picam2.start()
 # Istanze Moduli
 tf_instance = Tensorflow()
 vehicle_control = Vehicle_Control()
-#mqtt = MQTTConnection("192.168.1.2", "8000", topic_alert, topic_auto, vehicle_id)
-
+# MQTT TOPIC & INFO
+# Broker MQTT e Topic
+broker_address = "192.168.1.6"
+broker_port = 1883
 topic_alert = "/alert/"
 topic_auto = "/smartcar/"
+topic_rsu = "/rsu/"
 vehicle_id = "ROVER"
+
+#mqtt = MQTTConnection(broker_address, broker_port, topic_alert, topic_auto, topic_rsu, vehicle_id)
 
 # Stato del veicolo
 status_json = {}

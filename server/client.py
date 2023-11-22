@@ -21,7 +21,7 @@ vehicle_info = {
 alert = {}
 
 # Broker MQTT e Topic
-broker_address = "localhost"
+broker_address = "192.168.1.6"
 broker_port = 1883
 topic = "/smartcar/" + vehicle_id
 alert_topic = "/alert/#"

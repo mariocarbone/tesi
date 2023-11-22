@@ -76,29 +76,15 @@ class Arduino:
 			print("Timeout nell'invio del comando", command)
 			self.reconnect()
 	
+	def process_alert(self, alert):
+		command = "ALERT"
+		
+
 	def reconnect(self):	
 		print("Avvio una nuova connessione")
 		self.ser = serial.Serial(self.serial_port, self.baud_rate)
 		self.ser.timeout=self.timeout
 		self.ser.write_timeout=self.write_timeout
 	
-	def main(self):
-		print("<arduino> Connessione avviata")
-		time.sleep(1.5)
-		while True:
-			#print("<arduino> Seriale Aperta:", test.arduino.isOpen())
-			comando = "STATUS"
-			newline = "\n"
-			comando_completo = comando+newline
-			self.ser.write(comando_completo.encode())
-			#print("<arduino> Comando inviato:",comando)
-			response = self.ser.readline().decode('ascii')
-			print("<arduino> Risposta ricevuta:",response)
-			time.sleep(1)
-			acc= "SPD50\n"
-			#print("<arduino> Comando inviato: SPD50")
-			self.ser.write(acc.encode())
-			time.sleep(1)
-
 
 	

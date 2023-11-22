@@ -34,7 +34,7 @@ cap = cv2.VideoCapture(0)
 # Istanze Moduli
 tf_instance = Tensorflow()
 rpi = Raspberry()
-#mqtt = MQTTConnection("192.168.1.2", "8000", topic_alert, topic_auto, vehicle_id)
+#mqtt = MQTTConnection("192.168.1.6", "1883", topic_alert, topic_auto, topic_rsu, rsu_id)
 
 #MQTT INFO
 topic_alert = "/alert/"
@@ -43,11 +43,9 @@ rsu_id = "RSU_01"
 rsu_deatils = {
     "id": rsu_id,
     "connected_clients": 0,
-    "ssid": "RSU_PI01",
-    "gps": {"lat": 39.35613, "lon": 16.22815}
+    "ssid": "RSU_PI01"#,
+    #"gps": {"lat": 39.35613, "lon": 16.22815}
 }
-
-veicoli_connessi = {}
 
 # Broker MQTT e Topic
 broker_address = "localhost"
@@ -56,6 +54,7 @@ topic_auto = "/smartcar/#"
 topic_rsu = "/rsu/#"
 topic_rsu_topub = "/rsu/"
 alert_topic = "/alert/"
+veicoli_connessi = {}
 
 # Stato del veicolo
 status_json = {}
@@ -68,7 +67,6 @@ prediction_lock = Lock()
 # Code dei frame
 frame_queue = deque(maxlen=15) #Webcam
 tf_queue = deque(maxlen=15) #Tensorflow Output
-img_queue = deque(maxlen=15) #Web Output
 
 # Metodi per l'aggiunta dei frame alle relative code
 def add_frame(frame):
@@ -102,15 +100,6 @@ def capture_frames():
 		if ret:
 			add_frame(frame)
 	cap.release()
-
-# Funzione per aggiornare lo stato del veicolo
-def update_vehicle_status():
-	global status_json, vehicle_control, distance, stop_threads
-	while not stop_threads:
-		vehicle_control.update_status()
-		#with status_lock:
-		status_json = vehicle_control.status
-		time.sleep(0.2)
 
 # Funzione per effettuare object detection sui frame della coda
 def detection():

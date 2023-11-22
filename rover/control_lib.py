@@ -36,7 +36,6 @@ class Vehicle_Control():
 			"last_command": "STATUS"
 		}
 
-
 	def update_status(self):
 		if self.arduino.ser.is_open:
 			response = self.arduino.get_status()
@@ -45,4 +44,9 @@ class Vehicle_Control():
 			else:
 				print("Lo stato di Arduino non è un dizionario valido.")
 
+	def handle_prediction(self, predictions):
+		print(predictions)
+
+	def handle_alert(self,alert):
+		print(alert)
 		

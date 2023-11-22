@@ -13,14 +13,6 @@ class Raspberry(str):
 		self.wifi_info = {}
 		self.system_status = {}
 		self.pi = PI()
-		#self.distance = 0
-		#GPIO.setwarnings(False)
-		#GPIO.cleanup()
-		#GPIO.setmode(GPIO.BOARD)
-		#self.trig_pin = 7
-		#self.echo_pin = 11
-		#GPIO.setup(self.trig_pin, GPIO.OUT)
-		#GPIO.setup(self.echo_pin, GPIO.IN)
 
 	def get_system_status(self):
 		ram_used = int(self.pi.get_ram_info()[1])
@@ -35,9 +27,8 @@ class Raspberry(str):
 		self.system_status["disk_space"] = self.pi.get_disk_space()
 		self.system_status["ap_distance"] = self.get_rsu_distance()
 		self.get_rsu_distance()
-		self.system_status["other_aps"] = self.get_other_rsu_distance()
 		return self.system_status
-	
+
 	def calculate_distance(self, rssi, n=2):
 		if rssi is None:
 			return None
