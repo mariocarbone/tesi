@@ -1,6 +1,8 @@
 #import RPi.GPIO as GPIO
 import time
 import subprocess
+import re
+import netifaces
 from pyembedded.raspberry_pi_tools.raspberrypi import PI
 
 
@@ -33,6 +35,7 @@ class Raspberry(str):
 		self.system_status["disk_space"] = self.pi.get_disk_space()
 		self.system_status["ap_distance"] = self.get_rsu_distance()
 		self.get_rsu_distance()
+		self.system_status["other_aps"] = self.get_other_rsu_distance()
 		return self.system_status
 	
 	def calculate_distance(self, rssi, n=2):
@@ -53,6 +56,22 @@ class Raspberry(str):
 		rssi_str = self.system_status["wifi"][1]
 		rssi = int(rssi_str.split(' ')[0])  # RSSI a intero
 		return self.calculate_distance(rssi)
+	
+	def get_other_rsu_distance(self):
+		interface = "wlan0"
+		rsu_networks = self.scan_wifi_rsu(interface)
+		rsu_distances = {ssid: self.calculate_distance(int(rssi)) for ssid, rssi in rsu_networks}
+		return rsu_distances
+
+	def scan_wifi_rsu(self, interface):
+		""" Scansiona le reti Wi-Fi che iniziano con 'RSU'. """
+		try:
+			scan_output = subprocess.check_output(['sudo', 'iwlist', interface, 'scan'], text=True)
+			networks = re.findall(r"ESSID:\"(RSU.+?)\".*?Signal level=(-?\d+)", scan_output, re.DOTALL)
+			return networks
+		except subprocess.CalledProcessError as e:
+			print(f"Errore durante la scansione delle reti Wi-Fi: {e}")
+			return {}
 
 	def get_wifi_network_info(self):
 		wifi_interface = "wlan0"
