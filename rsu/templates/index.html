@@ -180,26 +180,33 @@
         var braking = document.getElementById('braking');
         var stopped = document.getElementById('stopped');
         var onTrack = document.getElementById('on_track');
+        var personCount = document.getElementById('person_count');
+        var carCount = document.getElementById('car_count');
 
 
         function updatePrediction(prediction) {
-            predictionTable.innerHTML = '';
-            for (var key in prediction) {
-                if (prediction.hasOwnProperty(key)) {
-                    var predictionObj = prediction[key];
-                    var newRow = predictionTable.insertRow();
-                    var categoryCell = newRow.insertCell(0);
-                    var valueCell = newRow.insertCell(1);
+            tmp_personCount = 0;
+            tmp_carCount = 0;
 
-                    categoryCell.innerHTML = `<b>${predictionObj.category}:</b>`;
-                    valueCell.textContent = predictionObj.value;
+            for (var key in prediction) {
+                if (prediction.hasOwnProperty(key) && key !== "timestamp") {
+                    var predictionObj = prediction[key];
+
+                    // Controlla la categoria e aggiorna i conteggi
+                    if (predictionObj.category === "person") {
+                        tmp_personCount++;
+                    } else if (predictionObj.category === "car") {
+                        tmp_carCount++;
+                    }
                 }
             }
+            personCount.textContent = `Persone rilevate: ${tmp_personCount}`;
+            carCount.textContent = `Auto rilevate: ${tmp_carCount}`;
+
         }
+    
 
         function updateStatus(status) {
-            //var statusObj = JSON.parse(status);
-
             speedDiv.textContent = status.speed + " m/s";
             steerDiv.textContent = status.steer_side + "";
             irLDiv.textContent = status.ir_left + " ";
@@ -220,28 +227,13 @@
             ip.textContent = status.ip;
         }
 
-        // Aggiorna il frame immagine ogni secondo
-        //setInterval(function () {
-        //    var currentTime = new Date().getTime();
-        //    frameElement.src = '/frame?' + currentTime;
-        //}, 1000);
-
         // Aggiorna le prediction ogni secondo
         setInterval(function () {
             fetch('/get_predictions')
                 .then(response => response.json())
                 .then(data => updatePrediction(data))
                 .catch(error => console.log('Errore durante la richiesta della distanza:', error));
-        }, 1000);
-
-        // Aggiorna lo stato del veicolo ogni secondo
-        /*setInterval(function () {
-            fetch('/get_status')
-                .then(response => response.json())
-                .then(data => updateStatus(data))
-                .catch(error => console.log('Errore durante la richiesta della distanza:', error));
-        }, 1000);
-        */
+        }, 500);
 
         // Aggiorna le informazioni sulla connessione ogni cinque secondi
         setInterval(function () {
