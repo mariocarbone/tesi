@@ -23,10 +23,10 @@ class Raspberry(str):
 		self.system_status["ip"] = self.get_network_info()
 		return self.system_status
 
-def get_network_info(self):
-    bridge_interface = "bridge0"
-    if bridge_interface in netifaces.interfaces():
-        addrs = netifaces.ifaddresses(bridge_interface)
-        if netifaces.AF_INET in addrs and addrs[netifaces.AF_INET]:
-            return addrs[netifaces.AF_INET][0]["addr"]
-    return None
+	def get_network_info(self):
+		bridge_interface = "bridge0"
+		if bridge_interface in netifaces.interfaces():
+			addrs = netifaces.ifaddresses(bridge_interface)
+			if netifaces.AF_INET in addrs and addrs[netifaces.AF_INET]:
+				return addrs[netifaces.AF_INET][0]["addr"]
+		return None
