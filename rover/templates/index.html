@@ -122,15 +122,15 @@
                 <div class="row justify-content-center align-items-center">
                     <div class="connection-field mx-2 my-2 text-center">
                         <h5>RSU Disponibili:</h5>
-                        <div id="ssid" class="h5">WiFi SSID</div>
+                        <div id="rsu_list" class="h5">WiFi SSID</div>
+                    </div>
+                    <div class="status-field mx-2 my-2 text-center">
+                        <h5>RSU Connessa</h5>
+                        <div id="rsu_connessa" class="h5">0</div>
                     </div>
                     <div class="connection-field mx-2 my-2 text-center">
                         <h5>Distanza Stimata:</h5>
-                        <div id="distance-rsu" class="h5">0m</div>
-                    </div>
-                    <div class="status-field mx-2 my-2 text-center">
-                        <h5>Livello Segnale</h5>
-                        <div id="signal" class="h5">0</div>
+                        <div id="distance_rsu" class="h5">0m</div>
                     </div>
                 </div>
             </div>
@@ -229,7 +229,7 @@
         var ram = document.getElementById('ram');
         var ssid = document.getElementById('ssid');
         var ip = document.getElementById('ip');
-        var distanceRSU = document.getElementById('distance-rsu');
+        var distanceRSU = document.getElementById('distance_rsu');
         var signal = document.getElementById('signal');
         var moving = document.getElementById('moving');
         var braking = document.getElementById('braking');
@@ -274,7 +274,7 @@
             ssid.textContent = status.wifi[0];
             signal.textContent = status.wifi[1];
             ip.textContent = status.ip;
-            distanceRSU = status.ap_distance;
+            distanceRSU = status.ap_distance+" m";
         }
 
         // Aggiorna il frame immagine ogni secondo
