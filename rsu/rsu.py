@@ -99,10 +99,8 @@ def capture_frames():
 	global stop_threads, cap
 	while not stop_threads:
 		ret, frame = cap.read()
-		#frame = picam2.capture_array()
 		if ret:
 			add_frame(frame)
-	#picam2.stop()
 	cap.release()
 
 # Funzione per aggiornare lo stato del veicolo

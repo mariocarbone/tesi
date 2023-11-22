@@ -108,7 +108,7 @@
         </div>
 
         <div class="col-lg-4 text-center">
-            <h3 class="mt-4">Connessione</h3>
+            <h3 class="mt-4">Access Point Info</h3>
             <div class=" column" id="connection-fields" style="background-color: lightcyan; padding: auto;">
                 <div class="row justify-content-center align-items-center">
                     <div class="connection-field mx-2 my-2 text-center">
@@ -118,10 +118,6 @@
                     <div class="connection-field mx-2 my-2 text-center">
                         <h5>Indirizzo IP:</h5>
                         <div id="ip" class="h5">0.0.0.0</div>
-                    </div>
-                    <div class="status-field mx-2 my-2 text-center">
-                        <h5>Livello Segnale</h5>
-                        <div id="signal" class="h5">0</div>
                     </div>
                 </div>
             </div>
@@ -144,22 +140,6 @@
                         <div id="ram" class="h5">0%</div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4" style="padding-bottom: 100px;">
-            <h3 class="mt-4 text-center">Controlli Manuali</h3>
-            <div id="rover-manual-commands" class="row justify-content-center align-items-center"
-                style="background-color: lightcyan;">
-                <button id="rover-manual-stop" class="btn btn-danger mx-2 my-2">S</button>
-                <button id="rover-manual-forward" class="btn btn-primary mx-2 my-2">⇧</button>
-                <button id="rover-manual-reverse" class="btn btn-danger mx-2 my-2">R</button>
-            </div>
-            <div id="rover-manual-commands" class="row justify-content-center align-items-center"
-                style="background-color: lightcyan;">
-                <button id="rover-manual-left" class="btn btn-primary mx-2 my-2">⇦</button>
-                <button id="rover-manual-brake" class="btn btn-primary mx-2 my-2">⇩</button>
-                <button id="rover-manual-right" class="btn btn-primary mx-2 my-2">⇨</button>
             </div>
         </div>
 
@@ -234,8 +214,7 @@
             cpu.textContent = status.cpu + " %";
             temp.textContent = status.temp + " °";
             ram.textContent = status.ram + " %";
-            ssid.textContent = status.wifi[0];
-            signal.textContent = status.wifi[1];
+            ssid.textContent = status.ssid;
             ip.textContent = status.ip;
         }
 
@@ -327,110 +306,6 @@
                 //.then(function (data) {
                 //    alert(data); // Mostra un messaggio di conferma
                 //})
-                .catch(function (error) {
-                    console.error('Errore:', error);
-                });
-        });
-
-        //COMANDI MANUALI
-        var buttonManualStop = document.getElementById('rover-manual-stop');
-        var buttonManualForward = document.getElementById('rover-manual-forward');
-        var buttonManualReverse = document.getElementById('rover-manual-reverse');
-        var buttonManualLeft = document.getElementById('rover-manual-left');
-        var buttonManualRight = document.getElementById('rover-manual-right');
-        var buttonManualBrake = document.getElementById('rover-manual-brake');
-
-        buttonManualStop.addEventListener('click', function () {
-            fetch('/rover/commands/stop', {
-                method: 'POST'
-            })
-                .then(function (response) {
-                    if (response.ok) {
-                        return response.text();
-                    } else {
-                        throw new Error('Errore nella richiesta');
-                    }
-                })
-                .catch(function (error) {
-                    console.error('Errore:', error);
-                });
-        });
-
-        buttonManualForward.addEventListener('click', function () {
-            fetch('/rover/commands/forward', {
-                method: 'POST'
-            })
-                .then(function (response) {
-                    if (response.ok) {
-                        return response.text();
-                    } else {
-                        throw new Error('Errore nella richiesta');
-                    }
-                })
-                .catch(function (error) {
-                    console.error('Errore:', error);
-                });
-        });
-
-        buttonManualReverse.addEventListener('click', function () {
-            fetch('/rover/commands/reverse', {
-                method: 'POST'
-            })
-                .then(function (response) {
-                    if (response.ok) {
-                        return response.text();
-                    } else {
-                        throw new Error('Errore nella richiesta');
-                    }
-                })
-                .catch(function (error) {
-                    console.error('Errore:', error);
-                });
-        });
-
-        buttonManualLeft.addEventListener('click', function () {
-            fetch('/rover/commands/left', {
-                method: 'POST'
-            })
-                .then(function (response) {
-                    if (response.ok) {
-                        return response.text();
-                    } else {
-                        throw new Error('Errore nella richiesta');
-                    }
-                })
-                .catch(function (error) {
-                    console.error('Errore:', error);
-                });
-        });
-
-        buttonManualRight.addEventListener('click', function () {
-            fetch('/rover/commands/right', {
-                method: 'POST'
-            })
-                .then(function (response) {
-                    if (response.ok) {
-                        return response.text();
-                    } else {
-                        throw new Error('Errore nella richiesta');
-                    }
-                })
-                .catch(function (error) {
-                    console.error('Errore:', error);
-                });
-        });
-
-        buttonManualBrake.addEventListener('click', function () {
-            fetch('/rover/commands/brake', {
-                method: 'POST'
-            })
-                .then(function (response) {
-                    if (response.ok) {
-                        return response.text();
-                    } else {
-                        throw new Error('Errore nella richiesta');
-                    }
-                })
                 .catch(function (error) {
                     console.error('Errore:', error);
                 });
