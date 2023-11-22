@@ -99,9 +99,15 @@
     <div class="row">
         <div class="col-lg-4">
             <h3 class="mt-4 text-center">Oggetti Rilevati</h3>
-            <table id="prediction-table">
-                <!-- Le righe delle previsioni saranno generate dinamicamente qui -->
-            </table>
+            <div class="row justify-content-center align-items-center">
+                <div class="count-field mx-2 my-2 text-center">
+                    <h5>Person Count</h5>
+                    <div id="person_count" class="h5">0</div>
+                </div>
+                <div class="rpi-field mx-2 my-2 text-center">
+                    <h5>Car Count.</h5>
+                    <div id="car_count" class="h5">0</div>
+                </div>
         </div>
 
         <div class="col-lg-4 text-center">
@@ -200,8 +206,8 @@
                     }
                 }
             }
-            personCount.textContent = `Persone rilevate: ${tmp_personCount}`;
-            carCount.textContent = `Auto rilevate: ${tmp_carCount}`;
+            personCount.textContent = tmp_personCount;
+            carCount.textContent = tmp_carCount;
 
         }
     
