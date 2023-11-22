@@ -87,69 +87,66 @@
                             <div id="ir_right" class="h5">0</div>
                         </div>
             </div>
-            <h3 class="mt-4 text-center">Comandi</h3>
-            <div class=" column" id="status-fields" style="background-color: lightcyan;">
-                <!-- Comandi Rover-->
-                <div id="rover-commands" class="row justify-content-center align-items-center"
-                    style="background-color: lightcyan;">
+            <h4 class="mt-4 text-center">Comandi</h3>
+                <div id="rover-commands" class="row justify-content-center align-items-center">
                     <button id="rover-start" class="btn btn-primary mx-2 my-2">Start</button>
                     <button id="rover-stop" class="btn btn-danger mx-2 my-2">Stop</button>
                 </div>
-            </div>
+        </div>
+    </div>
+    </div>
 
+    <div class="row">
+        <div class="col-lg-4">
+            <h3 class="mt-4 text-center">Oggetti Rilevati</h3>
+            <table id="prediction-table">
+                <!-- Le righe delle previsioni saranno generate dinamicamente qui -->
+            </table>
         </div>
 
-
-
-        <div class="row">
-            <div class="col-lg-4">
-                <h3 class="mt-4 text-center">Oggetti Rilevati</h3>
-                <table id="prediction-table">
-                    <!-- Le righe delle previsioni saranno generate dinamicamente qui -->
-                </table>
-            </div>
-
-            <div class="col-lg-4 text-center">
-                <h3 class="mt-4">Access Point Info</h3>
-                <div class=" column" id="connection-fields" style="background-color: lightcyan; padding: auto;">
-                    <div class="row justify-content-center align-items-center">
-                        <div class="connection-field mx-2 my-2 text-center">
-                            <h5>SSID</h5>
-                            <div id="ssid" class="h5">WiFi SSID</div>
-                        </div>
-                        <div class="connection-field mx-2 my-2 text-center">
-                            <h5>Indirizzo IP:</h5>
-                            <div id="ip" class="h5">0.0.0.0</div>
-                        </div>
+        <div class="col-lg-4 text-center">
+            <h3 class="mt-4">Access Point Info</h3>
+            <div class=" column" id="connection-fields" style="background-color: lightcyan; padding: auto;">
+                <div class="row justify-content-center align-items-center">
+                    <div class="connection-field mx-2 my-2 text-center">
+                        <h5>SSID</h5>
+                        <div id="ssid" class="h5">WiFi SSID</div>
+                    </div>
+                    <div class="connection-field mx-2 my-2 text-center">
+                        <h5>Indirizzo IP:</h5>
+                        <div id="ip" class="h5">0.0.0.0</div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="col-lg-4 text-center">
-                <h3 class="mt-4 text-center">Raspberry Debug</h3>
-                <div class=" column" id="rpi-fields" style="background-color: lightcyan; padding: auto;">
-                    <div class="row justify-content-center align-items-center">
-                        <div class="rpi-field mx-2 my-2 text-center">
-                            <h5>CPU Usage</h5>
-                            <div id="cpu" class="h5">0%</div>
-                        </div>
-                        <div class="rpi-field mx-2 my-2 text-center">
-                            <h5>CPU Temp.</h5>
-                            <div id="temp" class="h5">0°</div>
-                        </div>
-                        <div class="rpi-field mx-2 my-2 text-center">
-                            <h5>Ram Usage</h5>
-                            <div id="ram" class="h5">0%</div>
-                        </div>
+        <div class="col-lg-4 text-center">
+            <h3 class="mt-4 text-center">Raspberry Debug</h3>
+            <div class=" column" id="rpi-fields" style="background-color: lightcyan; padding: auto;">
+                <div class="row justify-content-center align-items-center">
+                    <div class="rpi-field mx-2 my-2 text-center">
+                        <h5>CPU Usage</h5>
+                        <div id="cpu" class="h5">0%</div>
+                    </div>
+                    <div class="rpi-field mx-2 my-2 text-center">
+                        <h5>CPU Temp.</h5>
+                        <div id="temp" class="h5">0°</div>
+                    </div>
+                    <div class="rpi-field mx-2 my-2 text-center">
+                        <h5>Ram Usage</h5>
+                        <div id="ram" class="h5">0%</div>
                     </div>
                 </div>
             </div>
-
         </div>
-
 
     </div>
-    
+
+
+    </div> <!-- Container End -->
+
+
+
     <footer class="bg-light text-center text-lg-start fixed-bottom">
         <!-- Copyright -->
         <div class="text-center p-3">
