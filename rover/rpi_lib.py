@@ -13,6 +13,7 @@ class Raspberry(str):
 		self.wifi_info = {}
 		self.system_status = {}
 		self.pi = PI()
+		self.other_aps = {}
 
 	def get_system_status(self):
 		ram_used = int(self.pi.get_ram_info()[1])

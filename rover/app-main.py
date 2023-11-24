@@ -21,6 +21,7 @@ from libcamera import controls
 from detection import Tensorflow
 from control_lib import Vehicle_Control
 from mqtt_lib import MQTTConnection
+from alert_lib import Alert
 
 #Web-UI
 from flask import Flask, render_template, jsonify, Response
@@ -38,9 +39,6 @@ picam2 = Picamera2()
 picam2.configure(picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (640, 480)}))
 picam2.start()
 
-# Istanze Moduli
-tf_instance = Tensorflow()
-vehicle_control = Vehicle_Control()
 # MQTT TOPIC & INFO
 # Broker MQTT e Topic
 broker_address = "192.168.1.6"
@@ -51,6 +49,11 @@ topic_rsu = "/rsu/"
 vehicle_id = "ROVER"
 
 #mqtt = MQTTConnection(broker_address, broker_port, topic_alert, topic_auto, topic_rsu, vehicle_id)
+
+# Istanze Moduli
+tf_instance = Tensorflow()
+vehicle_control = Vehicle_Control()
+alert_instance = Alert(vehicle_id, vehicle_control, zone, mqtt)
 
 # Stato del veicolo
 status_json = {}
@@ -107,11 +110,12 @@ def capture_frames():
 
 # Funzione per aggiornare lo stato del veicolo
 def update_vehicle_status():
-	global status_json, vehicle_control, distance, stop_threads
+	global status_json, vehicle_control, stop_threads#, mqtt
 	while not stop_threads:
 		vehicle_control.update_status()
 		#with status_lock:
 		status_json = vehicle_control.status
+		#mqtt.send_vehicle_status(status_json)
 		time.sleep(0.2)
 
 # Funzione per effettuare object detection sui frame della coda
@@ -316,6 +320,7 @@ if __name__ == "__main__":
 	detection_thread = threading.Thread(target=detection)
 	status_thread = threading.Thread(target=update_vehicle_status)
 	flask_thread = threading.Thread(target=run_flask_app)
+
 
 	flask_thread.start()
 	capture_thread.start()
