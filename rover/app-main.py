@@ -55,7 +55,7 @@ mqtt = MQTTConnection(broker_address, broker_port, topic_alert, topic_auto, vehi
 tf_instance = Tensorflow()
 vehicle_control = Vehicle_Control()
 rpi = Raspberry()
-alert_instance = Alert(vehicle_id, vehicle_control, mqtt)
+alert_instance = Alert(vehicle_id, vehicle_control, rpi, mqtt)
 
 # Stato del veicolo
 status_json = {}
