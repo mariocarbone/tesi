@@ -30,6 +30,12 @@ class Raspberry(str):
 		self.get_rsu_distance()
 		return self.system_status
 
+	def update_other_aps(self):
+		interface = "wlan0"
+		rsu_networks = self.scan_wifi_rsu(interface)
+		rsu_distances = {ssid: self.calculate_distance(int(rssi)) for ssid, rssi in rsu_networks}
+		self.system_status['other_aps'] = rsu_distances
+
 	def calculate_distance(self, rssi, n=2):
 		if rssi is None:
 			return None
@@ -50,10 +56,7 @@ class Raspberry(str):
 		return self.calculate_distance(rssi)
 	
 	def get_other_rsu_distance(self):
-		interface = "wlan0"
-		rsu_networks = self.scan_wifi_rsu(interface)
-		rsu_distances = {ssid: self.calculate_distance(int(rssi)) for ssid, rssi in rsu_networks}
-		return rsu_distances
+		return self.system_status['other_aps']
 
 	def scan_wifi_rsu(self, interface):
 		""" Scansiona le reti Wi-Fi che iniziano con 'RSU'. """

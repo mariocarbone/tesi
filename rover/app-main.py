@@ -22,6 +22,7 @@ from detection import Tensorflow
 from control_lib import Vehicle_Control
 from mqtt_lib import MQTTConnection
 from alert_lib import Alert
+from rpi_lib import Raspberry
 
 #Web-UI
 from flask import Flask, render_template, jsonify, Response
@@ -53,6 +54,7 @@ vehicle_id = "ROVER"
 # Istanze Moduli
 tf_instance = Tensorflow()
 vehicle_control = Vehicle_Control()
+rpi = Raspberry()
 alert_instance = Alert(vehicle_id, vehicle_control, zone, mqtt)
 
 # Stato del veicolo
@@ -117,6 +119,12 @@ def update_vehicle_status():
 		status_json = vehicle_control.status
 		#mqtt.send_vehicle_status(status_json)
 		time.sleep(0.2)
+
+def update_other_aps():
+	global rpi, stop_threads
+	while not stop_threads:
+		rpi.update_other_aps()
+		time.sleep(1)
 
 # Funzione per effettuare object detection sui frame della coda
 def detection():
@@ -245,7 +253,7 @@ def get_predictions():
 # API per ottenere informazioni su raspberry pi 
 @app.route('/pi/get_info', methods=['GET'])
 def get_connections():
-	return jsonify(vehicle_control.rpi.get_system_status())  
+	return jsonify(rpi.get_system_status())  
 
 # API per far partire il rover
 @app.route('/rover/start', methods=['POST'])
@@ -319,8 +327,8 @@ if __name__ == "__main__":
 	cv2_thread = threading.Thread(target=cv2Lines)
 	detection_thread = threading.Thread(target=detection)
 	status_thread = threading.Thread(target=update_vehicle_status)
+	aps_thread = threading.Thread(target=update_other_aps)
 	flask_thread = threading.Thread(target=run_flask_app)
-
 
 	flask_thread.start()
 	capture_thread.start()
@@ -328,3 +336,4 @@ if __name__ == "__main__":
 	detection_thread.start()
 	cv2_thread.start()
 	status_thread.start()
+	aps_thread.start()

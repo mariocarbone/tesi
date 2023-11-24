@@ -10,7 +10,6 @@ class Vehicle_Control():
 	def __init__(self):
 		print("Vehicle Control avviato")
 		self.arduino = Arduino("/dev/ttyACM0", 9600, 1, 1)
-		self.rpi = Raspberry()
 		self.status_lock = Lock()
 		self.distance = 0.0
 		self.distance_lock = Lock()

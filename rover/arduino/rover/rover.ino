@@ -29,7 +29,9 @@ int distance = 0;
 bool stopped = true;
 bool braking = false;
 bool moving = false;
+bool on_track = false;
 bool objectDetected = false;
+bool object_in_front = true;
 String last_command = "STATUS";
 String status;
 int sx=analogRead(LEFT);
@@ -94,202 +96,244 @@ bool isBraking(bool braking){
  
 void loop() {
 
-if (lineFollowingMode) {
-    
-    // Aggiorno il valore dei sensori
-    leftSensor = digitalRead(LEFT);
-    centerSensor = digitalRead(CENTER);
-    rightSensor = digitalRead(RIGHT);
-  
-    //Calcolo la direzione
-    byte goDirection;
-    if (leftSensor == NOLINE && centerSensor == LINE && rightSensor == NOLINE) {
-      goDirection = GO_AHEAD;
-    } else if (leftSensor == LINE && centerSensor == NOLINE && rightSensor == NOLINE) {
-      goDirection = GO_LEFT;
-    } else if (leftSensor == NOLINE && centerSensor == NOLINE && rightSensor == LINE) {
-      goDirection = GO_RIGHT;
-    } else if (leftSensor == NOLINE && centerSensor == NOLINE && rightSensor == NOLINE) {
-      goDirection = STOP;
-    } else if (leftSensor == LINE && centerSensor == LINE && rightSensor == NOLINE) {
-      goDirection = GO_POWERLEFT;
-    } else if (leftSensor == NOLINE && centerSensor == LINE && rightSensor == LINE) {
-      goDirection = GO_POWERRIGHT;
-    } else {
-      goDirection = STOP;
-    }
+  distance = hc.dist();
 
-    //Interpreto la direzione ottenuta
-    switch (goDirection) {
-      case GO_AHEAD:
-        leftSpeed = speed;
-        rightSpeed = speed; 
-        analogWrite(ENA, leftSpeed);
-        analogWrite(ENB, rightSpeed);
-        break;
-      case GO_LEFT:
-        leftSpeed = getSideSpeed(3,speed);
-        rightSpeed = speed; 
-        analogWrite(ENA, leftSpeed);
-        analogWrite(ENB, rightSpeed);
-        break;
-      case GO_RIGHT:
-        leftSpeed = speed;
-        rightSpeed = getSideSpeed(3,speed); 
-        analogWrite(ENA, leftSpeed);
-        analogWrite(ENB, rightSpeed);
-        break;
-      case STOP:
-        speed = 0;
-        leftSpeed = speed;
-        rightSpeed = speed;
-        braking = true;
-        stopped = true;
-        analogWrite(ENA, leftSpeed);
-        analogWrite(ENB, rightSpeed); 
-        break;
-      case GO_POWERLEFT:
-        leftSpeed = getSideSpeed(5,speed);
-        rightSpeed = speed; 
-        analogWrite(ENA, leftSpeed);
-        analogWrite(ENB, rightSpeed);
-        break;
-      case GO_POWERRIGHT:
-        leftSpeed = speed;
-        rightSpeed = getSideSpeed(5,speed); 
-        analogWrite(ENA, leftSpeed);
-        analogWrite(ENB, rightSpeed);
-        break;
-    }
-  }
-
-  //Comandi Seriale
-  if (Serial.available() > 0) {
-    String command = Serial.readStringUntil('\n');
-    command.trim(); // Rimuovi eventuali spazi iniziali o finali
-    //Serial.println("COMANDO RICEVUTO: "+command);
-
-    if (command.startsWith("LEFT")) {
-      lastSteeringValue = steeringValue;
-      steeringValue = command.substring(4).toInt();
-      last_command = command;
-      steer_side = command;
-
-      leftSpeed = getSideSpeed(steeringValue,speed);
-      rightSpeed = speed; 
-     
+  if (distance < 20) {
+      // Se la distanza è minore di 20 cm, ferma il veicolo
+      speed = 0;
+      leftSpeed = 0;
+      rightSpeed = 0;
+      braking = true;
+      stopped = true;
+      object_in_front = true;
       analogWrite(ENA, leftSpeed);
       analogWrite(ENB, rightSpeed);
-      
-    } //TURNING LEFT
 
-    else if (command.startsWith("CENTER")) {
-      lastSteeringValue = steeringValue;
-      steeringValue = command.substring(6).toInt();
-      last_command = command;
-      steer_side = command;
+      if (Serial.available() > 0) {
+        String command = Serial.readStringUntil('\n');
+        command.trim(); 
+        if (command.startsWith("STATUS")) {
+          
+          //Rispondo solo al comando STATUS
+          sx=digitalRead(LEFT);
+          dx=digitalRead(RIGHT);
+          center=digitalRead(CENTER);
+          on_track = center == HIGH;
+          //distance = hc.dist();
+          moving = isMoving(speed);
+          braking = false;
+          //speed_ms = ;
 
-      leftSpeed = speed; 
-      rightSpeed = speed;
-     
-      analogWrite(ENA, leftSpeed);
-      analogWrite(ENB, rightSpeed);
-      
-    } //RETURN TO CENTER
-
-    else if (command.startsWith("RIGHT")) {
-      lastSteeringValue = steeringValue;
-      steeringValue = command.substring(5).toInt();
-      last_command = command;
-      steer_side = command;
-      
-
-      leftSpeed = speed;
-      rightSpeed = getSideSpeed(steeringValue,speed);
-
-      analogWrite(ENA, leftSpeed);
-      analogWrite(ENB, rightSpeed);
-      
-    } //TURNING LEFT
-
-    else if (command.startsWith("SPEED")) {
-      
-      int tmp_speed = 0;
-      if (command.length() >= 5){
-        tmp_speed = command.substring(5).toInt();
-        if(tmp_speed > maxSpeed){
-          tmp_speed = maxSpeed;
-        }
-        else if(tmp_speed == 0){
-          stopped = true;
-        }
+          Serial.println("{\"speed\":" + String(speed) + ",\"speed_left_side\":" + String(leftSpeed)
+                        + ",\"speed_right_side\":" + String(rightSpeed) + ",\"steer_angle\":" + String(steeringValue) 
+                        + ",\"steer_side\":\"" + steer_side + "\",\"last_angle\":" + String(lastAngle) + ",\"line_following_mode\":" + line_following_mode
+                        + ",\"ir_left\":" + String(sx) + ",\"ir_center\":" + String(center) + ",\"on_track\":" + on_track
+                        + ",\"ir_right\":" + String(dx) + ",\"distance\":" + String(distance) + ",\"stopped\":" + stopped
+                        + ",\"braking\":" + braking + ",\"moving\":" + moving + ",\"object_in_front\":" + object_in_front 
+                        + ",\"last_command\":\"" +String(last_command)+ "\"}");            
+          }
       }
-      last_command = command;
-      speed = tmp_speed;
- 
-      leftSpeed = speed;
-      rightSpeed = speed;
-      analogWrite(ENA, leftSpeed);
-      analogWrite(ENB, rightSpeed);
+      return; // Ritorno all'inizio del loop
+  } //distance < 20s
 
-      digitalWrite(MOTOR_A1, HIGH);
-      digitalWrite(MOTOR_A2, LOW);
-      digitalWrite(MOTOR_B1, LOW);
-      digitalWrite(MOTOR_B2, HIGH);
-
-    } //SPEED
-    
-    else if (command.startsWith("BACK")) {
-      speed = command.substring(4).toInt();
-
-      last_command = command;//(String)"BACKWARD("+command.substring(8).toInt()+")";
-      leftSpeed = speed;
-      rightSpeed = speed;
-      analogWrite(ENA, leftSpeed);  
-      analogWrite(ENB, rightSpeed);
-
-      digitalWrite(MOTOR_A1, LOW);
-      digitalWrite(MOTOR_A2, HIGH);
-      digitalWrite(MOTOR_B1, HIGH);
-      digitalWrite(MOTOR_B2, LOW);
-
-    } //BACKWARD
-
-    else if (command.startsWith("STOP")){
-        last_command = command;
-        speed = 0;
-        leftSpeed = speed;
-        rightSpeed = speed;
-        braking = true;
-        stopped = true;
-        analogWrite(ENA, leftSpeed);
-        analogWrite(ENB, rightSpeed); 
-
-    } //STOP
-    
-    else if (command.startsWith("STATUS")){
-        //last_command = command;
-        sx=analogRead(LEFT);
-        dx=analogRead(RIGHT);
-        center=analogRead(CENTER);
-        distance = hc.dist();
-        moving = isMoving(speed);
-        braking = false;
-        //speed_ms = ;
-
-        Serial.println("{\"speed\":" + String(speed) + ",\"speed_left_side\":" + String(leftSpeed)
-                      + ",\"speed_right_side\":" + String(rightSpeed) + ",\"steer_angle\":" + String(steeringValue) 
-                      + ",\"steer_side\":\"" + steer_side + "\",\"last_angle\":" + String(lastAngle) 
-                      + ",\"ir_left\":" + String(sx) + ",\"ir_center\":" + String(center) 
-                      + ",\"ir_right\":" + String(dx) + ",\"distance\":" + String(distance) + ",\"stopped\":" + stopped
-                      + ",\"braking\":" + braking + ",\"moving\":" + moving + ",\"last_command\":\"" +String(last_command)+ "\"}");
-      } //STATUS
+  if (lineFollowingMode) {
       
-    else {
-      Serial.println("Command not recognized");
+      // Aggiorno il valore dei sensori
+      leftSensor = digitalRead(LEFT);
+      centerSensor = digitalRead(CENTER);
+      rightSensor = digitalRead(RIGHT);
+      bool sensorState = digitalRead(YOUR_SENSOR_PIN) == HIGH;
+
+    
+      //Calcolo la direzione
+      byte goDirection;
+      if (leftSensor == NOLINE && centerSensor == LINE && rightSensor == NOLINE) {
+        goDirection = GO_AHEAD;
+      } else if (leftSensor == LINE && centerSensor == NOLINE && rightSensor == NOLINE) {
+        goDirection = GO_LEFT;
+      } else if (leftSensor == NOLINE && centerSensor == NOLINE && rightSensor == LINE) {
+        goDirection = GO_RIGHT;
+      } else if (leftSensor == NOLINE && centerSensor == NOLINE && rightSensor == NOLINE) {
+        goDirection = STOP;
+      } else if (leftSensor == LINE && centerSensor == LINE && rightSensor == NOLINE) {
+        goDirection = GO_POWERLEFT;
+      } else if (leftSensor == NOLINE && centerSensor == LINE && rightSensor == LINE) {
+        goDirection = GO_POWERRIGHT;
+      } else {
+        goDirection = STOP;
+      }
+
+      //Interpreto la direzione ottenuta
+      switch (goDirection) {
+        case GO_AHEAD:
+          leftSpeed = speed;
+          rightSpeed = speed; 
+          analogWrite(ENA, leftSpeed);
+          analogWrite(ENB, rightSpeed);
+          break;
+        case GO_LEFT:
+          leftSpeed = getSideSpeed(3,speed);
+          rightSpeed = speed; 
+          analogWrite(ENA, leftSpeed);
+          analogWrite(ENB, rightSpeed);
+          break;
+        case GO_RIGHT:
+          leftSpeed = speed;
+          rightSpeed = getSideSpeed(3,speed); 
+          analogWrite(ENA, leftSpeed);
+          analogWrite(ENB, rightSpeed);
+          break;
+        case STOP:
+          speed = 0;
+          leftSpeed = speed;
+          rightSpeed = speed;
+          braking = true;
+          stopped = true;
+          analogWrite(ENA, leftSpeed);
+          analogWrite(ENB, rightSpeed); 
+          break;
+        case GO_POWERLEFT:
+          leftSpeed = getSideSpeed(5,speed);
+          rightSpeed = speed; 
+          analogWrite(ENA, leftSpeed);
+          analogWrite(ENB, rightSpeed);
+          break;
+        case GO_POWERRIGHT:
+          leftSpeed = speed;
+          rightSpeed = getSideSpeed(5,speed); 
+          analogWrite(ENA, leftSpeed);
+          analogWrite(ENB, rightSpeed);
+          break;
+      }
     }
 
-  }//serial avaiable
+    //Comandi Seriale
+    if (Serial.available() > 0) {
+      String command = Serial.readStringUntil('\n');
+      command.trim(); // Rimuovi eventuali spazi iniziali o finali
+      //Serial.println("COMANDO RICEVUTO: "+command);
+
+      if (command.startsWith("LEFT")) {
+        lastSteeringValue = steeringValue;
+        steeringValue = command.substring(4).toInt();
+        last_command = command;
+        steer_side = command;
+
+        leftSpeed = getSideSpeed(steeringValue,speed);
+        rightSpeed = speed; 
+      
+        analogWrite(ENA, leftSpeed);
+        analogWrite(ENB, rightSpeed);
+        
+      } //TURNING LEFT
+
+      else if (command.startsWith("CENTER")) {
+        lastSteeringValue = steeringValue;
+        steeringValue = command.substring(6).toInt();
+        last_command = command;
+        steer_side = command;
+
+        leftSpeed = speed; 
+        rightSpeed = speed;
+      
+        analogWrite(ENA, leftSpeed);
+        analogWrite(ENB, rightSpeed);
+        
+      } //RETURN TO CENTER
+
+      else if (command.startsWith("RIGHT")) {
+        lastSteeringValue = steeringValue;
+        steeringValue = command.substring(5).toInt();
+        last_command = command;
+        steer_side = command;
+        
+
+        leftSpeed = speed;
+        rightSpeed = getSideSpeed(steeringValue,speed);
+
+        analogWrite(ENA, leftSpeed);
+        analogWrite(ENB, rightSpeed);
+        
+      } //TURNING LEFT
+
+      else if (command.startsWith("SPEED")) {
+        
+        int tmp_speed = 0;
+        if (command.length() >= 5){
+          tmp_speed = command.substring(5).toInt();
+          if(tmp_speed > maxSpeed){
+            tmp_speed = maxSpeed;
+          }
+          else if(tmp_speed == 0){
+            stopped = true;
+          }
+        }
+        last_command = command;
+        speed = tmp_speed;
+  
+        leftSpeed = speed;
+        rightSpeed = speed;
+        analogWrite(ENA, leftSpeed);
+        analogWrite(ENB, rightSpeed);
+
+        digitalWrite(MOTOR_A1, HIGH);
+        digitalWrite(MOTOR_A2, LOW);
+        digitalWrite(MOTOR_B1, LOW);
+        digitalWrite(MOTOR_B2, HIGH);
+
+      } //SPEED
+      
+      else if (command.startsWith("BACK")) {
+        speed = command.substring(4).toInt();
+
+        last_command = command;//(String)"BACKWARD("+command.substring(8).toInt()+")";
+        leftSpeed = speed;
+        rightSpeed = speed;
+        analogWrite(ENA, leftSpeed);  
+        analogWrite(ENB, rightSpeed);
+
+        digitalWrite(MOTOR_A1, LOW);
+        digitalWrite(MOTOR_A2, HIGH);
+        digitalWrite(MOTOR_B1, HIGH);
+        digitalWrite(MOTOR_B2, LOW);
+
+      } //BACKWARD
+
+      else if (command.startsWith("STOP")){
+          last_command = command;
+          speed = 0;
+          leftSpeed = speed;
+          rightSpeed = speed;
+          braking = true;
+          stopped = true;
+          analogWrite(ENA, leftSpeed);
+          analogWrite(ENB, rightSpeed); 
+
+      } //STOP
+      
+      else if (command.startsWith("STATUS")){
+          //last_command = command;
+          sx=analogRead(LEFT);
+          dx=analogRead(RIGHT);
+          center=analogRead(CENTER);
+          //distance = hc.dist();
+          moving = isMoving(speed);
+          braking = false;
+          //speed_ms = ;
+
+          Serial.println("{\"speed\":" + String(speed) + ",\"speed_left_side\":" + String(leftSpeed)
+                        + ",\"speed_right_side\":" + String(rightSpeed) + ",\"steer_angle\":" + String(steeringValue) 
+                        + ",\"steer_side\":\"" + steer_side + "\",\"last_angle\":" + String(lastAngle) 
+                        + ",\"ir_left\":" + String(sx) + ",\"ir_center\":" + String(center) 
+                        + ",\"ir_right\":" + String(dx) + ",\"distance\":" + String(distance) + ",\"stopped\":" + stopped
+                        + ",\"braking\":" + braking + ",\"moving\":" + moving + ",\"last_command\":\"" +String(last_command)+ "\"}");
+        } //STATUS
+        
+      else {
+        Serial.println("Command not recognized");
+      }
+
+    }//serial avaiable
 
 } //loop
   

@@ -21,15 +21,13 @@ class MQTTConnection:
 
 	def on_message(self, client, userdata, message):
 		if message.topic.startswith("/alert"):
-			print("<alert> Ricevuto Alert")
+			print("<Alert> Ricevuto Alert")
 			payload = json.loads(message.payload)
-			self.gestisciAlert(payload)
+			self.manage_alert(payload)
 			# alert_id = payload["id"]
 			# alert[alert_id] = payload
 
 	def handle_message(self, topic, message):
-		# Processa il messaggio ricevuto da MQTT e prende decisioni in base al contenuto
-		print("Sto processando il messaggio")
 		if message.topic.startswith("/smartcar"):
 			payload = json.loads(message.payload)
 			vehicle_id = payload["id"] 
@@ -39,17 +37,14 @@ class MQTTConnection:
 	def send_vehicle_status(self,vehicle_info):
 		vehicle_info_json = json.dumps(vehicle_info)
 		self.client.publish(self.topic_auto + "/info", vehicle_info_json)
-		# Invia continuamente lo stato del veicolo su un topic MQTT specificato
 
 	def send_alert(self, alert):
 		alert_json = json.dumps(alert)
-		self.client.publish(self.topic_alert + "/" + str(alert["timestamp"]) , alert_json)
-		# Invia continuamente lo stato del veicolo su un topic MQTT specificato
+		self.client.publish(self.topic_alert + "/" + alert.get("connected_RSU", "") , alert_json)
 
 	def manage_alert(self, payload):
 		print("Gestione dell'alert:", payload)
 		
-
 	def on_connect(client, userdata, flags, rc):
 		print("Connected to MQTT broker with result code "+str(rc))
 		client.subscribe(topic_auto)
