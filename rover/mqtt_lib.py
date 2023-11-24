@@ -45,9 +45,6 @@ class MQTTConnection:
 	def manage_alert(self, payload):
 		print("Gestione dell'alert:", payload)
 		
-	def on_connect(client, userdata, flags, rc):
-		print("Connected to MQTT broker with result code "+str(rc))
-		client.subscribe(topic_auto)
 
 
 
