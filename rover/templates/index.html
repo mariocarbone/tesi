@@ -255,7 +255,7 @@
         function updateStatus(status) {
             //var statusObj = JSON.parse(status);
 
-            let adjustedSpeed = status.speed * 0.3;
+            let adjustedSpeed = status.speed * 0.003;
             speedDiv.textContent = adjustedSpeed.toFixed(2) + " m/s";
             //speedDiv.textContent = status.speed + " m/s";
             steerDiv.textContent = status.steer_side + "";
