@@ -317,20 +317,24 @@ void loop() {
       
       else if (command.startsWith("STATUS")){
           //last_command = command;
-          sx=analogRead(LEFT);
-          dx=analogRead(RIGHT);
-          center=analogRead(CENTER);
+          //sx=analogRead(LEFT);
+          //dx=analogRead(RIGHT);
+          //center=analogRead(CENTER);
           //distance = hc.dist();
+          sx=digitalRead(LEFT);
+          dx=digitalRead(RIGHT);
+          center=digitalRead(CENTER);
           moving = isMoving(speed);
-          braking = false;
+          //braking = false;
           //speed_ms = ;
 
           Serial.println("{\"speed\":" + String(speed) + ",\"speed_left_side\":" + String(leftSpeed)
                         + ",\"speed_right_side\":" + String(rightSpeed) + ",\"steer_angle\":" + String(steeringValue) 
-                        + ",\"steer_side\":\"" + steer_side + "\",\"last_angle\":" + String(lastAngle) 
-                        + ",\"ir_left\":" + String(sx) + ",\"ir_center\":" + String(center) 
+                        + ",\"steer_side\":\"" + steer_side + "\",\"last_angle\":" + String(lastAngle) + ",\"line_following_mode\":" + lineFollowingMode
+                        + ",\"ir_left\":" + String(sx) + ",\"ir_center\":" + String(center) + ",\"on_track\":" + on_track
                         + ",\"ir_right\":" + String(dx) + ",\"distance\":" + String(distance) + ",\"stopped\":" + stopped
-                        + ",\"braking\":" + braking + ",\"moving\":" + moving + ",\"last_command\":\"" +String(last_command)+ "\"}");
+                        + ",\"braking\":" + braking + ",\"moving\":" + moving + ",\"object_in_front\":" + object_in_front 
+                        + ",\"last_command\":\"" +String(last_command)+ "\"}");       
         } //STATUS
         
       else {
