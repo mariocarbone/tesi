@@ -28,7 +28,7 @@ int leftSpeed = 0;
 int rightSpeed = 0;
 int speed = 0;
 int maxSpeed = 254;
-int steeringValue = 50;
+int steeringValue = 0;
 String steer_side = "CENTER";
 int lastSteeringValue = 0;
 int distance = 0;
@@ -131,7 +131,7 @@ void loop() {
           //speed_ms = ;
 
           Serial.println("{\"speed\":" + String(speed) + ",\"speed_left_side\":" + String(leftSpeed)
-                        + ",\"speed_right_side\":" + String(rightSpeed) + ",\"steer_angle\":" + String(steeringValue) 
+                        + ",\"speed_right_side\":" + String(rightSpeed) + ",\"steer_side_value\":" + String(steeringValue) 
                         + ",\"steer_side\":\"" + steer_side + "\",\"last_angle\":" + String(lastAngle) + ",\"line_following_mode\":" + lineFollowingMode
                         + ",\"ir_left\":" + String(sx) + ",\"ir_center\":" + String(center) + ",\"on_track\":" + on_track
                         + ",\"ir_right\":" + String(dx) + ",\"distance\":" + String(distance) + ",\"stopped\":" + stopped
@@ -329,7 +329,7 @@ void loop() {
           //speed_ms = ;
 
           Serial.println("{\"speed\":" + String(speed) + ",\"speed_left_side\":" + String(leftSpeed)
-                        + ",\"speed_right_side\":" + String(rightSpeed) + ",\"steer_angle\":" + String(steeringValue) 
+                        + ",\"speed_right_side\":" + String(rightSpeed) + ",\"steer_side_value\":" + String(steeringValue) 
                         + ",\"steer_side\":\"" + steer_side + "\",\"last_angle\":" + String(lastAngle) + ",\"line_following_mode\":" + lineFollowingMode
                         + ",\"ir_left\":" + String(sx) + ",\"ir_center\":" + String(center) + ",\"on_track\":" + on_track
                         + ",\"ir_right\":" + String(dx) + ",\"distance\":" + String(distance) + ",\"stopped\":" + stopped
