@@ -1,6 +1,8 @@
 //Arduino RC CAR + LINE FOLLOWING
 //Author: Mario Carbone
 #include <HCSR04.h>
+#define LINE HIGH
+#define NOLINE LOW
 
 int ENA = 9; //ENA connected to digital pin 9 @LEFT GEAR
 int ENB = 3; //ENB connected to digital pin 3 @RIGHT GEAR
@@ -33,6 +35,12 @@ String status;
 int sx=analogRead(LEFT);
 int dx=analogRead(RIGHT);
 int center=analogRead(CENTER);
+
+//Nuova Linea
+byte leftSensor = digitalRead(LEFT);
+byte centerSensor = digitalRead(CENTER);
+byte rightSensor = digitalRead(RIGHT);
+bool lineFollowingMode = false;
 
 void setup() {
   
@@ -83,10 +91,79 @@ bool isMoving(int speed){
 bool isBraking(bool braking){
   return braking;
 }
-
  
 void loop() {
 
+if (lineFollowingMode) {
+    
+    // Aggiorno il valore dei sensori
+    leftSensor = digitalRead(LEFT);
+    centerSensor = digitalRead(CENTER);
+    rightSensor = digitalRead(RIGHT);
+  
+    //Calcolo la direzione
+    byte goDirection;
+    if (leftSensor == NOLINE && centerSensor == LINE && rightSensor == NOLINE) {
+      goDirection = GO_AHEAD;
+    } else if (leftSensor == LINE && centerSensor == NOLINE && rightSensor == NOLINE) {
+      goDirection = GO_LEFT;
+    } else if (leftSensor == NOLINE && centerSensor == NOLINE && rightSensor == LINE) {
+      goDirection = GO_RIGHT;
+    } else if (leftSensor == NOLINE && centerSensor == NOLINE && rightSensor == NOLINE) {
+      goDirection = STOP;
+    } else if (leftSensor == LINE && centerSensor == LINE && rightSensor == NOLINE) {
+      goDirection = GO_POWERLEFT;
+    } else if (leftSensor == NOLINE && centerSensor == LINE && rightSensor == LINE) {
+      goDirection = GO_POWERRIGHT;
+    } else {
+      goDirection = STOP;
+    }
+
+    //Interpreto la direzione ottenuta
+    switch (goDirection) {
+      case GO_AHEAD:
+        leftSpeed = speed;
+        rightSpeed = speed; 
+        analogWrite(ENA, leftSpeed);
+        analogWrite(ENB, rightSpeed);
+        break;
+      case GO_LEFT:
+        leftSpeed = getSideSpeed(3,speed);
+        rightSpeed = speed; 
+        analogWrite(ENA, leftSpeed);
+        analogWrite(ENB, rightSpeed);
+        break;
+      case GO_RIGHT:
+        leftSpeed = speed;
+        rightSpeed = getSideSpeed(3,speed); 
+        analogWrite(ENA, leftSpeed);
+        analogWrite(ENB, rightSpeed);
+        break;
+      case STOP:
+        speed = 0;
+        leftSpeed = speed;
+        rightSpeed = speed;
+        braking = true;
+        stopped = true;
+        analogWrite(ENA, leftSpeed);
+        analogWrite(ENB, rightSpeed); 
+        break;
+      case GO_POWERLEFT:
+        leftSpeed = getSideSpeed(5,speed);
+        rightSpeed = speed; 
+        analogWrite(ENA, leftSpeed);
+        analogWrite(ENB, rightSpeed);
+        break;
+      case GO_POWERRIGHT:
+        leftSpeed = speed;
+        rightSpeed = getSideSpeed(5,speed); 
+        analogWrite(ENA, leftSpeed);
+        analogWrite(ENB, rightSpeed);
+        break;
+    }
+  }
+
+  //Comandi Seriale
   if (Serial.available() > 0) {
     String command = Serial.readStringUntil('\n');
     command.trim(); // Rimuovi eventuali spazi iniziali o finali
@@ -97,7 +174,6 @@ void loop() {
       steeringValue = command.substring(4).toInt();
       last_command = command;
       steer_side = command;
-
 
       leftSpeed = getSideSpeed(steeringValue,speed);
       rightSpeed = speed; 
@@ -127,9 +203,10 @@ void loop() {
       last_command = command;
       steer_side = command;
       
-      leftSpeed = speed; 
+
+      leftSpeed = speed;
       rightSpeed = getSideSpeed(steeringValue,speed);
-     
+
       analogWrite(ENA, leftSpeed);
       analogWrite(ENB, rightSpeed);
       
@@ -198,6 +275,7 @@ void loop() {
         distance = hc.dist();
         moving = isMoving(speed);
         braking = false;
+        //speed_ms = ;
 
         Serial.println("{\"speed\":" + String(speed) + ",\"speed_left_side\":" + String(leftSpeed)
                       + ",\"speed_right_side\":" + String(rightSpeed) + ",\"steer_angle\":" + String(steeringValue) 

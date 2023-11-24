@@ -32,7 +32,7 @@ class MQTTConnection:
 		print("Sto processando il messaggio")
 		if message.topic.startswith("/smartcar"):
 			payload = json.loads(message.payload)
-			vehicle_plate = payload["id"] 
+			vehicle_id = payload["id"] 
 			if payload["rsu_id"] == self.rsu_id:
 				veicoli_connessi[vehicle_plate] = payload
 
@@ -48,6 +48,7 @@ class MQTTConnection:
 
 	def manage_alert(self, payload):
 		print("Gestione dell'alert:", payload)
+		
 
 	def on_connect(client, userdata, flags, rc):
 		print("Connected to MQTT broker with result code "+str(rc))

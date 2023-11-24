@@ -1,15 +1,44 @@
 from mqtt_lib import MQTTConnection
 class Alert:
 	
-	def __init__(self, zone):
-		self.zone=zone
+	def __init__(self, vehicle_id, zone, mqtt_connection):
+		self.vehicle_id = vehicle_id
+		self.zone = zone
+		self.mqtt_connection = mqtt_connection
 
+	def create_and_send_alert(self, vehicle_control, rpi_instance):
+
+		vehicle_status = vehicle_control.status
+		front_distance = vehicle_status.get("distance", 0)
+		vehicle_stopped = vehicle_status.get("moving", False)
+		rsu_distance = rpi_instance.get_rsu_distance()
+
+		# Creazione dell'alert
+		alert = {
+			"timestamp": int(time.time()),
+			"vehicle_id": self.vehicle_id,
+			"front_distance": front_distance,
+			"connected_RSU": "RSU_01", 
+			"distance_from_rsu": rsu_distance,
+			"distance_from_other_aps": rpi_instance.get_other_rsu_distance(),
+			"type" : "person",
+			"confidence" : 0.5,
+			"vehicle_stopped": vehicle_stopped
+		}
+
+		# Invio dell'alert
+		self.mqtt_connection.send_alert(alert)
 	
 	def generate_alert(self, predictions):
 		print(" ")
 
+	def check_alert_type(self,alert):
+		if(alert):
+			print(alert)
+
 	def check_zona(self, punto):
 		for zona in self.zone :
+
 			# Estrai le coordinate dei quattro vertici
 			x1, y1 = zona[0]
 			x2, y2 = zona[1]
@@ -50,5 +79,6 @@ class Alert:
 			zona=self.check_zona(center)
 			if (zona != None):
 				print(zona[0])
+
 
 
