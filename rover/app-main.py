@@ -49,13 +49,13 @@ topic_auto = "/smartcar/"
 topic_rsu = "/rsu/"
 vehicle_id = "ROVER"
 
-#mqtt = MQTTConnection(broker_address, broker_port, topic_alert, topic_auto, topic_rsu, vehicle_id)
+mqtt = MQTTConnection(broker_address, broker_port, topic_alert, topic_auto, topic_rsu, vehicle_id)
 
 # Istanze Moduli
 tf_instance = Tensorflow()
 vehicle_control = Vehicle_Control()
 rpi = Raspberry()
-alert_instance = Alert(vehicle_id, vehicle_control, zone, mqtt)
+alert_instance = Alert(vehicle_id, vehicle_control, mqtt)
 
 # Stato del veicolo
 status_json = {}

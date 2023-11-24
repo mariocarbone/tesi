@@ -3,6 +3,12 @@
 #include <HCSR04.h>
 #define LINE HIGH
 #define NOLINE LOW
+#define GO_AHEAD 1
+#define GO_LEFT 2
+#define GO_RIGHT 3
+#define STOP 4
+#define GO_POWERLEFT 5
+#define GO_POWERRIGHT 6
 
 int ENA = 9; //ENA connected to digital pin 9 @LEFT GEAR
 int ENB = 3; //ENB connected to digital pin 3 @RIGHT GEAR
@@ -126,7 +132,7 @@ void loop() {
 
           Serial.println("{\"speed\":" + String(speed) + ",\"speed_left_side\":" + String(leftSpeed)
                         + ",\"speed_right_side\":" + String(rightSpeed) + ",\"steer_angle\":" + String(steeringValue) 
-                        + ",\"steer_side\":\"" + steer_side + "\",\"last_angle\":" + String(lastAngle) + ",\"line_following_mode\":" + line_following_mode
+                        + ",\"steer_side\":\"" + steer_side + "\",\"last_angle\":" + String(lastAngle) + ",\"line_following_mode\":" + lineFollowingMode
                         + ",\"ir_left\":" + String(sx) + ",\"ir_center\":" + String(center) + ",\"on_track\":" + on_track
                         + ",\"ir_right\":" + String(dx) + ",\"distance\":" + String(distance) + ",\"stopped\":" + stopped
                         + ",\"braking\":" + braking + ",\"moving\":" + moving + ",\"object_in_front\":" + object_in_front 
@@ -142,8 +148,6 @@ void loop() {
       leftSensor = digitalRead(LEFT);
       centerSensor = digitalRead(CENTER);
       rightSensor = digitalRead(RIGHT);
-      bool sensorState = digitalRead(YOUR_SENSOR_PIN) == HIGH;
-
     
       //Calcolo la direzione
       byte goDirection;
