@@ -3,7 +3,7 @@ import json
 
 class MQTTConnection:
 
-	def __init__(self, broker_address, port, topic_alert, topic_auto, rsu_id):
+	def __init__(self, broker_address, port, topic_alert, topic_auto, topic_rsu, rsu_id):
 		self.broker = broker_address
 		self.port = port
 		self.topic_alert = topic_alert

@@ -49,7 +49,7 @@ topic_auto = "/smartcar/"
 topic_rsu = "/rsu/"
 vehicle_id = "ROVER"
 
-mqtt = MQTTConnection(broker_address, broker_port, topic_alert, topic_auto, topic_rsu, vehicle_id)
+mqtt = MQTTConnection(broker_address, broker_port, topic_alert, topic_auto, vehicle_id)
 
 # Istanze Moduli
 tf_instance = Tensorflow()
