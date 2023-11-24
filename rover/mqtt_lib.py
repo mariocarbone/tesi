@@ -8,7 +8,7 @@ class MQTTConnection:
 		self.port = port
 		self.topic_alert = topic_alert
 		self.topic_auto = topic_auto
-		self.rsu_id = rsu_id
+		self.vehicle_id = vehicle_id
 		self.client = mqtt.Client(vehicle_id)
 		self.client.on_connect = self.on_connect
 		self.client.on_message = self.on_message
