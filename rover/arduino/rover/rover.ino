@@ -131,7 +131,7 @@ void loop() {
 
           Serial.println("{\"speed\":" + String(speed) + ",\"speed_left_side\":" + String(leftSpeed)
                         + ",\"speed_right_side\":" + String(rightSpeed) + ",\"steer_side_value\":" + String(steeringValue) 
-                        + ",\"steer_side\":" + steer_side  + ",\"line_following_mode\":" + lineFollowingMode
+                        + ",\"steer_side\":" + +String(steer_side)+ "\"}"  + ",\"line_following_mode\":" + lineFollowingMode
                         + ",\"ir_left\":" + String(sx) + ",\"ir_center\":" + String(center) + ",\"on_track\":" + on_track
                         + ",\"ir_right\":" + String(dx) + ",\"distance\":" + String(distance) + ",\"stopped\":" + stopped
                         + ",\"braking\":" + braking + ",\"moving\":" + moving + ",\"object_in_front\":" + object_in_front 
@@ -329,11 +329,11 @@ void loop() {
 
           Serial.println("{\"speed\":" + String(speed) + ",\"speed_left_side\":" + String(leftSpeed)
                         + ",\"speed_right_side\":" + String(rightSpeed) + ",\"steer_side_value\":" + String(steeringValue) 
-                        + ",\"steer_side\":" + steer_side  + ",\"line_following_mode\":" + lineFollowingMode
+                        + ",\"steer_side\":" + +String(steer_side)+ "\"}"  + ",\"line_following_mode\":" + lineFollowingMode
                         + ",\"ir_left\":" + String(sx) + ",\"ir_center\":" + String(center) + ",\"on_track\":" + on_track
                         + ",\"ir_right\":" + String(dx) + ",\"distance\":" + String(distance) + ",\"stopped\":" + stopped
                         + ",\"braking\":" + braking + ",\"moving\":" + moving + ",\"object_in_front\":" + object_in_front 
-                        + ",\"last_command\":\"" +String(last_command)+ "\"}");      
+                        + ",\"last_command\":\"" +String(last_command)+ "\"}");   
         } //STATUS
         
       else {
