@@ -15,10 +15,9 @@ class Alert:
 
     def process_predictions(self, predictions):
         prediction_timestamp = predictions.get('timestamp', time.time())
-        if self.should_generate_alert(predictions):
-            if not self.is_recent_alert(predictions, prediction_timestamp):
-                alert_thread = threading.Thread(target=self.create_and_send_alert, args=(predictions, prediction_timestamp))
-                alert_thread.start()
+        for key, prediction in predictions.items():
+            if key != "timestamp" and prediction["category"] == "person" and prediction["score"] > 0.7:
+                self.create_and_send_alert(prediction, prediction_timestamp)
     
     def is_recent_alert(self, current_predictions, current_timestamp):
         for prev_predictions, prev_timestamp in self.last_predictions:
@@ -59,8 +58,7 @@ class Alert:
             "vehicle_stopped": self.vehicle_control.status.get('stopped', False),
             "coordinates": predictions.get('coordinates')
         }
-        print(predictions, "PREDICTIONS")
-        print(prediction_timestamp, "Alert creato")
+        print(prediction_timestamp, "<Alert creato>")
         self.alert_sended[str(prediction_timestamp)] = alert_details
         # Mantieni solo gli ultimi 10 alert
         if len(self.alert_sended) > 10:
