@@ -51,6 +51,7 @@ class Alert:
     def create_and_send_alert(self, predictions, prediction_timestamp):
         alert_details = {
             "timestamp": prediction_timestamp,
+            "t_creation" : time.time(),
             "creator_id": self.vehicle_id,
             "front_distance": self.vehicle_control.status.get('distance', 0),
             "connected_RSU": self.rpi_instance.system_status.get("ap_connected", 'N/A'),

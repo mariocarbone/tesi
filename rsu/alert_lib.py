@@ -47,6 +47,7 @@ class Alert:
 	def create_and_send_alert(self, predictions, prediction_timestamp):
 		alert_details = {
 			"timestamp": prediction_timestamp,
+			"t_creation" : time.time(),
 			"creator_id": self.rsu_id,
 			"type": predictions.get('category', 'unknown'),
 			"confidence": predictions.get('score', 0),
