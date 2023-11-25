@@ -5,6 +5,8 @@
     <title>Webcam Stream</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
+
 
 </head>
 
@@ -94,47 +96,60 @@
                     style="background-color: lightcyan;">
                     <button id="rover-start" class="btn btn-primary mx-2 my-2">Start</button>
                     <button id="rover-stop" class="btn btn-danger mx-2 my-2">Stop</button>
-                    <button id="rover-log"  class="btn btn-light" disabled>Log:</button>
-                    <span id="self-driving-log">Errori</span>
+                    <div>
+                    <label for="speedRange" class="form-label">Velocità</label>
+                    <input type="range" class="form-range" min="70" max="254" step="10" id="roverSpeedRange">
+                    <span id="roverSpeedDisplay">Max Speed</span>
+                </div>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-lg-3">
             <h3 class="mt-4 text-center">Oggetti Rilevati</h3>
-            <table id="prediction-table">
-                <!-- Le righe delle previsioni saranno generate dinamicamente qui -->
-            </table>
+            <div class="row justify-content-center align-items-center">
+                <div class="count-field mx-2 my-2 text-center">
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                    <div id="person_count" class="h5">0</div>
+                </div>
+                <div class="rpi-field mx-2 my-2 text-center">
+                    <i class="fa fa-car" aria-hidden="true"></i>
+                    <div id="car_count" class="h5">0</div>
+                </div>
+            </div>
         </div>
 
         <div class="col-lg-4">
-            <h3 class="mt-4 text-center">Gestion Alert</h3>
-            <table id="prediction-table">
-                <!-- Le righe delle previsioni saranno generate dinamicamente qui -->
-            </table>
+            <h3 class="mt-4 text-center">Alert ricevuti</h3>
+            <div class="row" id="alert-list" style="background-color: lightcyan; padding: auto;">
+            </div>
         </div>
 
-        <div class="col-lg-4 text-center">
+        <div class="col-lg-5 text-center">
             <h3 class="mt-4">RSU Debug</h3>
-            <div class=" column" id="connection-fields" style="background-color: lightcyan; padding: auto;">
-                <div class="row justify-content-center align-items-center">
+            <div class="row" id="rsu-fields" style="background-color: lightcyan; padding: auto;">
+                <!-- Colonna per RSU Connessa e Distanza Stimata -->
+                <div class="col">
+                    <div class="status-field mx-2 my-2 text-center">
+                        <h5>RSU Connessa</h5>
+                        <div id="rsu_connessa" class="h5">0</div>
+                        <h5>Distanza:</h5>
+                        <div id="distance_rsu" class="h5">0m</div>
+                    </div>
+                </div>
+        
+                <!-- Colonna per RSU Disponibili -->
+                <div class="col">
                     <div class="connection-field mx-2 my-2 text-center">
                         <h5>RSU Disponibili:</h5>
                         <div id="rsu_list" class="h5">WiFi SSID</div>
                     </div>
-                    <div class="status-field mx-2 my-2 text-center">
-                        <h5>RSU Connessa</h5>
-                        <div id="rsu_connessa" class="h5">0</div>
-                    </div>
-                    <div class="connection-field mx-2 my-2 text-center">
-                        <h5>Distanza Stimata:</h5>
-                        <div id="distance_rsu" class="h5">0m</div>
-                    </div>
                 </div>
             </div>
         </div>
+        
 
         <div class="col-lg-4 text-center">
             <h3 class="mt-4">Connessione</h3>
@@ -235,21 +250,29 @@
         var braking = document.getElementById('braking');
         var stopped = document.getElementById('stopped');
         var onTrack = document.getElementById('on_track');
+        var personCount = document.getElementById('person_count');
+        var carCount = document.getElementById('car_count');
 
 
         function updatePrediction(prediction) {
-            predictionTable.innerHTML = '';
-            for (var key in prediction) {
-                if (prediction.hasOwnProperty(key)) {
-                    var predictionObj = prediction[key];
-                    var newRow = predictionTable.insertRow();
-                    var categoryCell = newRow.insertCell(0);
-                    var valueCell = newRow.insertCell(1);
+            tmp_personCount = 0;
+            tmp_carCount = 0;
 
-                    categoryCell.innerHTML = `<b>${predictionObj.category}:</b>`;
-                    valueCell.textContent = predictionObj.value;
+            for (var key in prediction) {
+                if (prediction.hasOwnProperty(key) && key !== "timestamp") {
+                    var predictionObj = prediction[key];
+
+                    // Controlla la categoria e aggiorna i conteggi
+                    if (predictionObj.category === "person") {
+                        tmp_personCount++;
+                    } else if (predictionObj.category === "car") {
+                        tmp_carCount++;
+                    }
                 }
             }
+            personCount.textContent = tmp_personCount;
+            carCount.textContent = tmp_carCount;
+
         }
 
         function updateStatus(status) {
@@ -381,6 +404,10 @@
 
         document.getElementById('speedRange').addEventListener('input', function() {
             document.getElementById('speedDisplay').textContent = this.value + " m/s";
+        });
+
+        document.getElementById('roverSpeedRange').addEventListener('input', function() {
+            document.getElementById('roverSpeedDisplay').textContent = this.value ;//+ " m/s";
         });
 
         buttonManualStop.addEventListener('click', function () {
