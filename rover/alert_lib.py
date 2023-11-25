@@ -77,7 +77,7 @@ class Alert:
         punto=(punto_x, punto_y)
         return punto
     
-    def check_predictions(self,predictions):
+    def check_predictions_old(self,predictions):
         for prediction in predictions:
             center=self.check_center(prediction)
             zona=self.check_zona(center)
