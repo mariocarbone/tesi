@@ -24,19 +24,23 @@ class Alert:
                 if key != "timestamp":
                     object_id = self.get_object_id(prediction)
                     
-                    # Rate Limiting
-                    if object_id in self.last_alert_time and current_time - self.last_alert_time[object_id] < self.rate_limit_interval:
-                        continue  # Salta se l'intervallo di rate limiting non è ancora trascorso
-                    
-                    # Object Tracking
+                    # Object Tracking: Controlla se l'oggetto è lo stesso rilevato di recente
+                    # e non ha subito variazioni significative
                     if object_id in self.recently_detected_objects:
                         last_detected, last_position = self.recently_detected_objects[object_id]
-                        if current_time - last_detected < self.object_tracking_interval and self.is_same_object(prediction, last_position):
-                            continue  # Salta se l'oggetto è lo stesso rilevato di recente
+                        if self.is_same_object(prediction, last_position):
+                            if current_time - last_detected < self.object_tracking_interval:
+                                continue  # Salta se l'oggetto è lo stesso rilevato di recente
 
-                    # Aggiorna i dati per il tracking e il rate limiting
-                    self.last_alert_time[object_id] = current_time
+                    # Aggiorna i dati per il tracking
                     self.recently_detected_objects[object_id] = (current_time, self.get_object_position(prediction))
+
+                    # Rate Limiting: Controlla se è trascorso abbastanza tempo dall'ultimo alert
+                    if object_id in self.last_alert_time and current_time - self.last_alert_time[object_id] < self.rate_limit_interval:
+                        continue  # Salta se l'intervallo di rate limiting non è ancora trascorso
+
+                    # Aggiorna l'ultimo tempo di alert
+                    self.last_alert_time[object_id] = current_time
                     
                     # Crea e invia l'alert
                     alert_thread = threading.Thread(target=self.create_and_send_alert, args=(prediction,))
