@@ -76,7 +76,7 @@ class Alert:
 
     def is_same_object(self, prediction, last_position):
         current_position = self.get_object_position(prediction)
-        threshold = 50  # Soglia per determinare se due oggetti sono lo stesso
+        threshold = 100  # Soglia per determinare se due oggetti sono lo stesso
         return (abs(current_position['x'] - last_position['x']) < threshold and
                 abs(current_position['y'] - last_position['y']) < threshold and
                 abs(current_position['w'] - last_position['w']) < threshold and
