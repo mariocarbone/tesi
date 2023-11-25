@@ -22,7 +22,6 @@ class MQTTConnection:
 
 	def on_message(self, client, userdata, message):
 		if message.topic.startswith("/alert"):
-
 			payload = json.loads(message.payload)
 			if payload["creator_id"] == self.vehicle_id:
 				pass 
@@ -32,7 +31,7 @@ class MQTTConnection:
 				t_trasm = payload["t_creation"]*1000
 				t_total_ms = round(t_arrival - t_trasm)
 				print("<Ricevuto Alert> da", creator, " - Tempo impiegato:", t_total_ms , " ms")
-				self.manage_alert(payload)
+				#self.manage_alert(payload)
 			# alert_id = payload["id"]
 			# alert[alert_id] = payload
 
