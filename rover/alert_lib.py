@@ -15,10 +15,12 @@ class Alert:
 
     def process_predictions(self, predictions):
         prediction_timestamp = predictions.get('timestamp', time.time())
-        if self.should_generate_alert(predictions):
-            if not self.is_recent_alert(predictions, prediction_timestamp):
-                alert_thread = threading.Thread(target=self.create_and_send_alert, args=(predictions, prediction_timestamp))
-                alert_thread.start()
+        for key, prediction in predictions.items():
+            if key != "timestamp" and isinstance(prediction, dict):
+                if self.should_generate_alert(prediction):
+                    if not self.is_recent_alert(prediction, prediction_timestamp):
+                        alert_thread = threading.Thread(target=self.create_and_send_alert, args=(prediction, prediction_timestamp))
+                        alert_thread.start()
 
     def is_recent_alert(self, current_predictions, current_timestamp):
         for prev_predictions, prev_timestamp in self.last_predictions:
@@ -30,12 +32,15 @@ class Alert:
         if len(self.last_predictions) > 10:
             self.last_predictions.pop(0)
         return False
-    
-    def are_predictions_similar(self, current_predictions, prev_predictions):
-        current_coords = current_predictions.get('coordinates', {})
-        prev_coords = prev_predictions.get('coordinates', {})
-        score_diff = abs(current_predictions.get('score', 0) - prev_predictions.get('score', 0))
+
+    def are_predictions_similar(self, current_prediction, prev_prediction):
+
+        current_coords = current_prediction.get('coordinates', {})
+        prev_coords = prev_prediction.get('coordinates', {})
+        score_diff = abs(current_prediction.get('score', 0) - prev_prediction.get('score', 0))
         coords_diff = all(abs(current_coords.get(key, 0) - prev_coords.get(key, 0)) < 50 for key in ['x', 'y', 'w', 'h'])
+        
+        # Restituisci True se le previsioni sono simili, altrimenti False
         return coords_diff and score_diff < 0.1
 
     def should_generate_alert(self, predictions):
