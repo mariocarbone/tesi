@@ -27,9 +27,9 @@ class MQTTConnection:
 			if payload["creator_id"] == self.vehicle_id:
 				pass 
 			else:
-				t_arrival = time.time() 
-				t_trasm = payload["t_creation"]
-				t_total_ms = round(t_arrival - t_trasm)*1000
+				t_arrival = time.time()*1000 
+				t_trasm = payload["t_creation"]*1000
+				t_total_ms = round(t_arrival - t_trasm)
 				print("<Alert> Ricevuto Alert - Tempo impiegato:", t_total_ms , " ms")
 				self.manage_alert(payload)
 			# alert_id = payload["id"]
