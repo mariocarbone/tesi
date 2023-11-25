@@ -16,28 +16,25 @@ class Alert:
     def process_predictions(self, predictions):
         prediction_timestamp = predictions.get('timestamp', time.time())
         if self.should_generate_alert(predictions):
-            for key, prediction in predictions.items():
-                if key != "timestamp":
-                    if not self.is_recent_alert(prediction):
-                        alert_thread = threading.Thread(target=self.create_and_send_alert, args=(prediction, prediction_timestamp))
-                        alert_thread.start()
-                        # Aggiungi la prediction corrente alle ultime 10
-                        self.last_predictions.append((prediction, prediction_timestamp))
-                        # Mantieni solo le ultime 10 prediction
-                        if len(self.last_predictions) > 10:
-                            self.last_predictions.pop(0)
+            if not self.is_recent_alert(predictions, prediction_timestamp):
+                alert_thread = threading.Thread(target=self.create_and_send_alert, args=(predictions, prediction_timestamp))
+                alert_thread.start()
     
-    def is_recent_alert(self, current_prediction):
-        for prev_prediction, _ in self.last_predictions:
-            if self.are_predictions_similar(current_prediction, prev_prediction):
+    def is_recent_alert(self, current_predictions, current_timestamp):
+        for prev_predictions, prev_timestamp in self.last_predictions:
+            if self.are_predictions_similar(current_predictions, prev_predictions):
                 return True
+        self.last_predictions.append((current_predictions, current_timestamp))
+        # Mantieni solo le ultime 10 prediction
+        if len(self.last_predictions) > 10:
+            self.last_predictions.pop(0)
         return False
     
-    def are_predictions_similar(self, current_prediction, prev_prediction):
+    def are_predictions_similar(self, current_predictions, prev_predictions):
         # Confronta le coordinate e lo score delle prediction
-        current_coords = current_prediction.get('coordinates', {})
-        prev_coords = prev_prediction.get('coordinates', {})
-        score_diff = abs(current_prediction.get('score', 0) - prev_prediction.get('score', 0))
+        current_coords = current_predictions.get('coordinates', {})
+        prev_coords = prev_predictions.get('coordinates', {})
+        score_diff = abs(current_predictions.get('score', 0) - prev_predictions.get('score', 0))
         coords_diff = all(abs(current_coords.get(key, 0) - prev_coords.get(key, 0)) < 50 for key in ['x', 'y', 'w', 'h'])
         return coords_diff and score_diff < 0.1
 
@@ -47,7 +44,7 @@ class Alert:
                 return True
         return False
 
-    def create_and_send_alert(self, prediction, prediction_timestamp):
+    def create_and_send_alert(self, predictions, prediction_timestamp):
         alert_details = {
             "timestamp": prediction_timestamp,
             "vehicle_id": self.vehicle_id,
@@ -55,11 +52,11 @@ class Alert:
             "connected_RSU": self.rpi_instance.system_status.get("ap_connected", 'N/A'),
             "distance_from_rsu": self.rpi_instance.system_status.get("ap_distance", 'N/A'),
             "distance_from_other_aps": self.rpi_instance.system_status.get("other_aps", {}),
-            "type": prediction.get('category', 'unknown'),
-            "confidence": prediction.get('score', 0),
+            "type": predictions.get('category', 'unknown'),
+            "confidence": predictions.get('score', 0),
             "object_in_front": self.vehicle_control.status.get("object_in_front", False),
             "vehicle_stopped": self.vehicle_control.status.get('stopped', False),
-            "coordinates": prediction.get('coordinates')
+            "coordinates": predictions.get('coordinates')
         }
         print(prediction_timestamp, "Alert creato")
         self.alert_sended[str(prediction_timestamp)] = alert_details
