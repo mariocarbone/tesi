@@ -11,6 +11,7 @@ class Alert:
         self.vehicle_control = vehicle_control
         self.rpi_instance = rpi_instance
         self.alert_sended = {}
+        self.alert_received = {}
         self.last_predictions = []
 
     def process_predictions(self, predictions):

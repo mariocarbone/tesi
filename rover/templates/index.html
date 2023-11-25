@@ -129,7 +129,11 @@
 
         <div class="col-lg-5">
             <h4 class="mt-4 text-center">Alert ricevuti</h4>
-            <div class="row" id="alert-list" style="background-color: lightcyan;">
+            <div class="row">
+                <div class="col-12 text-center" id="alert_received_list"
+                    style=" background-color: lightcyan; max-height: 130px; overflow-y: auto;">
+                    <!-- Contenuto della lista degli alert inviati -->
+                </div>
             </div>
         </div>
 
@@ -261,6 +265,7 @@
         var personCount = document.getElementById('person_count');
         var carCount = document.getElementById('car_count');
         var alertList = document.getElementById('alert_sended_list')
+        var alertListReceived = document.getElementById('alert_received_list')
 
 
         function updatePrediction(prediction) {
@@ -322,6 +327,29 @@
 
             alert_sended_list.innerHTML = alertListHTML;
         }
+
+        function updateAlertReceived(alert_list) {
+            var alertListHTML = '';
+
+            for (const key in alert_list) {
+                if (alert_list.hasOwnProperty(key)) {
+                    const item = alert_list[key];
+                    var timestamp = new Date(item.timestamp * 1000);
+                    var hours = timestamp.getHours();
+                    var minutes = timestamp.getMinutes();
+                    var seconds = timestamp.getSeconds();
+
+                    // Aggiungi uno zero davanti se i minuti e i secondi sono inferiori a 10
+                    var formattedTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+                    var alertHTML = `<div class="text-center">${formattedTime} - Tipo: ${item.type} - Creator: ${item.creator_id}</div>`;
+                    alertListHTML += alertHTML;
+                }
+            }
+
+            alert_sended_list.innerHTML = alertListHTML;
+        }
+
         function updatePiInfo(status) {
             cpu.textContent = status.cpu + " %";
             temp.textContent = status.temp + " °";
@@ -366,6 +394,13 @@
             fetch('/alert/alert_sended')
                 .then(response => response.json())
                 .then(data => updateAlert(data))
+                .catch(error => console.log('Errore durante la richiesta degli alert:', error));
+        }, 1000);
+
+        setInterval(function () {
+            fetch('/alert/alert_received')
+                .then(response => response.json())
+                .then(data => updateAlertReceived(data))
                 .catch(error => console.log('Errore durante la richiesta degli alert:', error));
         }, 1000);
 
