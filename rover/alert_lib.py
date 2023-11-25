@@ -12,8 +12,8 @@ class Alert:
 
     def process_predictions(self, predictions):
         if self.should_generate_alert(predictions):
-            detailed_alert = self.create_detailed_alert(predictions)
-            self.mqtt_connection.send_alert(detailed_alert)
+            alert = self.create_alert(predictions)
+            self.mqtt_connection.send_alert(alert)
 
     def should_generate_alert(self, predictions):
         print(predictions)
