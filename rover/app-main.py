@@ -128,7 +128,7 @@ def update_other_aps():
 
 # Funzione per effettuare object detection sui frame della coda
 def detection():
-	global frame_counter,somma_tempi_frame, media_frame, contatore_media,prediction_json, prediction_lock, stop_threads
+	global frame_counter,somma_tempi_frame, media_frame, contatore_media,prediction_json, prediction_lock, stop_threads, alert_instance
 	while not stop_threads:
 		if len(frame_queue) > 0:
 			inizio = round(time.time()*1000)
@@ -155,6 +155,7 @@ def detection():
 			if(detected):
 				#with prediction_lock:
 				prediction_json = json
+				alert_instance.check_predictions(prediction_json)
 		else:
 			#logging.warning('Coda dei frame vuota') 
 			#print(round(time.time()*1000), "- App Main > Coda dei frame vuota")
