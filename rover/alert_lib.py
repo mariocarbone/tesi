@@ -30,7 +30,8 @@ class Alert:
             "distance_from_rsu": self.rpi_istance.system_status["ap_distance"],
             "distance_from_other_aps" : self.rpi_istance.other_aps,
             "type" : prediction['category'],
-            "confindence" : prediction['score'],      
+            "confindence" : prediction['score'],
+            "object_in_front" : self.vehicle_control.status["object_in_front"],      
             "vehicle_stopped": self.vehicle_control.status['stopped'],
             #"vehicle_stopped": self.vehicle_control.status.get("stopped", True)
         }

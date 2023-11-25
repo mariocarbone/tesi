@@ -19,21 +19,26 @@ class Vehicle_Control():
 		self.turn_step = 10
 		self.on_track = False
 		self.moving = False
+		
 		self.status = {
-			"speed": 0,
-			"speed_left_side": 0,
-			"speed_right_side": 0,
-			"steer_angle": 50,
-			"last_angle": 0,
-			"ir_left": 6,
-			"ir_center": 6,
-			"ir_right": 6,
-			"on_track" : False,
-			"braking" : False,
-			"moving" : False,
-			"distance" : 0,
+			"speed": 45,
+			"speed_left_side": 40,
+			"speed_right_side": 50,
+			"steer_side_value": 30,
+			"steer_side": "left",
+			"line_following_mode": False,
+			"ir_left": 0,
+			"ir_center": 1,
+			"ir_right": 0,
+			"on_track": True,
+			"distance": 25,
+			"stopped": True,
+			"braking": False,
+			"moving": False,
+			"object_in_front": False,
 			"last_command": "STATUS"
 		}
+
 
 	def update_status(self):
 		if self.arduino.ser.is_open:

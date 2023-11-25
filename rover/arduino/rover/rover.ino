@@ -22,7 +22,6 @@ int CENTER= A1; //CENTER sensor connected to analog pin A3
 int RIGHT = A2; // RIGHT sensor connected to analog pin A0
 
 HCSR04 hc(10, 11);
-int lastAngle = 0;
 int brake = 0;
 int leftSpeed = 0;
 int rightSpeed = 0;
@@ -132,7 +131,7 @@ void loop() {
 
           Serial.println("{\"speed\":" + String(speed) + ",\"speed_left_side\":" + String(leftSpeed)
                         + ",\"speed_right_side\":" + String(rightSpeed) + ",\"steer_side_value\":" + String(steeringValue) 
-                        + ",\"steer_side\":\"" + steer_side + "\",\"last_angle\":" + String(lastAngle) + ",\"line_following_mode\":" + lineFollowingMode
+                        + ",\"steer_side\":\"" + steer_side  + ",\"line_following_mode\":" + lineFollowingMode
                         + ",\"ir_left\":" + String(sx) + ",\"ir_center\":" + String(center) + ",\"on_track\":" + on_track
                         + ",\"ir_right\":" + String(dx) + ",\"distance\":" + String(distance) + ",\"stopped\":" + stopped
                         + ",\"braking\":" + braking + ",\"moving\":" + moving + ",\"object_in_front\":" + object_in_front 
@@ -330,7 +329,7 @@ void loop() {
 
           Serial.println("{\"speed\":" + String(speed) + ",\"speed_left_side\":" + String(leftSpeed)
                         + ",\"speed_right_side\":" + String(rightSpeed) + ",\"steer_side_value\":" + String(steeringValue) 
-                        + ",\"steer_side\":\"" + steer_side + "\",\"last_angle\":" + String(lastAngle) + ",\"line_following_mode\":" + lineFollowingMode
+                        + ",\"steer_side\":\"" + steer_side  + ",\"line_following_mode\":" + lineFollowingMode
                         + ",\"ir_left\":" + String(sx) + ",\"ir_center\":" + String(center) + ",\"on_track\":" + on_track
                         + ",\"ir_right\":" + String(dx) + ",\"distance\":" + String(distance) + ",\"stopped\":" + stopped
                         + ",\"braking\":" + braking + ",\"moving\":" + moving + ",\"object_in_front\":" + object_in_front 
