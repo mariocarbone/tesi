@@ -16,6 +16,7 @@ class Alert:
             self.mqtt_connection.send_alert(detailed_alert)
 
     def should_generate_alert(self, predictions):
+        print(predictions)
         for prediction in predictions:
             if prediction["category"] == "person" and prediction["score"] > 0.5:
                 return True
