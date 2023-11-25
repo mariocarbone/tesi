@@ -43,7 +43,6 @@ class Vehicle_Control():
 	def update_status(self):
 		if self.arduino.ser.is_open:
 			response = self.arduino.get_status()
-			print(response)
 			if isinstance(response, dict):
 				self.status.update(response)
 			else:
