@@ -2,6 +2,7 @@ import time
 import threading
 from mqtt_lib import MQTTConnection
 from control_lib import Vehicle_Control
+
 class Alert:
     
     def __init__(self, vehicle_id, vehicle_control, rpi_instance, mqtt_connection):
@@ -10,25 +11,13 @@ class Alert:
         self.vehicle_control = vehicle_control
         self.rpi_instance = rpi_instance
         self.alert_sended = {}
-        self.rate_limit_interval = 1  # Intervallo in secondi
-        self.last_alert_time = {}  # Dizionario per tenere traccia dell'ultimo alert per ogni oggetto
-        self.object_tracking_interval = 1  # Intervallo in secondi per tenere traccia di un oggetto
-        self.recently_detected_objects = {}  # Dizionario per il tracking degli oggetti rilevati
 
     def process_predictions(self, predictions):
         prediction_timestamp = predictions.get('timestamp', time.time())
         if self.should_generate_alert(predictions):
             for key, prediction in predictions.items():
-                if key != "timestamp":
-                    object_id = self.get_object_id(prediction)
-
-                    # Controllo se generare un alert
-                    if object_id in self.last_alert_time:
-                        if prediction_timestamp - self.last_alert_time[object_id] < self.object_tracking_interval:
-                            continue  # Non genera alert se è passato meno di un secondo dall'ultimo alert
-
-                    self.last_alert_time[object_id] = prediction_timestamp  # Aggiorna il tempo dell'ultimo alert
-                    alert_thread = threading.Thread(target=self.create_and_send_alert, args=(prediction,))
+                if key != "timestamp" and not self.is_recent_alert(prediction, prediction_timestamp):
+                    alert_thread = threading.Thread(target=self.create_and_send_alert, args=(prediction, prediction_timestamp))
                     alert_thread.start()
 
     def should_generate_alert(self, predictions):
@@ -37,9 +26,21 @@ class Alert:
                 return True
         return False
 
-    def create_and_send_alert(self, prediction):
+    def is_recent_alert(self, prediction, prediction_timestamp):
+        coordinates = prediction['coordinates']
+        score = prediction['score']
+        for _, alert_details in list(self.alert_sended.items())[-10:]:  # Considera solo gli ultimi 10 alert
+            time_diff = prediction_timestamp - alert_details["timestamp"]
+            if time_diff < 1:  # Controllo se è passato meno di un secondo
+                coords_diff = all(abs(coordinates[key] - alert_details[key]) < 50 for key in ['x', 'y', 'w', 'h'])
+                score_diff = abs(score - alert_details["confidence"]) < 0.1
+                if coords_diff and score_diff:
+                    return True
+        return False
+
+    def create_and_send_alert(self, prediction, prediction_timestamp):
         alert_details = {
-            "timestamp": time.time(),
+            "timestamp": prediction_timestamp,
             "vehicle_id": self.vehicle_id,
             "front_distance": self.vehicle_control.status.get('distance', 0),
             "connected_RSU": self.rpi_instance.system_status.get("ap_connected", 'N/A'),
@@ -49,24 +50,18 @@ class Alert:
             "confidence": prediction.get('score', 0),
             "object_in_front": self.vehicle_control.status.get("object_in_front", False),
             "vehicle_stopped": self.vehicle_control.status.get('stopped', False),
+            "coordinates": prediction.get('coordinates')
         }
-        print(time.time(), "Alert creato")
-        alert_id = str(alert_details["timestamp"])
-        self.alert_sended[alert_id] = alert_details
-
-        # Gestione degli ultimi 10 alert
+        print(prediction_timestamp, "Alert creato")
+        self.alert_sended[str(prediction_timestamp)] = alert_details
+        # Mantieni solo gli ultimi 10 alert
         if len(self.alert_sended) > 10:
             oldest_key = sorted(self.alert_sended.keys())[0]
             del self.alert_sended[oldest_key]
 
         self.mqtt_connection.send_alert(alert_details)
 
-    def get_object_id(self, prediction):
-        # Implementazione mancante per ottenere un identificatore unico dell'oggetto
-        # Ad esempio:
-        coordinates = prediction['coordinates']
-        return f"{prediction['category']}_{coordinates['x']}_{coordinates['y']}_{coordinates['w']}_{coordinates['h']}"
-
+    #CODICE INUTILIZZATO
 
     def check_zona(self, punto):
         for zona in self.zone :
