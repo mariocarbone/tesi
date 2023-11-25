@@ -45,32 +45,32 @@
                     <div class="row justify-content-center align-items-center">
                         <div class="status-field mx-2 my-2 text-center">
                             <h5>Velocità</h5>
-                            <div id="speed" class="h5">0</div>
+                            <div id="speed" class="span">0</div>
                         </div>
                         <div class="status-field mx-2 my-2 text-center">
                             <h5>Direzione sterzo</h5>
-                            <div id="steer_side" class="h5">CENTER</div>
+                            <div id="steer_side" class="span">CENTER</div>
                         </div>
                         <div class="status-field mx-2 my-2 text-center">
                             <h5>Distanza anteriore</h5>
-                            <div id="distance-value" class="h5">0</div>
+                            <div id="distance-value" class="span">0</div>
                         </div>
                         <div class="row justify-content-center align-items-center">
                             <div class="status-field mx-2 my-2 text-center">
                                 <h5>In movimento</h5>
-                                <div id="moving" class="h5">0</div>
+                                <div id="moving" class="span">0</div>
                             </div>
                             <div class="status-field mx-2 my-2 text-center">
                                 <h5>In frenata</h5>
-                                <div id="braking" class="h5">0</div>
+                                <div id="braking" class="span">0</div>
                             </div>
                             <div class="status-field mx-2 my-2 text-center">
                                 <h5>Fermo</h5>
-                                <div id="stopped" class="h5">0</div>
+                                <div id="stopped" class="span">0</div>
                             </div>
                             <div class="status-field mx-2 my-2 text-center">
                                 <h5>Sulla Traccia</h5>
-                                <div id="on_track" class="h5">0</div>
+                                <div id="on_track" class="span">0</div>
                             </div>
                         </div>
                     </div>
@@ -78,15 +78,15 @@
                     <div class=" row justify-content-center align-items-center">
                         <div class="status-field mx-2 my-2 text-center">
                             <h5>IR Sinistra</h5>
-                            <div id="ir_left" class="h5">0</div>
+                            <div id="ir_left" class="span">0</div>
                         </div>
                         <div class="status-field mx-2 my-2 text-center">
                             <h5>IR Centro</h5>
-                            <div id="ir_center" class="h5">0</div>
+                            <div id="ir_center" class="span">0</div>
                         </div>
                         <div class="status-field mx-2 my-2 text-center">
                             <h5>IR Destra</h5>
-                            <div id="ir_right" class="h5">0</div>
+                            <div id="ir_right" class="span">0</div>
                         </div>
             </div>
             <h3 class="mt-4 text-center">Guida Autonoma</h3>
@@ -109,8 +109,8 @@
     <div class="row">
         <div class="col-lg-3">
             <h3 class="mt-4 text-center">Oggetti Rilevati</h3>
-            <div class="row justify-content-center align-items-center">
-                <div class="count-field mx-2 my-2 text-center">
+            <div class="row justify-content-center align-items-center" style="background-color: lightcyan; padding: auto;">
+                <div class="count-field mx-2 my-2 text-center" >
                     <i class="fa fa-user" aria-hidden="true"></i>
                     <div id="person_count" class="h5">0</div>
                 </div>
@@ -133,10 +133,10 @@
                 <!-- Colonna per RSU Connessa e Distanza Stimata -->
                 <div class="col">
                     <div class="status-field mx-2 my-2 text-center">
-                        <h5>RSU Connessa</h5>
-                        <div id="connected_rsu" class="h5">0</div>
+                        <h5>RSU Connessa:</h5>
+                        <div id="connected_rsu" class="span">0</div>
                         <h5>Distanza:</h5>
-                        <div id="distance_rsu" class="h5">0m</div>
+                        <div id="distance_rsu" class="span">0m</div>
                     </div>
                 </div>
         
@@ -144,7 +144,7 @@
                 <div class="col">
                     <div class="connection-field mx-2 my-2 text-center">
                         <h5>RSU Disponibili:</h5>
-                        <div id="rsu_list" class="h5">WiFi SSID</div>
+                        <div id="rsu_list" class="span">...</div>
                     </div>
                 </div>
             </div>
@@ -157,15 +157,15 @@
                 <div class="row justify-content-center align-items-center">
                     <div class="connection-field mx-2 my-2 text-center">
                         <h5>SSID</h5>
-                        <div id="ssid" class="h5">WiFi SSID</div>
+                        <div id="ssid" class="span">WiFi SSID</div>
                     </div>
                     <div class="connection-field mx-2 my-2 text-center">
                         <h5>Indirizzo IP:</h5>
-                        <div id="ip" class="h5">0.0.0.0</div>
+                        <div id="ip" class="span">0.0.0.0</div>
                     </div>
                     <div class="status-field mx-2 my-2 text-center">
                         <h5>Livello Segnale</h5>
-                        <div id="signal" class="h5">0</div>
+                        <div id="signal" class="span">0</div>
                     </div>
                 </div>
             </div>
@@ -177,15 +177,15 @@
                 <div class="row justify-content-center align-items-center">
                     <div class="rpi-field mx-2 my-2 text-center">
                         <h5>CPU Usage</h5>
-                        <div id="cpu" class="h5">0%</div>
+                        <div id="cpu" class="span">0%</div>
                     </div>
                     <div class="rpi-field mx-2 my-2 text-center">
                         <h5>CPU Temp.</h5>
-                        <div id="temp" class="h5">0°</div>
+                        <div id="temp" class="span">0°</div>
                     </div>
                     <div class="rpi-field mx-2 my-2 text-center">
                         <h5>Ram Usage</h5>
-                        <div id="ram" class="h5">0%</div>
+                        <div id="ram" class="span">0%</div>
                     </div>
                 </div>
             </div>
