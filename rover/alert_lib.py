@@ -11,31 +11,40 @@ class Alert:
         self.vehicle_control = vehicle_control
         self.rpi_instance = rpi_instance
         self.alert_sended = {}
+        self.last_predictions = []
 
     def process_predictions(self, predictions):
         prediction_timestamp = predictions.get('timestamp', time.time())
         if self.should_generate_alert(predictions):
             for key, prediction in predictions.items():
-                if key != "timestamp" and not self.is_recent_alert(prediction, prediction_timestamp):
-                    alert_thread = threading.Thread(target=self.create_and_send_alert, args=(prediction, prediction_timestamp))
-                    alert_thread.start()
+                if key != "timestamp":
+                    if not self.is_recent_alert(prediction):
+                        alert_thread = threading.Thread(target=self.create_and_send_alert, args=(prediction, prediction_timestamp))
+                        alert_thread.start()
+                        # Aggiungi la prediction corrente alle ultime 10
+                        self.last_predictions.append((prediction, prediction_timestamp))
+                        # Mantieni solo le ultime 10 prediction
+                        if len(self.last_predictions) > 10:
+                            self.last_predictions.pop(0)
+    
+    def is_recent_alert(self, current_prediction):
+        for prev_prediction, in self.last_predictions:
+            if self.are_predictions_similar(current_prediction, prev_prediction):
+                return True
+        return False
+    
+    def are_predictions_similar(self, current_prediction, prev_prediction):
+        # Confronta le coordinate e lo score delle prediction
+        current_coords = current_prediction.get('coordinates', {})
+        prev_coords = prev_prediction.get('coordinates', {})
+        score_diff = abs(current_prediction.get('score', 0) - prev_prediction.get('score', 0))
+        coords_diff = all(abs(current_coords.get(key, 0) - prev_coords.get(key, 0)) < 50 for key in ['x', 'y', 'w', 'h'])
+        return coords_diff and score_diff < 0.1
 
     def should_generate_alert(self, predictions):
         for key, prediction in predictions.items():
             if key != "timestamp" and prediction["category"] == "person" and prediction["score"] > 0.7:
                 return True
-        return False
-
-    def is_recent_alert(self, prediction, prediction_timestamp):
-        coordinates = prediction['coordinates']
-        score = prediction['score']
-        for _, alert_details in list(self.alert_sended.items())[-10:]:  # Considera solo gli ultimi 10 alert
-            time_diff = prediction_timestamp - alert_details["timestamp"]
-            if time_diff < 1:  # Controllo se è passato meno di un secondo
-                coords_diff = all(abs(coordinates[key] - alert_details[key]) < 50 for key in ['x', 'y', 'w', 'h'])
-                score_diff = abs(score - alert_details["confidence"]) < 0.1
-                if coords_diff and score_diff:
-                    return True
         return False
 
     def create_and_send_alert(self, prediction, prediction_timestamp):
