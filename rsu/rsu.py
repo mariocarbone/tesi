@@ -135,7 +135,7 @@ def detection():
 			contatore_media = contatore_media+1
 			if(detected):
 				#with prediction_lock:
-				prediction_json = json.
+				prediction_json = json
 				alert_instance.process_predictions(prediction_json)
 		else:
 			#logging.warning('Coda dei frame vuota') 
