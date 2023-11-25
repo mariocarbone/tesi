@@ -1,5 +1,6 @@
 import paho.mqtt.client as mqtt
 import json
+import time
 
 class MQTTConnection:
 
@@ -21,11 +22,15 @@ class MQTTConnection:
 
 	def on_message(self, client, userdata, message):
 		if message.topic.startswith("/alert"):
-			print("<Alert> Ricevuto Alert")
+
 			payload = json.loads(message.payload)
 			if payload["creator_id"] == self.vehicle_id:
 				pass 
 			else:
+				t_arrival = time.time() 
+				t_trasm = t_arrival - - payload["t_creation"]
+				t_total_ms = round(t_trasm)
+				print("<Alert> Ricevuto Alert - Tempo impiegato:", t_total_ms + " ms")
 				self.manage_alert(payload)
 			# alert_id = payload["id"]
 			# alert[alert_id] = payload
