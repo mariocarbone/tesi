@@ -40,7 +40,10 @@ class MQTTConnection:
 
 	def send_alert(self, alert):
 		alert_json = json.dumps(alert)
-		self.client.publish(self.topic_alert + "/" + alert.get("connected_RSU", "") , alert_json)
+		rsu_id = alert.get("connected_RSU", "default_RSU")
+		full_topic = f"{self.topic_alert}/{rsu_id}"
+
+		self.client.publish(full_topic, alert_json)
 
 	def manage_alert(self, payload):
 		print("Gestione dell'alert:", payload)
