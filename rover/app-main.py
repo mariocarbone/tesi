@@ -210,8 +210,9 @@ def cv2Lines():
 def generate_frames():
 	global stop_threads
 	while not stop_threads:
-		if len(img_queue) > 0:
-			frame = get_latest_image() #Prendo l'ultima immagine
+		#if len(img_queue) > 0:
+		if len(tf_queue) > 0:
+			frame = get_latest_tf_frame() #Prendo l'ultima immagine
 			ret, buffer = cv2.imencode('.jpg', frame) #Effettuo l'encoding dell'immagine
 			if ret:
 				yield (b'--frame\r\n'
@@ -330,7 +331,7 @@ def rover_manual_reverse():
 
 if __name__ == "__main__":
 	capture_thread = threading.Thread(target=capture_frames)
-	cv2_thread = threading.Thread(target=cv2Lines)
+	#cv2_thread = threading.Thread(target=cv2Lines)
 	detection_thread = threading.Thread(target=detection)
 	status_thread = threading.Thread(target=update_vehicle_status)
 	aps_thread = threading.Thread(target=update_other_aps)
@@ -340,6 +341,6 @@ if __name__ == "__main__":
 	capture_thread.start()
 	time.sleep(0.1)
 	detection_thread.start()
-	cv2_thread.start()
+	#cv2_thread.start()
 	status_thread.start()
 	aps_thread.start()
