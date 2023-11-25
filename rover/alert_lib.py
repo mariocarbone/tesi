@@ -18,7 +18,7 @@ class Alert:
         self.recently_detected_objects = {}
 
     def process_predictions(self, predictions):
-        current_time = time.time()
+        prediction_timestamp = predictions.get('timestamp', time.time())
         if self.should_generate_alert(predictions):
             for key, prediction in predictions.items():
                 if key != "timestamp":
@@ -28,18 +28,18 @@ class Alert:
                     if object_id in self.recently_detected_objects:
                         last_detected, last_position = self.recently_detected_objects[object_id]
                         if self.is_same_object(prediction, last_position):
-                            if current_time - last_detected < self.object_tracking_interval:
+                            if prediction_timestamp - last_detected < self.object_tracking_interval:
                                 continue  # Salta se l'oggetto è lo stesso rilevato di recente
 
                     # Aggiorna i dati per il tracking
-                    self.recently_detected_objects[object_id] = (current_time, self.get_object_position(prediction))
+                    self.recently_detected_objects[object_id] = (prediction_timestamp, self.get_object_position(prediction))
 
                     # Rate Limiting
-                    if object_id in self.last_alert_time and current_time - self.last_alert_time[object_id] < self.rate_limit_interval:
+                    if object_id in self.last_alert_time and prediction_timestamp - self.last_alert_time[object_id] < self.rate_limit_interval:
                         continue  # Salta se l'intervallo di rate limiting non è ancora trascorso
 
                     # Aggiorna l'ultimo tempo di alert
-                    self.last_alert_time[object_id] = current_time
+                    self.last_alert_time[object_id] = prediction_timestamp
                     
                     # Crea e invia l'alert
                     alert_thread = threading.Thread(target=self.create_and_send_alert, args=(prediction,))
