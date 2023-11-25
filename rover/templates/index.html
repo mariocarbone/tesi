@@ -88,25 +88,26 @@
                             <h5>IR Destra</h5>
                             <div id="ir_right" class="span">0</div>
                         </div>
-                    </div>
+            </div>
             <h4 class="mt-4 text-center">Guida Autonoma</h4>
-                <div id="rover-commands" class="row justify-content-center align-items-center">
-                    <button id="rover-start" class="btn btn-primary mx-2 my-2">Start</button>
-                    <button id="rover-stop" class="btn btn-danger mx-2 my-2">Stop</button>
-                    <div>
-                        <label for="speedRange" class="form-label">Velocità</label>
-                        <input type="range" class="form-range" min="70" max="254" step="10" id="roverSpeedRange">
-                        <span id="roverSpeedDisplay">Max Speed</span>
-                    </div>
+            <div id="rover-commands" class="row justify-content-center align-items-center">
+                <button id="rover-start" class="btn btn-primary mx-2 my-2">Start</button>
+                <button id="rover-stop" class="btn btn-danger mx-2 my-2">Stop</button>
+                <div>
+                    <label for="speedRange" class="form-label">Velocità</label>
+                    <input type="range" class="form-range" min="70" max="254" step="10" id="roverSpeedRange">
+                    <span id="roverSpeedDisplay">Max Speed</span>
                 </div>
+            </div>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-2">
             <h4 class="mt-4 text-center">Oggetti Rilevati</h4>
-            <div class="row justify-content-center align-items-center" style="background-color: lightcyan; padding: auto;">
-                <div class="count-field mx-2 my-2 text-center" >
+            <div class="row justify-content-center align-items-center"
+                style="background-color: lightcyan; padding: auto;">
+                <div class="count-field mx-2 my-2 text-center">
                     <i class="fa fa-user" aria-hidden="true"></i>
                     <div id="person_count" class="h5">0</div>
                 </div>
@@ -141,7 +142,7 @@
                         <div id="distance_rsu" class="span">0m</div>
                     </div>
                 </div>
-        
+
                 <!-- Colonna per RSU Disponibili -->
                 <div class="col">
                     <div class="connection-field mx-2 my-2 text-center">
@@ -151,7 +152,7 @@
                 </div>
             </div>
         </div>
-        
+
 
         <div class="col-lg-4 text-center">
             <h4 class="mt-4">Connessione</h4>
@@ -207,7 +208,8 @@
                 <button id="rover-manual-brake" class="btn btn-primary mx-2 my-2">⇩</button>
                 <button id="rover-manual-right" class="btn btn-primary mx-2 my-2">⇨</button>
             </div>
-            <div id="rover-speed-command" class="row justify-content-center align-items-center" style="background-color: lightcyan;">
+            <div id="rover-speed-command" class="row justify-content-center align-items-center"
+                style="background-color: lightcyan;">
                 <div class="col-12 text-center">
                     <label for="speedRange" class="form-label">Velocità</label>
                     <input type="range" class="form-range" min="0" max="254" step="20" id="speedRange">
@@ -298,17 +300,18 @@
 
         function updateAlert(alert_list) {
             var alertListHTML = '';
-            
-            alert_list.forEach(function(alert) {
-                // Costruisci l'HTML per ciascun alert
-                var alertHTML = `<div>${alert.timestamp} - Tipo: ${alert.type} - RSU: ${alert.connectedRSU}</div>`;
-                // Aggiungi l'HTML dell'alert alla lista
-                alertListHTML += alertHTML;
-                });
 
-                alertListDiv.innerHTML = alertListHTML;
+            for (const key in alert_list) {
+                if (alert_list.hasOwnProperty(key)) {
+                    const item = alert_list[key];
+                    var alertHTML = `<div>${item.timestamp} - Tipo: ${item.type} - RSU: ${item.connected_RSU}</div>`;
+                    alertListHTML += alertHTML;
+                }
+            }
+
+            alertListDiv.innerHTML = alertListHTML;
         }
-
+        
         function updatePiInfo(status) {
             cpu.textContent = status.cpu + " %";
             temp.textContent = status.temp + " °";
@@ -316,7 +319,7 @@
             ssid.textContent = status.wifi[0];
             signal.textContent = status.wifi[1];
             ip.textContent = status.ip;
-            distanceRSU.textContent = status.ap_distance+" m";
+            distanceRSU.textContent = status.ap_distance + " m";
             connectedRSU.textContent = status.ap_connected;
 
             // Update Other RSU
@@ -442,12 +445,12 @@
         var buttonManualRight = document.getElementById('rover-manual-right');
         var buttonManualBrake = document.getElementById('rover-manual-brake');
 
-        document.getElementById('speedRange').addEventListener('input', function() {
+        document.getElementById('speedRange').addEventListener('input', function () {
             document.getElementById('speedDisplay').textContent = this.value + " m/s";
         });
 
-        document.getElementById('roverSpeedRange').addEventListener('input', function() {
-            document.getElementById('roverSpeedDisplay').textContent = this.value ;//+ " m/s";
+        document.getElementById('roverSpeedRange').addEventListener('input', function () {
+            document.getElementById('roverSpeedDisplay').textContent = this.value;//+ " m/s";
         });
 
         buttonManualStop.addEventListener('click', function () {
@@ -546,7 +549,7 @@
                 });
         });
 
-        
+
 
     </script>
 </body>
