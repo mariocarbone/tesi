@@ -314,7 +314,7 @@
     }
 
     // Ordina gli alert in base al timestamp in ordine crescente
-    //alertsArray.sort((a, b) => a.timestamp - b.timestamp);
+    alertsArray.sort((a, b) => a.timestamp - b.timestamp);
 
     for (const item of alertsArray) {
         var timestamp = new Date(item.timestamp * 1000);
