@@ -28,7 +28,7 @@ class Alert:
                             self.last_predictions.pop(0)
     
     def is_recent_alert(self, current_prediction):
-        for prev_prediction in self.last_predictions:
+        for prev_prediction, _ in self.last_predictions:
             if self.are_predictions_similar(current_prediction, prev_prediction):
                 return True
         return False
