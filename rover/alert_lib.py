@@ -25,7 +25,7 @@ class Alert:
             if self.are_predictions_similar(current_predictions, prev_predictions):
                 return True
         self.last_predictions.append((current_predictions, current_timestamp))
-        
+
         # Mantieni solo le ultime 10 prediction
         if len(self.last_predictions) > 10:
             self.last_predictions.pop(0)
@@ -65,7 +65,7 @@ class Alert:
         if len(self.alert_sended) > 10:
             oldest_key = sorted(self.alert_sended.keys())[0]
             del self.alert_sended[oldest_key]
-
+        print(alert_details)
         self.mqtt_connection.send_alert(alert_details)
 
     #CODICE INUTILIZZATO
