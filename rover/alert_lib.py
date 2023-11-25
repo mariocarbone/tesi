@@ -25,13 +25,14 @@ class Alert:
             if self.are_predictions_similar(current_predictions, prev_predictions):
                 return True
         self.last_predictions.append((current_predictions, current_timestamp))
+        
         # Mantieni solo le ultime 10 prediction
         if len(self.last_predictions) > 10:
             self.last_predictions.pop(0)
         return False
     
     def are_predictions_similar(self, current_predictions, prev_predictions):
-        # Confronta le coordinate e lo score delle prediction
+
         current_coords = current_predictions.get('coordinates', {})
         prev_coords = prev_predictions.get('coordinates', {})
         score_diff = abs(current_predictions.get('score', 0) - prev_predictions.get('score', 0))

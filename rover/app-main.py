@@ -256,6 +256,11 @@ def get_predictions():
 def get_connections():
 	return jsonify(rpi.get_system_status())  
 
+# API per ottenere informazioni su raspberry pi 
+@app.route('/alert/alert_sendend', methods=['GET'])
+def get_alert_sended():
+	return jsonify(alert_instance.alert_sended)  
+
 # API per far partire il rover
 @app.route('/rover/start', methods=['POST'])
 def rover_start():

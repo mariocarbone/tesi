@@ -103,7 +103,7 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-3">
+        <div class="col-lg-2">
             <h4 class="mt-4 text-center">Oggetti Rilevati</h4>
             <div class="row justify-content-center align-items-center" style="background-color: lightcyan; padding: auto;">
                 <div class="count-field mx-2 my-2 text-center" >
@@ -117,7 +117,13 @@
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-lg-3">
+            <h4 class="mt-4 text-center">Alert inviati</h4>
+            <div class="row" id="alert_sended_list" style="background-color: lightcyan; padding: auto;">
+            </div>
+        </div>
+
+        <div class="col-lg-3">
             <h4 class="mt-4 text-center">Alert ricevuti</h4>
             <div class="row" id="alert-list" style="background-color: lightcyan; padding: auto;">
             </div>
@@ -249,6 +255,7 @@
         var onTrack = document.getElementById('on_track');
         var personCount = document.getElementById('person_count');
         var carCount = document.getElementById('car_count');
+        var alertList = document.getElementById('alert_sended_list')
 
 
         function updatePrediction(prediction) {
@@ -289,6 +296,19 @@
             distanceElement.textContent = status.distance + " cm";
         }
 
+        function updateAlert(alert_list) {
+            var alertListHTML = '';
+            
+            alert_list.forEach(function(alert) {
+                // Costruisci l'HTML per ciascun alert
+                var alertHTML = `<div>${alert.timestamp} - Tipo: ${alert.type} - RSU: ${alert.connectedRSU}</div>`;
+                // Aggiungi l'HTML dell'alert alla lista
+                alertListHTML += alertHTML;
+                });
+
+                alertListDiv.innerHTML = alertListHTML;
+        }
+
         function updatePiInfo(status) {
             cpu.textContent = status.cpu + " %";
             temp.textContent = status.temp + " °";
@@ -326,6 +346,14 @@
                 .then(response => response.json())
                 .then(data => updatePrediction(data))
                 .catch(error => console.log('Errore durante la richiesta della distanza:', error));
+        }, 1000);
+
+        // Aggiorna la lista degli alert
+        setInterval(function () {
+            fetch('/alert/alert_sended')
+                .then(response => response.json())
+                .then(data => updateAlert(data))
+                .catch(error => console.log('Errore durante la richiesta degli alert:', error));
         }, 1000);
 
         // Aggiorna lo stato del veicolo ogni secondo
