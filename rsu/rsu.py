@@ -33,6 +33,8 @@ stop_threads = False
 cap = cv2.VideoCapture(0)
 
 #MQTT INFO
+broker_address = "192.168.1.6"
+broker_port = 1883
 topic_alert = "/alert/"
 topic_auto = "/smartcar/"
 topic_rsu = "/rsu/"
@@ -43,7 +45,8 @@ rsu_deatils = {
     "ssid": "RSU_PI01"#,
     #"gps": {"lat": 39.35613, "lon": 16.22815}
 }
-mqtt = MQTTConnection("192.168.1.6", "1883", topic_alert, topic_auto, topic_rsu, rsu_id)
+mqtt = MQTTConnection(broker_address, broker_port, topic_alert, topic_auto, topic_rsu, rsu_id)
+
 
 # Istanze Moduli
 tf_instance = Tensorflow()
