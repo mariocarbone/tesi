@@ -307,14 +307,8 @@
             for (const key in alert_list) {
                 if (alert_list.hasOwnProperty(key)) {
                     const item = alert_list[key];
-
-                    // Converti il timestamp in data
-                    var timestamp = item.timestamp; // Assumendo che item.timestamp sia un timestamp in millisecondi
-                    var date = new Date(timestamp);
-
-                    // Formatta l'orario come hh:mm:ss
-                    var formattedTime = date.toLocaleTimeString();
-
+                    var timestamp = new Date(item.timestamp * 1000); // Converti il timestamp in millisecondi
+                    var formattedTime = `${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getSeconds()}`; // Ottieni ora, minuti e secondi
                     var alertHTML = `<div class="text-center">${formattedTime} - Tipo: ${item.type} - RSU: ${item.connected_RSU}</div>`;
                     alertListHTML += alertHTML;
                 }
