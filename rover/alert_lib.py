@@ -4,18 +4,16 @@ from mqtt_lib import MQTTConnection
 from control_lib import Vehicle_Control
 class Alert:
     
-    def __init__(self, vehicle_id, vehicle_control, rpi_instance, mqtt_connection):#, zone):
+    def __init__(self, vehicle_id, vehicle_control, rpi_instance, mqtt_connection):
         self.vehicle_id = vehicle_id
-        #self.zone = zone
         self.mqtt_connection = mqtt_connection
         self.vehicle_control = vehicle_control
-        self.rpi_istance = rpi_instance
+        self.rpi_instance = rpi_instance
         self.alert_sended = {}
-
-        self.last_alert_time = {}
         self.rate_limit_interval = 1  # Intervallo in secondi
-        self.object_tracking_interval = 5  # Intervallo in secondi per tenere traccia di un oggetto
-        self.recently_detected_objects = {}
+        self.last_alert_time = {}  # Dizionario per tenere traccia dell'ultimo alert per ogni oggetto
+        self.object_tracking_interval = 1  # Intervallo in secondi per tenere traccia di un oggetto
+        self.recently_detected_objects = {}  # Dizionario per il tracking degli oggetti rilevati
 
     def process_predictions(self, predictions):
         prediction_timestamp = predictions.get('timestamp', time.time())
@@ -24,30 +22,18 @@ class Alert:
                 if key != "timestamp":
                     object_id = self.get_object_id(prediction)
 
-                    # Object Tracking
-                    if object_id in self.recently_detected_objects:
-                        last_detected, last_position = self.recently_detected_objects[object_id]
-                        if self.is_same_object(prediction, last_position):
-                            if prediction_timestamp - last_detected < self.object_tracking_interval:
-                                continue  # Salta se l'oggetto è lo stesso rilevato di recente
+                    # Controllo se generare un alert
+                    if object_id in self.last_alert_time:
+                        if prediction_timestamp - self.last_alert_time[object_id] < self.object_tracking_interval:
+                            continue  # Non genera alert se è passato meno di un secondo dall'ultimo alert
 
-                    # Aggiorna i dati per il tracking
-                    self.recently_detected_objects[object_id] = (prediction_timestamp, self.get_object_position(prediction))
-
-                    # Rate Limiting
-                    if object_id in self.last_alert_time and prediction_timestamp - self.last_alert_time[object_id] < self.rate_limit_interval:
-                        continue  # Salta se l'intervallo di rate limiting non è ancora trascorso
-
-                    # Aggiorna l'ultimo tempo di alert
-                    self.last_alert_time[object_id] = prediction_timestamp
-                    
-                    # Crea e invia l'alert
+                    self.last_alert_time[object_id] = prediction_timestamp  # Aggiorna il tempo dell'ultimo alert
                     alert_thread = threading.Thread(target=self.create_and_send_alert, args=(prediction,))
                     alert_thread.start()
 
     def should_generate_alert(self, predictions):
         for key, prediction in predictions.items():
-            if key != "timestamp" and prediction["category"] == "person" and prediction["score"] > 0.5:
+            if key != "timestamp" and prediction["category"] == "person" and prediction["score"] > 0.7:
                 return True
         return False
 
@@ -55,35 +41,32 @@ class Alert:
         alert_details = {
             "timestamp": time.time(),
             "vehicle_id": self.vehicle_id,
-            "front_distance": self.vehicle_control.status.get('distance', 0),  
-            "connected_RSU": self.rpi_istance.system_status.get("ap_connected", 'N/A'), 
-            "distance_from_rsu": self.rpi_istance.system_status.get("ap_distance", 'N/A'),  
-            "distance_from_other_aps": self.rpi_istance.system_status.get("other_aps", {}),
-            "type": prediction.get('category', 'unknown'),  
+            "front_distance": self.vehicle_control.status.get('distance', 0),
+            "connected_RSU": self.rpi_instance.system_status.get("ap_connected", 'N/A'),
+            "distance_from_rsu": self.rpi_instance.system_status.get("ap_distance", 'N/A'),
+            "distance_from_other_aps": self.rpi_instance.system_status.get("other_aps", {}),
+            "type": prediction.get('category', 'unknown'),
             "confidence": prediction.get('score', 0),
-            "object_in_front": self.vehicle_control.status.get("object_in_front", False), 
-            "vehicle_stopped": self.vehicle_control.status.get('stopped', False),  
+            "object_in_front": self.vehicle_control.status.get("object_in_front", False),
+            "vehicle_stopped": self.vehicle_control.status.get('stopped', False),
         }
         print(time.time(), "Alert creato")
-        id = str(alert_details["timestamp"])
-        self.alert_sended[id] = alert_details
+        alert_id = str(alert_details["timestamp"])
+        self.alert_sended[alert_id] = alert_details
+
+        # Gestione degli ultimi 10 alert
+        if len(self.alert_sended) > 10:
+            oldest_key = sorted(self.alert_sended.keys())[0]
+            del self.alert_sended[oldest_key]
+
         self.mqtt_connection.send_alert(alert_details)
-        #return alert_details
 
     def get_object_id(self, prediction):
+        # Implementazione mancante per ottenere un identificatore unico dell'oggetto
+        # Ad esempio:
         coordinates = prediction['coordinates']
         return f"{prediction['category']}_{coordinates['x']}_{coordinates['y']}_{coordinates['w']}_{coordinates['h']}"
 
-    def get_object_position(self, prediction):
-        return prediction['coordinates']
-
-    def is_same_object(self, prediction, last_position):
-        current_position = self.get_object_position(prediction)
-        threshold = 100  # Soglia per determinare se due oggetti sono lo stesso
-        return (abs(current_position['x'] - last_position['x']) < threshold and
-                abs(current_position['y'] - last_position['y']) < threshold and
-                abs(current_position['w'] - last_position['w']) < threshold and
-                abs(current_position['h'] - last_position['h']) < threshold)
 
     def check_zona(self, punto):
         for zona in self.zone :
