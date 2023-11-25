@@ -306,7 +306,7 @@
             distanceElement.textContent = status.distance + " cm";
         }
 
-        function updateAlert(alert_list) {
+        function updateAlert(alert_list_send) {
             var alertListHTML = '';
 
             for (const key in alert_list) {
@@ -389,28 +389,25 @@
                 .catch(error => console.log('Errore durante la richiesta della distanza:', error));
         }, 1000);
 
-        // Aggiorna la lista degli alert
+        // Aggiorna la lista degli alert ogni secondo
         setInterval(function () {
             fetch('/alert/alert_sended')
                 .then(response => response.json())
                 .then(data => updateAlert(data))
                 .catch(error => console.log('Errore durante la richiesta degli alert:', error));
-        }, 1000);
-
-        setInterval(function () {
             fetch('/alert/alert_received')
                 .then(response => response.json())
                 .then(data => updateAlertReceived(data))
                 .catch(error => console.log('Errore durante la richiesta degli alert:', error));
         }, 1000);
 
-        // Aggiorna lo stato del veicolo ogni secondo
+        // Aggiorna lo stato del veicolo ogni 800 ms
         setInterval(function () {
             fetch('/get_status')
                 .then(response => response.json())
                 .then(data => updateStatus(data))
                 .catch(error => console.log('Errore durante la richiesta dello stato:', error));
-        }, 1000);
+        }, 800);
 
         // Aggiorna le informazioni sulla connessione ogni cinque secondi
         setInterval(function () {
