@@ -307,7 +307,7 @@
             for (const key in alert_list) {
                 if (alert_list.hasOwnProperty(key)) {
                     const item = alert_list[key];
-                    var alertHTML = `<div>${item.timestamp} - Tipo: ${item.type} - RSU: ${item.connected_RSU}</div>`;
+                    var alertHTML = `<div class="text-center">${item.timestamp} - Tipo: ${item.type} - RSU: ${item.connected_RSU}</div>`;
                     alertListHTML += alertHTML;
                 }
             }
