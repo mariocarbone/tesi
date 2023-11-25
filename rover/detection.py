@@ -88,7 +88,7 @@ class Tensorflow(str):
 		lock = threading.Lock()
 		dizionario = {}
 		cont = 0
-		dizionario["timestamp"]=time.time()
+		dizionario["timestamp"]=int(time.time())
 		
 		for detected_obj in detection_result.detections:
 			out = {

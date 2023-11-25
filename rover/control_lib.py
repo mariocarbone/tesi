@@ -13,12 +13,12 @@ class Vehicle_Control():
 		self.status_lock = Lock()
 		self.distance = 0.0
 		self.distance_lock = Lock()
-		self.stop = False
+		self.stop = 0
 		self.turn_min = 0
 		self.turn_max = 100
 		self.turn_step = 10
-		self.on_track = False
-		self.moving = False
+		self.on_track = 0
+		self.moving = 0
 		
 		self.status = {
 			"speed": 45,
@@ -26,16 +26,16 @@ class Vehicle_Control():
 			"speed_right_side": 50,
 			"steer_side_value": 30,
 			"steer_side": "left",
-			"line_following_mode": False,
+			"line_following_mode": 0,
 			"ir_left": 0,
 			"ir_center": 1,
 			"ir_right": 0,
-			"on_track": True,
+			"on_track": 1,
 			"distance": 25,
-			"stopped": True,
-			"braking": False,
-			"moving": False,
-			"object_in_front": False,
+			"stopped": 0,
+			"braking": 0,
+			"moving": 0,
+			"object_in_front": 0,
 			"last_command": "STATUS"
 		}
 

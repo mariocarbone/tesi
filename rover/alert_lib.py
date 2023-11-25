@@ -17,14 +17,15 @@ class Alert:
 
     def should_generate_alert(self, predictions):
         print(predictions)
-        for prediction in predictions:
-            if prediction["category"] == "person" and prediction["score"] > 0.5:
+
+        for key, prediction in predictions.items():
+            if key != "timestamp" and prediction["category"] == "person" and prediction["score"] > 0.5:
                 return True
         return False
 
     def create_alert(self, prediction):
         alert_details = {
-            "timestamp": int(time.time()),
+            "timestamp": time.time(),
             "vehicle_id": self.vehicle_id,
             "front_distance" : self.vehicle_control.status['distance'],
             "connected_RSU": self.rpi_istance.system_status["wifi"][0],
