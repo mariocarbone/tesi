@@ -31,6 +31,7 @@ class MQTTConnection:
 				t_trasm = payload["t_creation"]*1000
 				t_total_ms = round(t_arrival - t_trasm)
 				print("<Ricevuto Alert> da", creator, " - Tempo impiegato:", t_total_ms , " ms")
+				payload["t_travel"]= t_total_ms
 				if self.on_alert_callback:
 					self.on_alert_callback(payload)
 				#self.manage_alert(payload)

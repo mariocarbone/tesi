@@ -342,7 +342,7 @@
                     // Aggiungi uno zero davanti se i minuti e i secondi sono inferiori a 10
                     var formattedTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 
-                    var alertHTML = `<div class="text-center">${formattedTime} - Tipo: ${item.type} - Creator: ${item.creator_id}</div>`;
+                    var alertHTML = `<div class="text-center">${formattedTime} - Tipo: ${item.type} - Creator: ${item.creator_id} - T.Trasm: ${item.t_travel} </div>`;
                     alertListHTML += alertHTML;
                 }
             }

@@ -76,7 +76,7 @@ class Alert:
 
     def handle_received_alert(self,alert):
         tstamp = alert.get('timestamp', time.time())
-
+        
         self.alert_received[str(tstamp)] = alert
         # Mantieni solo gli ultimi 10 alert
         if len(self.alert_received) > 10:
