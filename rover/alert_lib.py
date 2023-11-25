@@ -23,9 +23,8 @@ class Alert:
             for key, prediction in predictions.items():
                 if key != "timestamp":
                     object_id = self.get_object_id(prediction)
-                    
-                    # Object Tracking: Controlla se l'oggetto è lo stesso rilevato di recente
-                    # e non ha subito variazioni significative
+
+                    # Object Tracking
                     if object_id in self.recently_detected_objects:
                         last_detected, last_position = self.recently_detected_objects[object_id]
                         if self.is_same_object(prediction, last_position):
@@ -35,7 +34,7 @@ class Alert:
                     # Aggiorna i dati per il tracking
                     self.recently_detected_objects[object_id] = (current_time, self.get_object_position(prediction))
 
-                    # Rate Limiting: Controlla se è trascorso abbastanza tempo dall'ultimo alert
+                    # Rate Limiting
                     if object_id in self.last_alert_time and current_time - self.last_alert_time[object_id] < self.rate_limit_interval:
                         continue  # Salta se l'intervallo di rate limiting non è ancora trascorso
 
