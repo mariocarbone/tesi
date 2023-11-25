@@ -311,7 +311,7 @@
 
             for (const key in alert_list_send) {
                 if (alert_list_send.hasOwnProperty(key)) {
-                    const item = alert_list[key];
+                    const item = alert_list_send[key];
                     var timestamp = new Date(item.timestamp * 1000);
                     var hours = timestamp.getHours();
                     var minutes = timestamp.getMinutes();
