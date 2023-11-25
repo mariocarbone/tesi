@@ -257,7 +257,7 @@ def get_connections():
 	return jsonify(rpi.get_system_status())  
 
 # API per ottenere informazioni su raspberry pi 
-@app.route('/alert/alert_sendend', methods=['GET'])
+@app.route('/alert/alert_sended', methods=['GET'])
 def get_alert_sended():
 	return jsonify(alert_instance.alert_sended)  
 
