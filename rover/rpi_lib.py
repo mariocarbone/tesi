@@ -26,6 +26,7 @@ class Raspberry(str):
 		self.system_status["wifi"] = self.pi.get_wifi_status()
 		self.system_status["ip"] = self.pi.get_connected_ip_addr(network="wlan0")
 		self.system_status["disk_space"] = self.pi.get_disk_space()
+		self.system_status["ap_connected"] = self.system_status["wifi"][0]
 		self.system_status["ap_distance"] = self.get_rsu_distance()
 		self.get_rsu_distance()
 		return self.system_status

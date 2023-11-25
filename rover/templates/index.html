@@ -134,7 +134,7 @@
                 <div class="col">
                     <div class="status-field mx-2 my-2 text-center">
                         <h5>RSU Connessa</h5>
-                        <div id="rsu_connessa" class="h5">0</div>
+                        <div id="connected_rsu" class="h5">0</div>
                         <h5>Distanza:</h5>
                         <div id="distance_rsu" class="h5">0m</div>
                     </div>
@@ -244,6 +244,7 @@
         var ram = document.getElementById('ram');
         var ssid = document.getElementById('ssid');
         var ip = document.getElementById('ip');
+        var connectedRSU = document.getElementById('connected_rsu');
         var distanceRSU = document.getElementById('distance_rsu');
         var signal = document.getElementById('signal');
         var moving = document.getElementById('moving');
@@ -300,6 +301,21 @@
             signal.textContent = status.wifi[1];
             ip.textContent = status.ip;
             distanceRSU.textContent = status.ap_distance+" m";
+            connectedRSU.textContent = status.ap_connected;
+
+            // Update Other RSU
+            if (status.other_aps) {
+                const rsuListDiv = document.getElementById('rsu_list');
+                let contenutoHTML = '';
+
+                for (const rsu in status.other_aps) {
+                    const distanza = status.other_aps[rsu];
+                    contenutoHTML += `<div>${rsu}: ${distanza}m</div>`;
+                }
+
+                rsuListDiv.innerHTML = contenutoHTML;
+            }
+
         }
 
         // Aggiorna il frame immagine ogni secondo
