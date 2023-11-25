@@ -47,20 +47,12 @@ rsu_deatils = {
 }
 mqtt = MQTTConnection(broker_address, broker_port, topic_alert, topic_auto, topic_rsu, rsu_id)
 
+veicoli_connessi = {}
 
 # Istanze Moduli
 tf_instance = Tensorflow()
 rpi = Raspberry()
 alert_instance = Alert(rsu_id, mqtt)
-
-# Broker MQTT e Topic
-#broker_address = 192.168.1.6
-#broker_port = 1883
-#topic_auto = "/smartcar/#"
-#topic_rsu = "/rsu/#"
-#topic_rsu_topub = "/rsu/"
-#alert_topic = "/alert/"
-#veicoli_connessi = {}
 
 # Stato del veicolo
 status_json = {}
@@ -174,7 +166,7 @@ def video_feed():
 @app.route('/get_status', methods=['GET'])
 def get_status():
 	global status_json#, status_lock
-	status_obj = vehicle_control.status
+	status_obj = status
 	return jsonify(status_obj)  
 	
 # API per ottenere le prediction
@@ -191,22 +183,6 @@ def get_predictions():
 @app.route('/pi/get_info', methods=['GET'])
 def get_connections():
 	return jsonify(rpi.get_system_status())  
-
-# API per far partire il rover
-@app.route('/rover/start', methods=['POST'])
-def rover_start():
-	global vehicle_control
-	vehicle_control.start_path()
-	print("ROVER START")
-	return jsonify({"message": "Rover partito!"})
-
-# API per far fermare il rover
-@app.route('/rover/stop', methods=['POST'])
-def rover_stop():
-	global vehicle_control
-	vehicle_control.stop_path()
-	print("ROVER STOP")
-	return jsonify({"message": "Rover fermato!"})
 
 # API per arrestare i threads
 @app.route('/stop_threads', methods=['POST'])
