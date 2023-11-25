@@ -16,8 +16,9 @@ class MQTTConnection:
 		self.client.loop_start()
 
 	def on_connect(self, client, userdata, flags, rc):
-		print("<stato> Connesso al broker MQTT: <code: " + str(rc) + ">")
-		client.subscribe(self.topic_alert)
+		print("<MQTT> Connesso al broker MQTT: <code: " + str(rc) + ">")
+
+		client.subscribe(self.topic_alert + '/+')
 
 	def on_message(self, client, userdata, message):
 		if message.topic.startswith("/alert"):
