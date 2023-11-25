@@ -302,29 +302,20 @@
         }
 
         function updateAlert(alert_list) {
-    var alertListHTML = '';
-    var alertsArray = [];
+            var alertListHTML = '';
 
-    // Aggiungi gli alert alla lista
-    for (const key in alert_list) {
-        if (alert_list.hasOwnProperty(key)) {
-            const item = alert_list[key];
-            alertsArray.push(item);
+            for (const key in alert_list) {
+                if (alert_list.hasOwnProperty(key)) {
+                    const item = alert_list[key];
+                    var timestamp = new Date(item.timestamp * 1000);
+                    var formattedTime = `${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getSeconds()}`;
+                    var alertHTML = `<div class="text-center">${formattedTime} - Tipo: ${item.type} - RSU: ${item.connected_RSU}</div>`;
+                    alertListHTML += alertHTML;
+                }
+            }
+
+            alert_sended_list.innerHTML = alertListHTML;
         }
-    }
-
-    // Ordina gli alert in base al timestamp in ordine crescente
-    alertsArray.sort((a, b) => a.timestamp - b.timestamp);
-
-    for (const item of alertsArray) {
-        var timestamp = new Date(item.timestamp * 1000);
-        var formattedTime = `${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getSeconds()}`;
-        var alertHTML = `<div class="text-center">${formattedTime} - Tipo: ${item.type} - RSU: ${item.connected_RSU}</div>`;
-        alertListHTML += alertHTML;
-    }
-
-    alert_sended_list.innerHTML = alertListHTML;
-}
 
         function updatePiInfo(status) {
             cpu.textContent = status.cpu + " %";
