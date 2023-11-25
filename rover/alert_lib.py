@@ -45,8 +45,9 @@ class Alert:
 
     def should_generate_alert(self, predictions):
         for key, prediction in predictions.items():
-            if key != "timestamp" and prediction["category"] == "person" and prediction["score"] > 0.7:
-                return True
+            if key != "timestamp" and isinstance(prediction, dict):
+                if prediction.get("category") == "person" and prediction.get("score") > 0.7:
+                    return True
         return False
 
     def create_and_send_alert(self, predictions, prediction_timestamp):
