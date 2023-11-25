@@ -16,7 +16,7 @@ class Alert:
             for key, prediction in predictions.items():
                 if key != "timestamp":
                     # Crea un thread per gestire la creazione e l'invio dell'alert
-                    alert_thread = threading.Thread(target=self.create_alert, args=(prediction))
+                    alert_thread = threading.Thread(target=self.create_alert, args=(prediction,))
                     alert_thread.start()
 
     def should_generate_alert(self, predictions):
