@@ -59,6 +59,7 @@ class Alert:
             "vehicle_stopped": self.vehicle_control.status.get('stopped', False),
             "coordinates": predictions.get('coordinates')
         }
+        print(predictions, "PREDICTIONS")
         print(prediction_timestamp, "Alert creato")
         self.alert_sended[str(prediction_timestamp)] = alert_details
         # Mantieni solo gli ultimi 10 alert
