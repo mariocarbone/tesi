@@ -38,7 +38,7 @@ broker_port = 1883
 topic_alert = "/alert/"
 topic_auto = "/smartcar/"
 topic_rsu = "/rsu/"
-rsu_id = "RSU_01"
+rsu_id = "RSU_PI01"
 rsu_deatils = {
     "id": rsu_id,
     "connected_clients": 0,
