@@ -308,7 +308,13 @@
                 if (alert_list.hasOwnProperty(key)) {
                     const item = alert_list[key];
                     var timestamp = new Date(item.timestamp * 1000);
-                    var formattedTime = `${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getSeconds()}`;
+                    var hours = timestamp.getHours();
+                    var minutes = timestamp.getMinutes();
+                    var seconds = timestamp.getSeconds();
+
+                    // Aggiungi uno zero davanti se i minuti e i secondi sono inferiori a 10
+                    var formattedTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
                     var alertHTML = `<div class="text-center">${formattedTime} - Tipo: ${item.type} - RSU: ${item.connected_RSU}</div>`;
                     alertListHTML += alertHTML;
                 }
@@ -316,7 +322,6 @@
 
             alert_sended_list.innerHTML = alertListHTML;
         }
-
         function updatePiInfo(status) {
             cpu.textContent = status.cpu + " %";
             temp.textContent = status.temp + " °";
