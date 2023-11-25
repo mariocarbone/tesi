@@ -8,6 +8,7 @@ class Alert:
     def __init__(self, vehicle_id, vehicle_control, rpi_instance, mqtt_connection):
         self.vehicle_id = vehicle_id
         self.mqtt_connection = mqtt_connection
+        self.mqtt_connection.on_alert_callback = self.handle_received_alert
         self.vehicle_control = vehicle_control
         self.rpi_instance = rpi_instance
         self.alert_sended = {}
@@ -73,8 +74,7 @@ class Alert:
         #print(alert_details)
         self.mqtt_connection.send_alert(alert_details)
 
-
-    def handle_alert(self,alert):
+    def handle_received_alert(self,alert):
         tstamp = alert.get('timestamp', time.time())
 
         self.alert_received[str(tstamp)] = alert
