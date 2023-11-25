@@ -308,26 +308,21 @@
                 if (alert_list.hasOwnProperty(key)) {
                     const item = alert_list[key];
 
-                    // Converti il timestamp in data e orario
+                    // Converti il timestamp in data
                     var timestamp = item.timestamp; // Assumendo che item.timestamp sia un timestamp in millisecondi
                     var date = new Date(timestamp);
-                    var options = {
-                        year: 'numeric',
-                        month: 'numeric',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit'
-                    };
-                    var formattedDate = date.toLocaleDateString('it-IT', options); // Personalizza il formato e la lingua
 
-                    var alertHTML = `<div class="text-center">${formattedDate} - Tipo: ${item.type} - RSU: ${item.connected_RSU}</div>`;
+                    // Formatta l'orario come hh:mm:ss
+                    var formattedTime = date.toLocaleTimeString();
+
+                    var alertHTML = `<div class="text-center">${formattedTime} - Tipo: ${item.type} - RSU: ${item.connected_RSU}</div>`;
                     alertListHTML += alertHTML;
                 }
             }
 
             alert_sended_list.innerHTML = alertListHTML;
         }
+
         function updatePiInfo(status) {
             cpu.textContent = status.cpu + " %";
             temp.textContent = status.temp + " °";
