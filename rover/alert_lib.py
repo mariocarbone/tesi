@@ -1,4 +1,5 @@
 import time
+import threading
 from mqtt_lib import MQTTConnection
 from control_lib import Vehicle_Control
 class Alert:
@@ -12,8 +13,11 @@ class Alert:
 
     def process_predictions(self, predictions):
         if self.should_generate_alert(predictions):
-            alert = self.create_alert(predictions)
-            self.mqtt_connection.send_alert(alert)
+            for key, prediction in predictions.items():
+                if key != "timestamp":
+                    # Crea un thread per gestire la creazione e l'invio dell'alert
+                    alert_thread = threading.Thread(target=self.handle_alert_creation, args=(prediction, predictions["timestamp"]))
+                    alert_thread.start()
 
     def should_generate_alert(self, predictions):
         print(predictions)
@@ -27,15 +31,14 @@ class Alert:
         alert_details = {
             "timestamp": time.time(),
             "vehicle_id": self.vehicle_id,
-            "front_distance" : self.vehicle_control.status['distance'],
-            "connected_RSU": self.rpi_istance.system_status["wifi"][0],
-            "distance_from_rsu": self.rpi_istance.system_status["ap_distance"],
-            "distance_from_other_aps" : self.rpi_istance.other_aps,
-            "type" : prediction['category'],
-            "confindence" : prediction['score'],
-            "object_in_front" : self.vehicle_control.status["object_in_front"],      
-            "vehicle_stopped": self.vehicle_control.status['stopped'],
-            #"vehicle_stopped": self.vehicle_control.status.get("stopped", True)
+            "front_distance": self.vehicle_control.status.get('distance', 0),  # Uso di get con valore di default
+            "connected_RSU": self.rpi_istance.system_status.get("ap_connected", 'N/A'),  # Uso di get con un array contenente None come valore di default
+            "distance_from_rsu": self.rpi_istance.system_status.get("ap_distance", 'N/A'),  # Uso di get con valore di default
+            "distance_from_other_aps": self.rpi_istance.get("other_aps", {}),
+            "type": prediction.get('category', 'unknown'),  # Uso di get con valore di default
+            "confidence": prediction.get('score', 0),  # Uso di get con valore di default
+            "object_in_front": self.vehicle_control.status.get("object_in_front", False),  # Uso di get con valore di default
+            "vehicle_stopped": self.vehicle_control.status.get('stopped', False),  # Uso di get con valore di default
         }
         return alert_details
 
