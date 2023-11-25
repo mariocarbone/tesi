@@ -17,14 +17,16 @@ class MQTTConnection:
 
 	def on_connect(self, client, userdata, flags, rc):
 		print("<MQTT> Connesso al broker MQTT: <code: " + str(rc) + ">")
-
 		client.subscribe(self.topic_alert + '/+')
 
 	def on_message(self, client, userdata, message):
 		if message.topic.startswith("/alert"):
 			print("<Alert> Ricevuto Alert")
 			payload = json.loads(message.payload)
-			self.manage_alert(payload)
+			if payload["creator_id"] == self.vehicle_id:
+				pass 
+			else:
+				self.manage_alert(payload)
 			# alert_id = payload["id"]
 			# alert[alert_id] = payload
 

@@ -51,7 +51,7 @@ class Alert:
     def create_and_send_alert(self, predictions, prediction_timestamp):
         alert_details = {
             "timestamp": prediction_timestamp,
-            "vehicle_id": self.vehicle_id,
+            "creator_id": self.vehicle_id,
             "front_distance": self.vehicle_control.status.get('distance', 0),
             "connected_RSU": self.rpi_instance.system_status.get("ap_connected", 'N/A'),
             "distance_from_rsu": self.rpi_instance.system_status.get("ap_distance", 'N/A'),
@@ -73,6 +73,14 @@ class Alert:
 
 
     def handle_alert(self,alert):
+        tstamp = alert.get('timestamp', time.time())
+
+        self.alert_received[str(tstamp)] = alert
+        # Mantieni solo gli ultimi 10 alert
+        if len(self.alert_received) > 10:
+            oldest_key = sorted(self.alert_received.keys())[0]
+            del self.alert_received[oldest_key]
+            
         alert_handle = threading.Thread(target=self.vehicle_control.alert_to_controls, args=(alert,))
         alert_handle.start()
 
