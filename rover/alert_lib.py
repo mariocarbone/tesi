@@ -10,13 +10,14 @@ class Alert:
         self.mqtt_connection = mqtt_connection
         self.vehicle_control = vehicle_control
         self.rpi_istance = rpi_instance
+        self.alert_sended = {}
 
     def process_predictions(self, predictions):
         if self.should_generate_alert(predictions):
             for key, prediction in predictions.items():
                 if key != "timestamp":
                     # Crea un thread per gestire la creazione e l'invio dell'alert
-                    alert_thread = threading.Thread(target=self.create_alert, args=(prediction,))
+                    alert_thread = threading.Thread(target=self.create_and_send_alert, args=(prediction,))
                     alert_thread.start()
 
     def should_generate_alert(self, predictions):
@@ -25,7 +26,7 @@ class Alert:
                 return True
         return False
 
-    def create_alert(self, prediction):
+    def create_and_send_alert(self, prediction):
         alert_details = {
             "timestamp": time.time(),
             "vehicle_id": self.vehicle_id,
@@ -38,11 +39,11 @@ class Alert:
             "object_in_front": self.vehicle_control.status.get("object_in_front", False), 
             "vehicle_stopped": self.vehicle_control.status.get('stopped', False),  
         }
-        print("Alert creato", alert_details)
-        return alert_details
-
-    def send_alert(self, alert):
-        self.mqtt_connection.send_alert(alert)
+        print(time.time(), "Alert creato")
+        id = str(alert_details["timestamp"])
+        self.alert_sended[id] = alert_details
+        self.mqtt_connection.send_alert(alert_details)
+        #return alert_details
 
     def check_zona(self, punto):
         for zona in self.zone :
