@@ -57,7 +57,8 @@ class MQTTConnection:
 		self.client.publish(self.topic_alert + "/" + self.rsu_id , alert_json)
 
 	def manage_alert(self, payload):
-		print("Gestione dell'alert:", payload)
+		print()
+		#print("Gestione dell'alert:", payload)
 		
 
 
