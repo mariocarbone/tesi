@@ -20,8 +20,6 @@ class Alert:
                     alert_thread.start()
 
     def should_generate_alert(self, predictions):
-        print(predictions)
-
         for key, prediction in predictions.items():
             if key != "timestamp" and prediction["category"] == "person" and prediction["score"] > 0.5:
                 return True
@@ -40,6 +38,7 @@ class Alert:
             "object_in_front": self.vehicle_control.status.get("object_in_front", False), 
             "vehicle_stopped": self.vehicle_control.status.get('stopped', False),  
         }
+        print("Alert creato", alert_details)
         return alert_details
 
     def send_alert(self, alert):
