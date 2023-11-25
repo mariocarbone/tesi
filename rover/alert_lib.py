@@ -15,10 +15,11 @@ class Alert:
 
     def process_predictions(self, predictions):
         prediction_timestamp = predictions.get('timestamp', time.time())
-        for key, prediction in predictions.items():
-            if key != "timestamp" and prediction["category"] == "person" and prediction["score"] > 0.7:
-                self.create_and_send_alert(prediction, prediction_timestamp)
-    
+        if self.should_generate_alert(predictions):
+            if not self.is_recent_alert(predictions, prediction_timestamp):
+                alert_thread = threading.Thread(target=self.create_and_send_alert, args=(predictions, prediction_timestamp))
+                alert_thread.start()
+
     def is_recent_alert(self, current_predictions, current_timestamp):
         for prev_predictions, prev_timestamp in self.last_predictions:
             if self.are_predictions_similar(current_predictions, prev_predictions):
@@ -31,7 +32,6 @@ class Alert:
         return False
     
     def are_predictions_similar(self, current_predictions, prev_predictions):
-
         current_coords = current_predictions.get('coordinates', {})
         prev_coords = prev_predictions.get('coordinates', {})
         score_diff = abs(current_predictions.get('score', 0) - prev_predictions.get('score', 0))
