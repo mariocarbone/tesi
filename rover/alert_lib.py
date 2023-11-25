@@ -12,13 +12,35 @@ class Alert:
         self.rpi_istance = rpi_instance
         self.alert_sended = {}
 
+        self.last_alert_time = {}
+        self.rate_limit_interval = 1  # Intervallo in secondi
+        self.object_tracking_interval = 5  # Intervallo in secondi per tenere traccia di un oggetto
+        self.recently_detected_objects = {}
+
     def process_predictions(self, predictions):
-        if self.should_generate_alert(predictions):
-            for key, prediction in predictions.items():
-                if key != "timestamp":
-                    # Crea un thread per gestire la creazione e l'invio dell'alert
-                    alert_thread = threading.Thread(target=self.create_and_send_alert, args=(prediction,))
-                    alert_thread.start()
+            current_time = time.time()
+            if self.should_generate_alert(predictions):
+                for key, prediction in predictions.items():
+                    if key != "timestamp":
+                        object_id = self.get_object_id(prediction)
+                        
+                        # Rate Limiting
+                        if object_id in self.last_alert_time and current_time - self.last_alert_time[object_id] < self.rate_limit_interval:
+                            continue  # Salta se l'intervallo di rate limiting non è ancora trascorso
+                        
+                        self.last_alert_time[object_id] = current_time
+                        
+                        # Object Tracking
+                        if object_id in self.recently_detected_objects:
+                            last_detected, last_position = self.recently_detected_objects[object_id]
+                            if current_time - last_detected < self.object_tracking_interval and self.is_same_object(prediction, last_position):
+                                continue  # Salta se l'oggetto è lo stesso rilevato di recente
+
+                        self.recently_detected_objects[object_id] = (current_time, self.get_object_position(prediction))
+                        
+                        # Crea e invia l'alert
+                        alert_thread = threading.Thread(target=self.create_and_send_alert, args=(prediction,))
+                        alert_thread.start()
 
     def should_generate_alert(self, predictions):
         for key, prediction in predictions.items():
@@ -44,6 +66,21 @@ class Alert:
         self.alert_sended[id] = alert_details
         self.mqtt_connection.send_alert(alert_details)
         #return alert_details
+
+    def get_object_id(self, prediction):
+        coordinates = prediction['coordinates']
+        return f"{prediction['category']}_{coordinates['x']}_{coordinates['y']}_{coordinates['w']}_{coordinates['h']}"
+
+    def get_object_position(self, prediction):
+        return prediction['coordinates']
+
+    def is_same_object(self, prediction, last_position):
+        current_position = self.get_object_position(prediction)
+        threshold = 50  # Soglia per determinare se due oggetti sono lo stesso
+        return (abs(current_position['x'] - last_position['x']) < threshold and
+                abs(current_position['y'] - last_position['y']) < threshold and
+                abs(current_position['w'] - last_position['w']) < threshold and
+                abs(current_position['h'] - last_position['h']) < threshold)
 
     def check_zona(self, punto):
         for zona in self.zone :
