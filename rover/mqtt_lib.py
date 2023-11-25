@@ -29,7 +29,7 @@ class MQTTConnection:
 			else:
 				t_arrival = time.time() 
 				t_trasm = payload["t_creation"]
-				t_total_ms = round(t_arrival - t_trasm)
+				t_total_ms = round(t_arrival - t_trasm)*1000
 				print("<Alert> Ricevuto Alert - Tempo impiegato:", t_total_ms , " ms")
 				self.manage_alert(payload)
 			# alert_id = payload["id"]
