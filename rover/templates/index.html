@@ -309,8 +309,8 @@
         function updateAlert(alert_list_send) {
             var alertListHTML = '';
 
-            for (const key in alert_list) {
-                if (alert_list.hasOwnProperty(key)) {
+            for (const key in alert_list_send) {
+                if (alert_list_send.hasOwnProperty(key)) {
                     const item = alert_list[key];
                     var timestamp = new Date(item.timestamp * 1000);
                     var hours = timestamp.getHours();
@@ -320,8 +320,8 @@
                     // Aggiungi uno zero davanti se i minuti e i secondi sono inferiori a 10
                     var formattedTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 
-                    var alertHTML = `<div class="text-center">${formattedTime} - Tipo: ${item.type} - RSU: ${item.connected_RSU}</div>`;
-                    alertListHTML += alertHTML;
+                    var alert_line = `<div class="text-center">${formattedTime} - Tipo: ${item.type} - RSU: ${item.connected_RSU}</div>`;
+                    alertListHTML += alert_line;
                 }
             }
 
