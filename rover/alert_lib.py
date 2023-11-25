@@ -68,8 +68,14 @@ class Alert:
         if len(self.alert_sended) > 10:
             oldest_key = sorted(self.alert_sended.keys())[0]
             del self.alert_sended[oldest_key]
-        print(alert_details)
+        #print(alert_details)
         self.mqtt_connection.send_alert(alert_details)
+
+
+    def handle_alert(self,alert):
+        alert_handle = threading.Thread(target=self.vehicle_control.alert_to_controls, args=(alert,))
+        alert_handle.start()
+
 
     #CODICE INUTILIZZATO
 

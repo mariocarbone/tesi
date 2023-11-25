@@ -27,13 +27,6 @@ class MQTTConnection:
 			# alert_id = payload["id"]
 			# alert[alert_id] = payload
 
-	def handle_message(self, topic, message):
-		if message.topic.startswith("/smartcar"):
-			payload = json.loads(message.payload)
-			vehicle_id = payload["id"] 
-			if payload["rsu_id"] == self.rsu_id:
-				veicoli_connessi[vehicle_plate] = payload
-
 	def send_vehicle_status(self,vehicle_info):
 		vehicle_info_json = json.dumps(vehicle_info)
 		self.client.publish(self.topic_auto + "/info", vehicle_info_json)
