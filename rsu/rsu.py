@@ -16,6 +16,7 @@ from queue import Queue
 from detection import Tensorflow
 from mqtt_lib import MQTTConnection
 from rpi_lib import Raspberry
+from alert_lib import Alert
 
 #Web-UI
 from flask import Flask, render_template, jsonify, Response
@@ -31,14 +32,10 @@ stop_threads = False
 # Inizializzazione Camera
 cap = cv2.VideoCapture(0)
 
-# Istanze Moduli
-tf_instance = Tensorflow()
-rpi = Raspberry()
-#mqtt = MQTTConnection("192.168.1.6", "1883", topic_alert, topic_auto, topic_rsu, rsu_id)
-
 #MQTT INFO
 topic_alert = "/alert/"
 topic_auto = "/smartcar/"
+topic_rsu = "/rsu/"
 rsu_id = "RSU_01"
 rsu_deatils = {
     "id": rsu_id,
@@ -46,15 +43,21 @@ rsu_deatils = {
     "ssid": "RSU_PI01"#,
     #"gps": {"lat": 39.35613, "lon": 16.22815}
 }
+mqtt = MQTTConnection("192.168.1.6", "1883", topic_alert, topic_auto, topic_rsu, rsu_id)
+
+# Istanze Moduli
+tf_instance = Tensorflow()
+rpi = Raspberry()
+alert_instance = Alert(rsu_id, mqtt)
 
 # Broker MQTT e Topic
-broker_address = "localhost"
-broker_port = 1883
-topic_auto = "/smartcar/#"
-topic_rsu = "/rsu/#"
-topic_rsu_topub = "/rsu/"
-alert_topic = "/alert/"
-veicoli_connessi = {}
+#broker_address = 192.168.1.6
+#broker_port = 1883
+#topic_auto = "/smartcar/#"
+#topic_rsu = "/rsu/#"
+#topic_rsu_topub = "/rsu/"
+#alert_topic = "/alert/"
+#veicoli_connessi = {}
 
 # Stato del veicolo
 status_json = {}

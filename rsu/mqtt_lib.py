@@ -16,14 +16,15 @@ class MQTTConnection:
 		self.client.loop_start()
 
 	def on_connect(self, client, userdata, flags, rc):
-		print("<stato> Connesso al broker MQTT: <code: " + str(rc) + ">")
+		print("<MQTT> Connesso al broker MQTT: <code: " + str(rc) + ">")
 		client.subscribe(self.topic_alert)
 
 	def on_message(self, client, userdata, message):
 		if message.topic.startswith("/alert"):
 			print("<Alert> Ricevuto Alert")
 			payload = json.loads(message.payload)
-			self.manage_alert(payload)
+			print(payload)
+			#self.manage_alert(payload)
 			# alert_id = payload["id"]
 			# alert[alert_id] = payload
 
@@ -40,14 +41,11 @@ class MQTTConnection:
 
 	def send_alert(self, alert):
 		alert_json = json.dumps(alert)
-		self.client.publish(self.topic_alert + "/" + alert.get("connected_RSU", "") , alert_json)
+		self.client.publish(self.topic_alert + "/" + self.rsu_id , alert_json)
 
 	def manage_alert(self, payload):
 		print("Gestione dell'alert:", payload)
 		
-	def on_connect(client, userdata, flags, rc):
-		print("Connected to MQTT broker with result code "+str(rc))
-		client.subscribe(topic_auto)
 
 
 
