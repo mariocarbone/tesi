@@ -34,8 +34,13 @@ class Raspberry(str):
 	def update_other_aps(self):
 		interface = "wlan0"
 		rsu_networks = self.scan_wifi_rsu(interface)
-		rsu_distances = {ssid: self.calculate_distance(int(rssi)) for ssid, rssi in rsu_networks}
-		self.system_status['other_aps'] = rsu_distances
+		connected_rsu = self.system_status.get("ap_connected", "")
+		
+		# Crea o aggiorna il dizionario con le RSU disponibili escludendo quella connessa
+		for ssid, rssi in rsu_networks:
+			if ssid != connected_rsu:  # Escludi l'RSU connessa
+				distance = self.calculate_distance(int(rssi))
+				self.system_status['other_aps'][ssid] = distance
 
 	def calculate_distance(self, rssi, n=2):
 		if rssi is None:
@@ -62,7 +67,7 @@ class Raspberry(str):
 	def scan_wifi_rsu(self, interface):
 		try:
 			scan_output = subprocess.check_output(['iwlist', interface, 'scan'], text=True)
-			print(scan_output)  # Aggiungi per debug
+			#print(scan_output)  # Aggiungi per debug
 			networks = re.findall(r"ESSID:\"(RSU.+?)\".*?Signal level=(.+?) dBm", scan_output, re.DOTALL)
 			return networks
 		except subprocess.CalledProcessError as e:
