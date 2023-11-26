@@ -61,8 +61,8 @@
                                 <div id="moving" class="span">0</div>
                             </div>
                             <div class="status-field mx-2 my-2 text-center">
-                                <h5>In frenata</h5>
-                                <div id="braking" class="span">0</div>
+                                <h5>Oggetto rilevato</h5>
+                                <div id="obj_front" class="span">0</div>
                             </div>
                             <div class="status-field mx-2 my-2 text-center">
                                 <h5>Fermo</h5>
@@ -98,6 +98,10 @@
                     <input type="range" class="form-range" min="70" max="254" step="10" id="roverSpeedRange">
                     <span id="roverSpeedDisplay">Max Speed</span>
                 </div>
+                <div class="status-field mx-2 my-2 text-center">
+                    <span>Self Driving</span>
+                    <div id="self_driving" class="span">OFF</div>
+                    </div>
             </div>
         </div>
     </div>
@@ -259,9 +263,10 @@
         var distanceRSU = document.getElementById('distance_rsu');
         var signal = document.getElementById('signal');
         var moving = document.getElementById('moving');
-        var braking = document.getElementById('braking');
+        var object_in_front = document.getElementById('obj_front');
         var stopped = document.getElementById('stopped');
         var onTrack = document.getElementById('on_track');
+        var selfDriving = document.getElementById('self_driving');
         var personCount = document.getElementById('person_count');
         var carCount = document.getElementById('car_count');
         var alertList = document.getElementById('alert_sended_list')
@@ -300,10 +305,17 @@
             irCDiv.textContent = status.ir_center + " ";
             irRDiv.textContent = status.ir_right + " ";
             moving.textContent = status.moving;
-            braking.textContent = status.braking;
+            object_in_front.textContent = status.object_in_front;
             onTrack.textContent = status.on_track;
             stopped.textContent = status.stopped;
             distanceElement.textContent = status.distance + " cm";
+            if(status.line_following_mode == 1){
+                selfDriving.textContent = "ON"
+            }
+            else{
+                selfDriving.textContent = "OFF"
+            }
+
         }
 
         function updateAlert(alert_list_send) {
