@@ -168,7 +168,7 @@ void loop() {
         if(lastSensorLine == CENTER){
           goDirection = GO_AHEAD;
         }
-        else if (lastSensorLine == LEFT)
+        else if (lastSensorLine == LEFT){
           goDirection = GO_RIGHT;
         }
         else if (lastSensorLine == RIGHT){
@@ -227,7 +227,8 @@ void loop() {
           analogWrite(ENB, rightSpeed);
           break;
       }
-    }
+
+    }//Line Following Mode 
 
     //Comandi Seriale
     if (Serial.available() > 0) {
@@ -424,5 +425,5 @@ void loop() {
 
     }//serial avaiable
 
-  } //loop
+} //loop
   
