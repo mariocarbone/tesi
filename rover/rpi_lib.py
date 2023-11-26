@@ -28,7 +28,6 @@ class Raspberry(str):
 		self.system_status["disk_space"] = self.pi.get_disk_space()
 		self.system_status["ap_connected"] = self.system_status["wifi"][0]
 		self.system_status["ap_distance"] = self.get_rsu_distance()
-		self.system_status['other_aps'] = {}
 		self.get_rsu_distance()
 		return self.system_status
 
@@ -36,12 +35,16 @@ class Raspberry(str):
 		interface = "wlan0"
 		rsu_networks = self.scan_wifi_rsu(interface)
 		connected_rsu = self.system_status.get("ap_connected")
-		print(rsu_networks)
+
+		if 'other_aps' not in self.system_status:
+			self.system_status['other_aps'] = {}
 
 		for ssid, rssi in rsu_networks:
 			if ssid != connected_rsu:  # Escludi l'RSU connessa
 				distance = self.calculate_distance(int(rssi))
 				self.system_status['other_aps'][ssid] = distance
+
+		print(self.system_status['other_aps'])
 
 	def calculate_distance(self, rssi, n=2):
 		if rssi is None:
