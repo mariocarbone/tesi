@@ -39,66 +39,31 @@
             </div>
 
             <div class="col-lg-6">
-                <!-- Stato RSU-->
-                <h3 class="mt-4 text-center"">Stato</h3>
-                <div class=" column" id="status-fields" style="background-color: lightcyan;">
-                    <div class="row justify-content-center align-items-center">
-                        <div class="status-field mx-2 my-2 text-center">
-                            <h5>Veicoli connessi</h5>
-                            <div id="speed" class="h5">0</div>
-                        </div>
-                        <div class="status-field mx-2 my-2 text-center">
-                            <h5>Velocita massima</h5>
-                            <div id="steer_side" class="h5">CENTER</div>
-                        </div>
-                        <div class="status-field mx-2 my-2 text-center">
-                            <h5>Distanza anteriore</h5>
-                            <div id="distance-value" class="h5">0</div>
-                        </div>
-                        <div class="row justify-content-center align-items-center">
-                            <div class="status-field mx-2 my-2 text-center">
-                                <h5>In movimento</h5>
-                                <div id="moving" class="h5">0</div>
-                            </div>
-                            <div class="status-field mx-2 my-2 text-center">
-                                <h5>In frenata</h5>
-                                <div id="braking" class="h5">0</div>
-                            </div>
-                            <div class="status-field mx-2 my-2 text-center">
-                                <h5>Fermo</h5>
-                                <div id="stopped" class="h5">0</div>
-                            </div>
-                            <div class="status-field mx-2 my-2 text-center">
-                                <h5>Sulla Traccia</h5>
-                                <div id="on_track" class="h5">0</div>
-                            </div>
+                <!-- Alert RSU-->
+                <div class="col-lg-12">
+                    <h4 class="mt-4 text-center">Alert inviati</h4>
+                    <div class="row">
+                        <div class="col-12 text-center" id="alert_sended_list"
+                            style=" background-color: lightcyan; max-height: 130px; overflow-y: auto;">
+                            <!-- Contenuto della lista degli alert inviati -->
                         </div>
                     </div>
-                    <h4 class="mt-4 text-center"">Line Following</h3>
-                    <div class=" row justify-content-center align-items-center">
-                        <div class="status-field mx-2 my-2 text-center">
-                            <h5>IR Sinistra</h5>
-                            <div id="ir_left" class="h5">0</div>
-                        </div>
-                        <div class="status-field mx-2 my-2 text-center">
-                            <h5>IR Centro</h5>
-                            <div id="ir_center" class="h5">0</div>
-                        </div>
-                        <div class="status-field mx-2 my-2 text-center">
-                            <h5>IR Destra</h5>
-                            <div id="ir_right" class="h5">0</div>
-                        </div>
-            </div>
-            <h4 class="mt-4 text-center">Comandi</h3>
-                <div id="rover-commands" class="row justify-content-center align-items-center">
-                    <button id="rover-start" class="btn btn-primary mx-2 my-2">Start</button>
-                    <button id="rover-stop" class="btn btn-danger mx-2 my-2">Stop</button>
                 </div>
+        
+                <div class="col-lg-12">
+                    <h4 class="mt-4 text-center">Alert ricevuti</h4>
+                    <div class="row">
+                        <div class="col-12 text-center" id="alert_received_list"
+                            style=" background-color: lightcyan; max-height: 130px; overflow-y: auto;">
+                            <!-- Contenuto della lista degli alert inviati -->
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
         </div>
-    </div>
-    </div>
-
-    <div class="row">
+    
+        <div class="row">
         <div class="col-lg-4">
             <h3 class="mt-4 text-center">Oggetti Rilevati</h3>
             <div class="row justify-content-center align-items-center">
@@ -148,10 +113,7 @@
                 </div>
             </div>
         </div>
-
-    </div>
-
-
+        
     </div> <!-- Container End -->
 
 

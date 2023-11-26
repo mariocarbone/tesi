@@ -49,23 +49,32 @@ class Vehicle_Control():
 				print("Lo stato di Arduino non è un dizionario valido.")
 
 	def alert_to_controls(self,alert):
-		rsu_alert = alert["connected_RSU"]
-		rsu = self.rpi.status["ap_connected"]
-		tstamp = alert["t_creation"]
-		t_travel_s = alert["t_travel"]/1000
-		if(rsu_alert == rsu):
-			distance = self.rpi.status["ap_distance"]
-			speed_ms = self.status.get('speed',0)*0.003
-			t_remain = self.calc_time_to_reach(t_creation, speed_ms, distance)
-			if(t_remain == -1):
-				print("<Vehicle Control> continuo a marciare")
-			elif(t_remain > 1):
-				println("<Vehicle Control> raggiungo l'obiettivo e fermo il rover in ", t_remain, "secondi")
-				wait_and_stop_thread = threading.Thread(target=self.wait_then_brake, args=(t_remain,))
-				wait_and_stop_thread.start()
-			else:
-				println("<Vehicle Control> faccio rallentare il rover alla velocità minima")
-				self.arduino.speed(70) #Imposto la velocità minima per far marciare il rover
+		type = alert['type']
+		if(type == "person"):
+			rsu_alert = alert["connected_RSU"]
+			rsu = self.rpi.status["ap_connected"]
+			tstamp = alert["t_creation"]
+			t_travel_s = alert["t_travel"]/1000
+			if(rsu_alert == rsu):
+				distance = self.rpi.status["ap_distance"]
+				speed_ms = self.status.get('speed',0)*0.003
+				t_remain = self.calc_time_to_reach(t_creation, speed_ms, distance)
+				if(t_remain == -1):
+					print("<Vehicle Control> continuo a marciare")
+				elif(t_remain > 1):
+					println("<Vehicle Control> raggiungo l'obiettivo e fermo il rover in ", t_remain, "secondi")
+					wait_and_stop_thread = threading.Thread(target=self.wait_then_brake, args=(t_remain,))
+					wait_and_stop_thread.start()
+				else:
+					println("<Vehicle Control> faccio rallentare il rover alla velocità minima")
+					self.arduino.speed(70) #Imposto la velocità minima per far marciare il rover
+		elif(type == "undefined"):
+			println("<Vehicle Control> faccio rallentare il rover alla velocità minima")
+			self.arduino.speed(70) #Imposto la velocità minima per far marciare il rover
+		elif(type == "vehicle_stopped"):
+			println("<Vehicle Control> faccio rallentare il rover alla velocità minima")
+			self.arduino.speed(70) #Imposto la velocità minima per far marciare il rover	
+
 
 	def calc_time_to_reach(self, t_creation, speed, distance):
 		t_now = time.time()
@@ -86,5 +95,5 @@ class Vehicle_Control():
 		self.arduino.start_self_driving(speed)
 
 	def stop_self_driving(self):
-		self.arduino.stop_self_driving()
+		self.arduino.stop_self_driving(speed)
 		
