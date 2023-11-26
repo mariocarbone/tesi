@@ -57,7 +57,7 @@ class Vehicle_Control():
 				rsu_alert = alert["creator_id"]
 			
 			rsu = self.rpi.system_status["ap_connected"]
-			tstamp = alert["t_creation"]
+			t_creation = alert["t_creation"]
 			t_travel_s = alert["t_travel"]/1000
 
 			if(rsu_alert == rsu):
