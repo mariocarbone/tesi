@@ -179,7 +179,7 @@
                     // Aggiungi uno zero davanti se i minuti e i secondi sono inferiori a 10
                     var formattedTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 
-                    var alert_line = `<div class="text-center">${formattedTime} - Tipo: ${item.type} - RSU: ${item.connected_RSU}</div>`;
+                    var alert_line = `<div class="text-center">${formattedTime} - Tipo: ${item.type} - RSU: ${item.creator_id} - Confidence ${item.confidence}</div>`;
                     alertListHTML += alert_line;
                 }
             }

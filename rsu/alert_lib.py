@@ -50,7 +50,7 @@ class Alert:
 			"timestamp": prediction_timestamp,
 			"t_creation" : time.time(),
 			"creator_id": self.rsu_id,
-			"type": predictions.get('category', 'unknown'),
+			"type": predictions.get('category', 'undefined'),
 			"confidence": predictions.get('score', 0),
 			"coordinates": predictions.get('coordinates')
 		}
