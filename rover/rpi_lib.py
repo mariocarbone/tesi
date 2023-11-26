@@ -41,6 +41,7 @@ class Raspberry(str):
 
 		for ssid, rssi in rsu_networks:
 			if ssid != connected_rsu:  # Escludi l'RSU connessa
+				print(ssid, rssi)
 				distance = self.calculate_distance(int(rssi))
 				self.system_status['other_aps'][ssid] = distance
 
