@@ -41,7 +41,7 @@ bool braking = false;
 bool moving = false;
 bool on_track = false;
 bool objectDetected = false;
-bool object_in_front = true;
+bool object_in_front = false;
 String last_command = "STATUS";
 String status;
 int sx=analogRead(LEFT);
@@ -174,6 +174,9 @@ void loop() {
       }
       return; // Ritorno all'inizio del loop
   } //distance < 20s
+  else if(distance >= 15){
+    object_in_front = false;
+  }
 
   if (lineFollowingMode) {
       

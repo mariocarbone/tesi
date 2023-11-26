@@ -51,26 +51,42 @@ class Vehicle_Control():
 	def alert_to_controls(self,alert):
 		type = alert['type']
 		if(type == "person"):
-			rsu_alert = alert["connected_RSU"]
+			if "connected_RSU" in alert:
+				rsu_alert = alert["connected_RSU"]
+			else:
+				rsu_alert = alert["creator_id"]
+			
 			rsu = self.rpi.status["ap_connected"]
 			tstamp = alert["t_creation"]
 			t_travel_s = alert["t_travel"]/1000
+
 			if(rsu_alert == rsu):
 				distance = self.rpi.status["ap_distance"]
-				speed_ms = self.status.get('speed',0)*0.003
-				t_remain = self.calc_time_to_reach(t_creation, speed_ms, distance)
-				if(t_remain == -1):
-					print("<Vehicle Control> continuo a marciare")
-				elif(t_remain > 1):
-					println("<Vehicle Control> raggiungo l'obiettivo e fermo il rover in ", t_remain, "secondi")
-					wait_and_stop_thread = threading.Thread(target=self.wait_then_brake, args=(t_remain,))
-					wait_and_stop_thread.start()
+
+			else:
+				rsu_distance = system_status["other_aps"].get(rsu_alert)
+				if rsu_distance is not None:
+					distance = rsu_distance
 				else:
-					println("<Vehicle Control> faccio rallentare il rover alla velocità minima")
-					self.arduino.speed(70) #Imposto la velocità minima per far marciare il rover
+					distance = 0
+
+			speed_ms = self.status.get('speed',0)*0.003
+			t_remain = self.calc_time_to_reach(t_creation, speed_ms, distance)
+			
+			if(t_remain == -1):
+				print("<Vehicle Control> continuo a marciare")
+			elif(t_remain > 1):
+				println("<Vehicle Control> raggiungo l'obiettivo e fermo il rover in ", t_remain, "secondi")
+				wait_and_stop_thread = threading.Thread(target=self.wait_then_brake, args=(t_remain,))
+				wait_and_stop_thread.start()
+			else:
+				println("<Vehicle Control> faccio rallentare il rover alla velocità minima")
+				self.arduino.speed(70) #Imposto la velocità minima per far marciare il rover			
+				
 		elif(type == "undefined"):
 			println("<Vehicle Control> faccio rallentare il rover alla velocità minima")
 			self.arduino.speed(70) #Imposto la velocità minima per far marciare il rover
+			
 		elif(type == "vehicle_stopped"):
 			println("<Vehicle Control> faccio rallentare il rover alla velocità minima")
 			self.arduino.speed(70) #Imposto la velocità minima per far marciare il rover	
@@ -81,14 +97,20 @@ class Vehicle_Control():
 		t_elapsed_since_creation = t_now - t_creation
 
 		distance_travelled = speed * t_elapsed_since_creation
+		
 		remaining_distance = max(distance - distance_travelled, 0)
 
 		t_remain = remaining_distance / speed if speed > 0 else -1
 		#Se il veicolo è fermo allora non considero di raggiungere l'oggetto
+
+		if(distance == 0 or distance > 10):
+			t_remain = -1
+
 		return t_remain
 
 	def wait_then_brake(self, time_to_wait):
 		time.sleep(time_to_wait)
+		print("<Rover> ho aspettato", time_to_wait, "secondi e ora mi fermo")
 		self.arduino.stop()
 
 	def start_self_driving(self, speed):
