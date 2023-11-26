@@ -35,9 +35,9 @@ class Raspberry(str):
 	def update_other_aps(self):
 		interface = "wlan0"
 		rsu_networks = self.scan_wifi_rsu(interface)
-		connected_rsu = self.system_status.get("ap_connected", "")
-		
-		# Crea o aggiorna il dizionario con le RSU disponibili escludendo quella connessa
+		connected_rsu = self.system_status.get("ap_connected")
+		print(rsu_networks)
+
 		for ssid, rssi in rsu_networks:
 			if ssid != connected_rsu:  # Escludi l'RSU connessa
 				distance = self.calculate_distance(int(rssi))
