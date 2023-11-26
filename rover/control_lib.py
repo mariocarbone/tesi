@@ -56,15 +56,15 @@ class Vehicle_Control():
 			else:
 				rsu_alert = alert["creator_id"]
 			
-			rsu = self.rpi.status["ap_connected"]
+			rsu = self.rpi.system_status["ap_connected"]
 			tstamp = alert["t_creation"]
 			t_travel_s = alert["t_travel"]/1000
 
 			if(rsu_alert == rsu):
-				distance = self.rpi.status["ap_distance"]
+				distance = self.rpi.system_status["ap_distance"]
 
 			else:
-				rsu_distance = system_status["other_aps"].get(rsu_alert)
+				rsu_distance = self.rpi.system_status["other_aps"].get(rsu_alert)
 				if rsu_distance is not None:
 					distance = rsu_distance
 				else:
@@ -86,7 +86,7 @@ class Vehicle_Control():
 		elif(type == "undefined"):
 			println("<Vehicle Control> faccio rallentare il rover alla velocità minima")
 			self.arduino.speed(70) #Imposto la velocità minima per far marciare il rover
-			
+
 		elif(type == "vehicle_stopped"):
 			println("<Vehicle Control> faccio rallentare il rover alla velocità minima")
 			self.arduino.speed(70) #Imposto la velocità minima per far marciare il rover	
