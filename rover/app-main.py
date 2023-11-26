@@ -43,9 +43,9 @@ picam2.start()
 # Broker MQTT e Topic
 broker_address = "192.168.1.6"
 broker_port = 1883
-topic_alert = "/alert/"
-topic_auto = "/smartcar/"
-topic_rsu = "/rsu/"
+topic_alert = "/alert"
+topic_auto = "/smartcar"
+topic_rsu = "/rsu"
 vehicle_id = "ROVER"
 
 mqtt = MQTTConnection(broker_address, broker_port, topic_alert, topic_auto, vehicle_id)
