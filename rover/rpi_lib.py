@@ -68,9 +68,13 @@ class Raspberry(str):
 	def scan_wifi_rsu(self, interface):
 		try:
 			scan_output = subprocess.check_output(['iwlist', interface, 'scan'], text=True)
-			all_networks = re.findall(r"ESSID:\"(.+?)\".*?Signal level=(.+?) dBm", scan_output, re.DOTALL)
-			rsu_networks = [network for network in all_networks if network[0].startswith("RSU")]
-			print("All net", all_networks)
+
+			# Estrai tutti gli SSID e i livelli del segnale
+			networks = re.findall(r"ESSID:\"(.+?)\".*?\n.*?Signal level=(.+?) dBm", scan_output, re.DOTALL)
+			
+			# Filtra solo le reti che iniziano con "RSU"
+			rsu_networks = [(ssid, signal) for ssid, signal in networks if ssid.startswith("RSU")]
+
 			return rsu_networks
 		except subprocess.CalledProcessError as e:
 			print(f"Errore durante la scansione delle reti Wi-Fi: {e}\nOutput: {e.output}")
