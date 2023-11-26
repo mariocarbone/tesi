@@ -157,29 +157,29 @@ void loop() {
       byte goDirection;
 
       if (leftSensor == NOLINE && centerSensor == LINE && rightSensor == NOLINE) {
-        lastSensorLine = CENTER;
+        lastSensorLine = LAST_CENTER;
         goDirection = GO_AHEAD;
       } else if (leftSensor == LINE && centerSensor == NOLINE && rightSensor == NOLINE) {
-        lastSensorLine = LEFT;
+        lastSensorLine = LAST_LEFT;
         goDirection = GO_RIGHT;
       } else if (leftSensor == NOLINE && centerSensor == NOLINE && rightSensor == LINE) {
-        lastSensorLine = CENTER;
+        lastSensorLine = LAST_RIGHT;
         goDirection = GO_LEFT;
       } else if (leftSensor == NOLINE && centerSensor == NOLINE && rightSensor == NOLINE) {
-        if(lastSensorLine == CENTER){
-          goDirection = GO_AHEAD;
+        switch (lastSensorLine) {
+          case LAST_LEFT:
+            goDirection = GO_RIGHT; // Il rover era a sinistra, quindi gira a destra
+            break;
+          case LAST_RIGHT:
+            goDirection = GO_LEFT; // Il rover era a destra, quindi gira a sinistra
+            break;
+          case LAST_CENTER:
+          default:
+            goDirection = GO_AHEAD; // Il rover era al centro, quindi prosegue dritto
+            break;
         }
-        else if (lastSensorLine == LEFT){
-          goDirection = GO_RIGHT;
-        }
-        else if (lastSensorLine == RIGHT){
-          goDirection = GO_LEFT;
-        }
-        //else{
-          //goDirection = STOP;
-        //}
       } else {
-        goDirection = STOP;
+        goDirection = STOP; 
       }
 //    } else if (leftSensor == LINE && centerSensor == LINE && rightSensor == NOLINE) {
 //      goDirection = GO_POWERLEFT;
