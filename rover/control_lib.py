@@ -76,19 +76,19 @@ class Vehicle_Control():
 			if(t_remain == -1):
 				print("<Vehicle Control> continuo a marciare, rover fermo o distanza superiore a 10")
 			elif(t_remain > 1):
-				println("<Vehicle Control> raggiungo l'obiettivo e fermo il rover in ", t_remain, "secondi")
+				print("<Vehicle Control> raggiungo l'obiettivo e fermo il rover in ", t_remain, "secondi")
 				wait_and_stop_thread = threading.Thread(target=self.wait_then_brake, args=(t_remain,))
 				wait_and_stop_thread.start()
 			else:
-				println("<Vehicle Control> faccio rallentare il rover alla velocità minima")
+				print("<Vehicle Control> faccio rallentare il rover alla velocità minima")
 				self.arduino.speed(70) #Imposto la velocità minima per far marciare il rover			
 				
 		elif(type == "undefined"):
-			println("<Vehicle Control> faccio rallentare il rover alla velocità minima")
+			print("<Vehicle Control> faccio rallentare il rover alla velocità minima")
 			self.arduino.speed(70) #Imposto la velocità minima per far marciare il rover
 
 		elif(type == "vehicle_stopped"):
-			println("<Vehicle Control> faccio rallentare il rover alla velocità minima")
+			print("<Vehicle Control> faccio rallentare il rover alla velocità minima")
 			self.arduino.speed(70) #Imposto la velocità minima per far marciare il rover	
 
 
