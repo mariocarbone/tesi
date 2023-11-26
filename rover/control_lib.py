@@ -95,5 +95,5 @@ class Vehicle_Control():
 		self.arduino.start_self_driving(speed)
 
 	def stop_self_driving(self):
-		self.arduino.stop_self_driving(speed)
+		self.arduino.stop_self_driving()
 		
