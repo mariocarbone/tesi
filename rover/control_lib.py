@@ -74,7 +74,7 @@ class Vehicle_Control():
 			t_remain = self.calc_time_to_reach(t_creation, speed_ms, distance)
 			
 			if(t_remain == -1):
-				print("<Vehicle Control> continuo a marciare")
+				print("<Vehicle Control> continuo a marciare, rover fermo o distanza superiore a 10")
 			elif(t_remain > 1):
 				println("<Vehicle Control> raggiungo l'obiettivo e fermo il rover in ", t_remain, "secondi")
 				wait_and_stop_thread = threading.Thread(target=self.wait_then_brake, args=(t_remain,))
