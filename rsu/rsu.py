@@ -184,6 +184,16 @@ def get_predictions():
 def get_connections():
 	return jsonify(rpi.get_system_status())  
 
+# API per ottenere informazioni su raspberry pi 
+@app.route('/alert/alert_sended', methods=['GET'])
+def get_alert_sended():
+	return jsonify(alert_instance.alert_sended)  
+
+# API per ottenere informazioni su raspberry pi 
+@app.route('/alert/alert_received', methods=['GET'])
+def get_alert_received():
+	return jsonify(alert_instance.alert_received)  
+
 # API per arrestare i threads
 @app.route('/stop_threads', methods=['POST'])
 def stop_all_threads():

@@ -34,17 +34,17 @@
 
         <div class="row">
             <div class="col-lg-6">
-                <h3 class="mt-4 text-center">Webcam Stream</h3>
+                <h3 class="mt-4 text-center">Gestione Alert</h3>
                 <img id="video" class="img-fluid" src="{{ url_for('video_feed') }}">
             </div>
 
             <div class="col-lg-6">
-                <!-- Alert RSU-->
+                <h4 class="mt-4 text-center"">Stato</h4>
                 <div class="col-lg-12">
                     <h4 class="mt-4 text-center">Alert inviati</h4>
                     <div class="row">
                         <div class="col-12 text-center" id="alert_sended_list"
-                            style=" background-color: lightcyan; max-height: 130px; overflow-y: auto;">
+                            style=" background-color: lightcyan; max-height: 150px; overflow-y: auto;">
                             <!-- Contenuto della lista degli alert inviati -->
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                     <h4 class="mt-4 text-center">Alert ricevuti</h4>
                     <div class="row">
                         <div class="col-12 text-center" id="alert_received_list"
-                            style=" background-color: lightcyan; max-height: 130px; overflow-y: auto;">
+                            style=" background-color: lightcyan; max-height: 150px; overflow-y: auto;">
                             <!-- Contenuto della lista degli alert inviati -->
                         </div>
                     </div>
@@ -113,10 +113,8 @@
                 </div>
             </div>
         </div>
-        
+
     </div> <!-- Container End -->
-
-
 
     <footer class="bg-light text-center text-lg-start fixed-bottom">
         <!-- Copyright -->
@@ -130,29 +128,20 @@
 
     <script type="text/javascript">
         var frameElement = document.getElementById('frame');
-        var distanceElement = document.getElementById('distance-value');
-
         var predictionElement = document.getElementById('prediction-json');
         var predictionTable = document.getElementById('prediction-table');
 
         var statusElement = document.getElementById('status-json');
-        var speedDiv = document.getElementById('speed');
-        var steerDiv = document.getElementById('steer_side');
-        var irLDiv = document.getElementById('ir_left');
-        var irCDiv = document.getElementById('ir_center');
-        var irRDiv = document.getElementById('ir_right');
         var cpu = document.getElementById('cpu');
         var temp = document.getElementById('temp');
         var ram = document.getElementById('ram');
         var ssid = document.getElementById('ssid');
         var ip = document.getElementById('ip');
         var signal = document.getElementById('signal');
-        var moving = document.getElementById('moving');
-        var braking = document.getElementById('braking');
-        var stopped = document.getElementById('stopped');
-        var onTrack = document.getElementById('on_track');
         var personCount = document.getElementById('person_count');
         var carCount = document.getElementById('car_count');
+        var alertList = document.getElementById('alert_sended_list')
+        var alertListReceived = document.getElementById('alert_received_list')
 
 
         function updatePrediction(prediction) {
@@ -175,19 +164,49 @@
             carCount.textContent = tmp_carCount;
 
         }
-    
 
-        function updateStatus(status) {
-            speedDiv.textContent = status.speed + " m/s";
-            steerDiv.textContent = status.steer_side + "";
-            irLDiv.textContent = status.ir_left + " ";
-            irCDiv.textContent = status.ir_center + " ";
-            irRDiv.textContent = status.ir_right + " ";
-            moving.textContent = status.moving;
-            braking.textContent = status.braking;
-            onTrack.textContent = status.on_track;
-            stopped.textContent = status.stopped;
-            distanceElement.textContent = status.distance + " cm";
+        function updateAlert(alert_list_send) {
+            var alertListHTML = '';
+
+            for (const key in alert_list_send) {
+                if (alert_list_send.hasOwnProperty(key)) {
+                    const item = alert_list_send[key];
+                    var timestamp = new Date(item.timestamp * 1000);
+                    var hours = timestamp.getHours();
+                    var minutes = timestamp.getMinutes();
+                    var seconds = timestamp.getSeconds();
+
+                    // Aggiungi uno zero davanti se i minuti e i secondi sono inferiori a 10
+                    var formattedTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+                    var alert_line = `<div class="text-center">${formattedTime} - Tipo: ${item.type} - RSU: ${item.connected_RSU}</div>`;
+                    alertListHTML += alert_line;
+                }
+            }
+
+            alert_sended_list.innerHTML = alertListHTML;
+        }
+
+        function updateAlertReceived(alert_list) {
+            var alertListHTML = '';
+
+            for (const key in alert_list) {
+                if (alert_list.hasOwnProperty(key)) {
+                    const item = alert_list[key];
+                    var timestamp = new Date(item.timestamp * 1000);
+                    var hours = timestamp.getHours();
+                    var minutes = timestamp.getMinutes();
+                    var seconds = timestamp.getSeconds();
+
+                    // Aggiungi uno zero davanti se i minuti e i secondi sono inferiori a 10
+                    var formattedTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+                    var alertHTML = `<div class="text-center">${formattedTime} - Tipo: ${item.type} - Creator: ${item.creator_id} - T.Trasm: ${item.t_travel}ms</div>`;
+                    alertListHTML += alertHTML;
+                }
+            }
+
+            alert_received_list.innerHTML = alertListHTML;
         }
 
         function updatePiInfo(status) {
@@ -206,6 +225,19 @@
                 .catch(error => console.log('Errore durante la richiesta della distanza:', error));
         }, 500);
 
+
+        // Aggiorna la lista degli alert ogni secondo
+        setInterval(function () {
+            fetch('/alert/alert_sended')
+                .then(response => response.json())
+                .then(data => updateAlert(data))
+                .catch(error => console.log('Errore durante la richiesta degli alert:', error));
+            fetch('/alert/alert_received')
+                .then(response => response.json())
+                .then(data => updateAlertReceived(data))
+                .catch(error => console.log('Errore durante la richiesta degli alert:', error));
+        }, 1000);
+
         // Aggiorna le informazioni sulla connessione ogni cinque secondi
         setInterval(function () {
             fetch('/pi/get_info')
@@ -215,47 +247,7 @@
         }, 5000);
 
         //Azioni bottoni
-        var buttonRoverStart = document.getElementById('rover-start');
-        var buttonRoverStop = document.getElementById('rover-stop');
         var buttonStop = document.getElementById('stop');
-
-        buttonRoverStart.addEventListener('click', function () {
-            fetch('/rover/start', {
-                method: 'POST'
-            })
-                .then(function (response) {
-                    if (response.ok) {
-                        return response.text();
-                    } else {
-                        throw new Error('Errore nella richiesta');
-                    }
-                })
-                //.then(function (data) {
-                //    alert(data); // Mostra un messaggio di conferma
-                //})
-                .catch(function (error) {
-                    console.error('Errore:', error);
-                });
-        });
-
-        buttonRoverStop.addEventListener('click', function () {
-            fetch('/rover/stop', {
-                method: 'POST'
-            })
-                .then(function (response) {
-                    if (response.ok) {
-                        return response.text();
-                    } else {
-                        throw new Error('Errore nella richiesta');
-                    }
-                })
-                //.then(function (data) {
-                //    alert(data); // Mostra un messaggio di conferma
-                //})
-                .catch(function (error) {
-                    console.error('Errore:', error);
-                });
-        });
 
         buttonStop.addEventListener('click', function () {
             fetch('/stop_threads', {

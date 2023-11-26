@@ -7,6 +7,7 @@ class Alert:
 		self.rsu_id = rsu_id
 		self.mqtt_connection = mqtt_connection
 		self.alert_sended = {}
+		self.alert_received = {}
 		self.last_predictions = []
 
 	def process_predictions(self, predictions):
