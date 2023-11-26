@@ -375,7 +375,7 @@ void loop() {
       else if (command.startsWith("STARTSELF")) {
         
         int tmp_speed = 0;
-        if (command.length() >= 5){
+        if (command.length() >= 9){
           tmp_speed = command.substring(9).toInt();
           if(tmp_speed > maxSpeed){
             tmp_speed = maxSpeed;
@@ -389,15 +389,6 @@ void loop() {
         speed = tmp_speed;
 
         lineFollowingMode = true;
-
-        if(last_command.startsWith("SPEED") && tmp_speed < last_speed){
-          if(speed < last_speed){
-            braking = true;
-          }
-          else{
-            braking = false;
-          }
-        }
 
         leftSpeed = speed;
         rightSpeed = speed;

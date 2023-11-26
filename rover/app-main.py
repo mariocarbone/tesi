@@ -280,7 +280,7 @@ def rover_start():
     if speed is not None:
         try:
             speed_value = int(speed)
-            vehicle_control.start_self_driving(speed=speed_value)
+            vehicle_control.start_self_driving(speed_value)
             print(f"<Rover> Self Driving Start at Speed: {speed_value}")
             return jsonify({"message": f"Rover partito a velocità {speed_value}!"})
         except ValueError:
