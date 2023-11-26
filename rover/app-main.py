@@ -123,7 +123,7 @@ def update_other_aps():
 	global rpi, stop_threads
 	while not stop_threads:
 		rpi.update_other_aps()
-		time.sleep(1)
+		time.sleep(2)
 
 # Funzione per effettuare object detection sui frame della coda
 def detection():
