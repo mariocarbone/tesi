@@ -12,6 +12,7 @@
 #define LAST_RIGHT 7
 #define LAST_LEFT 8
 #define LAST_CENTER 9   
+#define LAST_ALL 10
 
 int ENA = 9; //ENA connected to digital pin 9 @LEFT GEAR
 int ENB = 3; //ENB connected to digital pin 3 @RIGHT GEAR
@@ -52,7 +53,8 @@ byte leftSensor = digitalRead(LEFT);
 byte centerSensor = digitalRead(CENTER);
 byte rightSensor = digitalRead(RIGHT);
 bool lineFollowingMode = false;
-byte lastSensorLine = 0;
+byte lastSensorLine = LAST_CENTER;
+byte prevSensorLine = LAST_CENTER; 
 
 void setup() {
   
@@ -103,7 +105,34 @@ bool isMoving(int speed){
 bool isBraking(bool braking){
   return braking;
 }
- 
+
+byte determineDirection(byte lastLine, byte prevLine) {
+  if (lastLine == LAST_CENTER) {
+    return GO_AHEAD;
+
+  } else if (lastLine == LAST_LEFT) {
+    if (prevLine == LAST_CENTER) {
+      return GO_RIGHT;
+    } else {
+      return GO_LEFT;
+    }
+
+  } else if (lastLine == LAST_RIGHT) {
+    if (prevLine == LAST_CENTER) {
+      return GO_LEFT;
+    } else {
+      return GO_RIGHT;
+    }
+  } else {
+    if (prevLine == LAST_LEFT) {
+      return GO_RIGHT;
+    } else if (prevLine == LAST_RIGHT) {
+      return GO_LEFT;
+    } else {
+      return STOP; 
+    }
+  }
+}
 void loop() {
 
   distance = hc.dist();
@@ -153,39 +182,22 @@ void loop() {
       centerSensor = digitalRead(CENTER);
       rightSensor = digitalRead(RIGHT);
     
-      //Calcolo la direzione
-      byte goDirection;
+      prevSensorLine = lastSensorLine; // Memorizza l'ultima lettura
 
-      if (leftSensor == NOLINE && centerSensor == LINE && rightSensor == NOLINE) {
-        lastSensorLine = LAST_CENTER;
-        goDirection = GO_AHEAD;
-      } else if (leftSensor == LINE && centerSensor == NOLINE && rightSensor == NOLINE) {
+      if (leftSensor == LINE && centerSensor == NOLINE && rightSensor == NOLINE) {
         lastSensorLine = LAST_LEFT;
-        goDirection = GO_RIGHT;
-      } else if (leftSensor == NOLINE && centerSensor == NOLINE && rightSensor == LINE) {
+      } else if (centerSensor == LINE && leftSensor == NOLINE && rightSensor == NOLINE) {
+        lastSensorLine = LAST_CENTER;
+      } else if (rightSensor == LINE && leftSensor == NOLINE && centerSensor == NOLINE) {
         lastSensorLine = LAST_RIGHT;
-        goDirection = GO_LEFT;
-      } else if (leftSensor == NOLINE && centerSensor == NOLINE && rightSensor == NOLINE) {
-        switch (lastSensorLine) {
-          case LAST_LEFT:
-            goDirection = GO_RIGHT; // Il rover era a sinistra, quindi gira a destra
-            break;
-          case LAST_RIGHT:
-            goDirection = GO_LEFT; // Il rover era a destra, quindi gira a sinistra
-            break;
-          case LAST_CENTER:
-          default:
-            goDirection = GO_AHEAD; // Il rover era al centro, quindi prosegue dritto
-            break;
-        }
+      } else if (rightSensor == LINE && leftSensor == LINE && centerSensor == LINE) {
+        lastSensorLine = LAST_ALL;
       } else {
-        goDirection = STOP; 
+        // Nessuna linea rilevata, mantenere l'ultima lettura
       }
-//    } else if (leftSensor == LINE && centerSensor == LINE && rightSensor == NOLINE) {
-//      goDirection = GO_POWERLEFT;
-//    } else if (leftSensor == NOLINE && centerSensor == LINE && rightSensor == LINE) {
-//      goDirection = GO_POWERRIGHT;
 
+      //Calcolo la direzione
+      byte goDirection = determineDirection(lastSensorLine, prevSensorLine);
 
       //Interpreto la direzione ottenuta
       switch (goDirection) {
