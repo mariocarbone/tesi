@@ -35,7 +35,7 @@ class Raspberry(str):
 		interface = "wlan0"
 		rsu_networks = self.scan_wifi_rsu(interface)
 		#connected_rsu = self.system_status.get('ap_connected',"RSU_PI01")
-		conected_rsu = "RSU_PI01"
+		connnected_rsu = "RSU_PI01"
 
 		if 'other_aps' not in self.system_status:
 			self.system_status['other_aps'] = {}
