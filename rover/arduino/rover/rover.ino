@@ -158,6 +158,7 @@ void loop() {
 
       if (leftSensor == NOLINE && centerSensor == LINE && rightSensor == NOLINE) {
         lastSensorLine = CENTER;
+        goDirection = GO_AHEAD;
       } else if (leftSensor == LINE && centerSensor == NOLINE && rightSensor == NOLINE) {
         lastSensorLine = LEFT;
         goDirection = GO_RIGHT;
@@ -177,13 +178,14 @@ void loop() {
         else{
           goDirection = STOP;
         }
+      } else {
+        goDirection = STOP;
+      }
 //    } else if (leftSensor == LINE && centerSensor == LINE && rightSensor == NOLINE) {
 //      goDirection = GO_POWERLEFT;
 //    } else if (leftSensor == NOLINE && centerSensor == LINE && rightSensor == LINE) {
 //      goDirection = GO_POWERRIGHT;
-      } else {
-        goDirection = STOP;
-      }
+
 
       //Interpreto la direzione ottenuta
       switch (goDirection) {
