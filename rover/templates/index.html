@@ -69,7 +69,7 @@
                                 <div id="stopped" class="span">0</div>
                             </div>
                             <div class="status-field mx-2 my-2 text-center">
-                                <h5>Sulla Traccia</h5>
+                                <h5>Sulla traccia</h5>
                                 <div id="on_track" class="span">0</div>
                             </div>
                         </div>
@@ -91,6 +91,10 @@
             </div>
             <h4 class="mt-4 text-center">Guida Autonoma</h4>
             <div id="rover-commands" class="row justify-content-center align-items-center">
+                <div class="status-field mx-2 my-2 text-center">
+                    <span>STATO:</span>
+                    <div id="self_driving" class="span">OFF</div>
+                </div>
                 <button id="rover-start" class="btn btn-primary mx-2 my-2">Start</button>
                 <button id="rover-stop" class="btn btn-danger mx-2 my-2">Stop</button>
                 <div>
@@ -98,10 +102,7 @@
                     <input type="range" class="form-range" min="70" max="254" step="10" id="roverSpeedRange">
                     <span id="roverSpeedDisplay">Max Speed</span>
                 </div>
-                <div class="status-field mx-2 my-2 text-center">
-                    <span>Self Driving</span>
-                    <div id="self_driving" class="span">OFF</div>
-                    </div>
+
             </div>
         </div>
     </div>
