@@ -40,7 +40,6 @@ picam2 = Picamera2()
 picam2.configure(picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (640, 480)}))
 picam2.start()
 
-# MQTT TOPIC & INFO
 # Broker MQTT e Topic
 broker_address = "192.168.1.6"
 broker_port = 1883
@@ -53,8 +52,8 @@ mqtt = MQTTConnection(broker_address, broker_port, topic_alert, topic_auto, vehi
 
 # Istanze Moduli
 tf_instance = Tensorflow()
-vehicle_control = Vehicle_Control(rpi)
 rpi = Raspberry()
+vehicle_control = Vehicle_Control(rpi)
 alert_instance = Alert(vehicle_id, vehicle_control, rpi, mqtt)
 
 # Stato del veicolo
