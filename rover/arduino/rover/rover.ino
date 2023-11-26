@@ -29,7 +29,7 @@ int brake = 0;
 int leftSpeed = 0;
 int rightSpeed = 0;
 int speed = 0;
-int lastSpeed = 0;
+int last_speed = 0;
 int maxSpeed = 254;
 int steeringValue = 0;
 String steer_side = "CENTER";
@@ -383,7 +383,7 @@ void loop() {
         last_speed = speed;
         speed = tmp_speed;
 
-        line_following_mode = true;
+        lineFollowingMode = true;
 
         if(last_command.startsWith("SPEED") && tmp_speed < last_speed){
           if(speed < last_speed){
@@ -411,7 +411,7 @@ void loop() {
           speed = 0;
           leftSpeed = speed;
           rightSpeed = speed;
-          line_following_mode = false;
+          lineFollowingMode = false;
           //braking = true;
           stopped = true;
           analogWrite(ENA, leftSpeed);
