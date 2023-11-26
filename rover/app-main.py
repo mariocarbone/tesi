@@ -295,7 +295,7 @@ def rover_start():
 def rover_stop():
 	global vehicle_control
 	vehicle_control.stop_self_driving()
-	print("<Rover> Self Driving Start!")
+	print("<Rover> Self Driving Stop!")
 	return jsonify({"message": "Rover fermato!"})
 
 # API per arrestare i threads
@@ -311,42 +311,42 @@ def stop_all_threads():
 def rover_manual_forward():
 	global vehicle_control
 	vehicle_control.arduino.speed(70)
-	print("Rover Forward")
+	print("<Rover> Manual Forward")
 	return jsonify({"message": "Rover Forward!"})
 
 @app.route('/rover/commands/left', methods=['POST'])
 def rover_manual_left():
 	global vehicle_control
 	vehicle_control.arduino.steer(vehicle_control.arduino.str_left,3)
-	print("Rover Left")
+	print("<Rover> Manual Left")
 	return jsonify({"message": "Rover Left!"})
 
 @app.route('/rover/commands/right', methods=['POST'])
 def rover_manual_right():
 	global vehicle_control
 	vehicle_control.arduino.steer(vehicle_control.arduino.str_right,3)
-	print("Rover Right")
+	print("<Rover> Manual Right")
 	return jsonify({"message": "Rover Right!"})
 
 @app.route('/rover/commands/brake', methods=['POST'])
 def rover_manual_brake():
 	global vehicle_control
 	vehicle_control.arduino.stop()
-	print("Rover Brake")
+	print("<Rover>  Manual Brake")
 	return jsonify({"message": "Rover Brake!"})
 
 @app.route('/rover/commands/stop', methods=['POST'])
 def rover_manual_stop():
 	global vehicle_control
 	vehicle_control.arduino.stop()
-	print("Rover Stop")
+	print("<Rover> Manual Stop")
 	return jsonify({"message": "Rover Stop!"})
 
 @app.route('/rover/commands/reverse', methods=['POST'])
 def rover_manual_reverse():
 	global vehicle_control
 	vehicle_control.arduino.backward()
-	print("Rover Reverse")
+	print("<Rover> Manual Reverse")
 	return jsonify({"message": "Rover Reverse!"})
 
 if __name__ == "__main__":
