@@ -60,15 +60,15 @@ class Raspberry(str):
 		return self.system_status['other_aps']
 
 	def scan_wifi_rsu(self, interface):
-		""" Scansiona le reti Wi-Fi che iniziano con 'RSU'. """
 		try:
-			scan_output = subprocess.check_output(['sudo', 'iwlist', interface, 'scan'], text=True)
+			scan_output = subprocess.check_output(['iwlist', interface, 'scan'], text=True)
+			print(scan_output)  # Aggiungi per debug
 			networks = re.findall(r"ESSID:\"(RSU.+?)\".*?Signal level=(-?\d+)", scan_output, re.DOTALL)
 			return networks
 		except subprocess.CalledProcessError as e:
-			print(f"Errore durante la scansione delle reti Wi-Fi: {e}")
+			print(f"Errore durante la scansione delle reti Wi-Fi: {e}\nOutput: {e.output}")
 			return {}
-
+			
 	def get_wifi_network_info(self):
 		wifi_interface = "wlan0"
 
