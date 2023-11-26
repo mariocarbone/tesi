@@ -67,7 +67,8 @@ class Raspberry(str):
 
 	def scan_wifi_rsu(self, interface):
 		try:
-			scan_output = subprocess.check_output(['sudo iwlist', interface, 'scan'], text=True)
+			# Esegui il comando senza shlex.split
+			scan_output = subprocess.check_output(['sudo', 'iwlist', interface, 'scan'], text=True)
 
 			# Estrai tutti gli SSID e i livelli del segnale
 			networks = re.findall(r"ESSID:\"(.+?)\".*?\n.*?Signal level=(.+?) dBm", scan_output, re.DOTALL)
