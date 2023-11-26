@@ -423,22 +423,25 @@
         var buttonStop = document.getElementById('stop');
 
         buttonRoverStart.addEventListener('click', function () {
+            var selectedSpeed = roverSpeedRange.value;
+
             fetch('/rover/start', {
-                method: 'POST'
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ speed: selectedSpeed })
             })
-                .then(function (response) {
-                    if (response.ok) {
-                        return response.text();
-                    } else {
-                        throw new Error('Errore nella richiesta');
-                    }
-                })
-                //.then(function (data) {
-                //    alert(data); // Mostra un messaggio di conferma
-                //})
-                .catch(function (error) {
-                    console.error('Errore:', error);
-                });
+            .then(function (response) {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('Errore nella richiesta');
+                }
+            })
+            .catch(function (error) {
+                console.error('Errore:', error);
+            });
         });
 
         buttonRoverStop.addEventListener('click', function () {

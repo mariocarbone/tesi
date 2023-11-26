@@ -25,7 +25,7 @@ from alert_lib import Alert
 from rpi_lib import Raspberry
 
 #Web-UI
-from flask import Flask, render_template, jsonify, Response
+from flask import Flask, render_template, jsonify, Response, request
 from flask_cors import CORS
 app = Flask(__name__)
 log = logging.getLogger('werkzeug')
@@ -53,7 +53,7 @@ mqtt = MQTTConnection(broker_address, broker_port, topic_alert, topic_auto, vehi
 
 # Istanze Moduli
 tf_instance = Tensorflow()
-vehicle_control = Vehicle_Control()
+vehicle_control = Vehicle_Control(rpi)
 rpi = Raspberry()
 alert_instance = Alert(vehicle_id, vehicle_control, rpi, mqtt)
 
@@ -267,21 +267,36 @@ def get_alert_sended():
 def get_alert_received():
 	return jsonify(alert_instance.alert_received)  
 
-
 # API per far partire il rover
 @app.route('/rover/start', methods=['POST'])
 def rover_start():
-	global vehicle_control
-	vehicle_control.start_path()
-	print("ROVER START")
-	return jsonify({"message": "Rover partito!"})
+    global vehicle_control
+
+    # Ottieni i dati JSON inviati con la richiesta POST
+    data = request.get_json()
+
+    # Estrai il valore della velocità
+    speed = data.get('speed', None)
+
+    if speed is not None:
+        try:
+            speed_value = int(speed)
+            vehicle_control.start_self_driving(speed=speed_value)
+            print(f"<Rover> Self Driving Start at Speed: {speed_value}")
+            return jsonify({"message": f"Rover partito a velocità {speed_value}!"})
+        except ValueError:
+            print("<Rover> Errore: Velocità non valida")
+            return jsonify({"error": "Velocità non valida"}), 400
+    else:
+        print("<Rover> Errore: Velocità non fornita")
+        return jsonify({"error": "Velocità non fornita"}), 400
 
 # API per far fermare il rover
 @app.route('/rover/stop', methods=['POST'])
 def rover_stop():
 	global vehicle_control
-	vehicle_control.stop_path()
-	print("ROVER STOP")
+	vehicle_control.stop_self_driving()
+	print("<Rover> Self Driving Start!")
 	return jsonify({"message": "Rover fermato!"})
 
 # API per arrestare i threads

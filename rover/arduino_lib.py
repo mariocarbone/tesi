@@ -76,9 +76,13 @@ class Arduino:
 			print("Timeout nell'invio del comando", command)
 			self.reconnect()
 	
-	def process_alert(self, alert):
-		command = "ALERT"
-		
+	def start_self_driving(self,speed):
+		command = "STARTSELF"+str(speed)
+		self.send_command(command)
+
+	def stop_self_driving(self):
+		command = "STOPSELF"
+		self.send_command(command)
 
 	def reconnect(self):	
 		print("Avvio una nuova connessione")

@@ -9,6 +9,9 @@
 #define STOP 4
 #define GO_POWERLEFT 5
 #define GO_POWERRIGHT 6
+#define LAST_RIGHT 7
+#define LAST_LEFT 8
+#define LAST_CENTER 9   
 
 int ENA = 9; //ENA connected to digital pin 9 @LEFT GEAR
 int ENB = 3; //ENB connected to digital pin 3 @RIGHT GEAR
@@ -26,6 +29,7 @@ int brake = 0;
 int leftSpeed = 0;
 int rightSpeed = 0;
 int speed = 0;
+int lastSpeed = 0;
 int maxSpeed = 254;
 int steeringValue = 0;
 String steer_side = "CENTER";
@@ -48,6 +52,7 @@ byte leftSensor = digitalRead(LEFT);
 byte centerSensor = digitalRead(CENTER);
 byte rightSensor = digitalRead(RIGHT);
 bool lineFollowingMode = false;
+byte lastSensorLine = 0;
 
 void setup() {
   
@@ -103,8 +108,8 @@ void loop() {
 
   distance = hc.dist();
 
-  if (distance < 20) {
-      // Se la distanza è minore di 20 cm, ferma il veicolo
+  if (distance < 15) {
+      // Se la distanza è minore di 15 cm, ferma il veicolo
       speed = 0;
       leftSpeed = 0;
       rightSpeed = 0;
@@ -150,18 +155,32 @@ void loop() {
     
       //Calcolo la direzione
       byte goDirection;
+
       if (leftSensor == NOLINE && centerSensor == LINE && rightSensor == NOLINE) {
-        goDirection = GO_AHEAD;
+        lastSensorLine = CENTER;
       } else if (leftSensor == LINE && centerSensor == NOLINE && rightSensor == NOLINE) {
+        lastSensorLine = LEFT;
         goDirection = GO_RIGHT;
       } else if (leftSensor == NOLINE && centerSensor == NOLINE && rightSensor == LINE) {
+        lastSensorLine = CENTER;
         goDirection = GO_LEFT;
       } else if (leftSensor == NOLINE && centerSensor == NOLINE && rightSensor == NOLINE) {
-        goDirection = STOP;
-//      } else if (leftSensor == LINE && centerSensor == LINE && rightSensor == NOLINE) {
+        if(lastSensorLine == CENTER){
+          goDirection = GO_AHEAD;
+        }
+        else if (lastSensorLine == LEFT)
+          goDirection = GO_RIGHT;
+        }
+        else if (lastSensorLine == RIGHT){
+          goDirection = GO_LEFT;
+        }
+        else{
+          goDirection = STOP;
+        }
+//    } else if (leftSensor == LINE && centerSensor == LINE && rightSensor == NOLINE) {
 //      goDirection = GO_POWERLEFT;
-//      } else if (leftSensor == NOLINE && centerSensor == LINE && rightSensor == LINE) {
-//        goDirection = GO_POWERRIGHT;
+//    } else if (leftSensor == NOLINE && centerSensor == LINE && rightSensor == LINE) {
+//      goDirection = GO_POWERRIGHT;
       } else {
         goDirection = STOP;
       }
@@ -175,14 +194,14 @@ void loop() {
           analogWrite(ENB, rightSpeed);
           break;
         case GO_LEFT:
-          leftSpeed = getSideSpeed(3,speed);
+          leftSpeed = getSideSpeed(4,speed);
           rightSpeed = speed; 
           analogWrite(ENA, leftSpeed);
           analogWrite(ENB, rightSpeed);
           break;
         case GO_RIGHT:
           leftSpeed = speed;
-          rightSpeed = getSideSpeed(3,speed); 
+          rightSpeed = getSideSpeed(4,speed); 
           analogWrite(ENA, leftSpeed);
           analogWrite(ENB, rightSpeed);
           break;
@@ -272,8 +291,18 @@ void loop() {
           }
         }
         last_command = command;
+        last_speed = speed;
         speed = tmp_speed;
-  
+
+        if(last_command.startsWith("SPEED") && tmp_speed < last_speed){
+          if(speed < last_speed){
+            braking = true;
+          }
+          else{
+            braking = false;
+          }
+        }
+
         leftSpeed = speed;
         rightSpeed = speed;
         analogWrite(ENA, leftSpeed);
@@ -307,7 +336,7 @@ void loop() {
           speed = 0;
           leftSpeed = speed;
           rightSpeed = speed;
-          braking = true;
+          //braking = true;
           stopped = true;
           analogWrite(ENA, leftSpeed);
           analogWrite(ENB, rightSpeed); 
@@ -335,7 +364,59 @@ void loop() {
                         + ",\"ir_right\":" + String(dx) + ",\"distance\":" + String(distance) + ",\"stopped\":" + stopped
                         + ",\"braking\":" + braking + ",\"moving\":" + moving + ",\"object_in_front\":" + object_in_front 
                         + ",\"last_command\":\"" +String(last_command)+ "\"}");  
-        } //STATUS
+      } //STATUS
+
+      else if (command.startsWith("STARTSELF")) {
+        
+        int tmp_speed = 0;
+        if (command.length() >= 5){
+          tmp_speed = command.substring(9).toInt();
+          if(tmp_speed > maxSpeed){
+            tmp_speed = maxSpeed;
+          }
+          else if(tmp_speed == 0){
+            stopped = true;
+          }
+        }
+        last_command = command;
+        last_speed = speed;
+        speed = tmp_speed;
+
+        line_following_mode = true;
+
+        if(last_command.startsWith("SPEED") && tmp_speed < last_speed){
+          if(speed < last_speed){
+            braking = true;
+          }
+          else{
+            braking = false;
+          }
+        }
+
+        leftSpeed = speed;
+        rightSpeed = speed;
+        analogWrite(ENA, leftSpeed);
+        analogWrite(ENB, rightSpeed);
+
+        digitalWrite(MOTOR_A1, HIGH);
+        digitalWrite(MOTOR_A2, LOW);
+        digitalWrite(MOTOR_B1, LOW);
+        digitalWrite(MOTOR_B2, HIGH);
+
+      } //SELF DRIVING
+
+      else if (command.startsWith("STOPSELF")){
+          last_command = command;
+          speed = 0;
+          leftSpeed = speed;
+          rightSpeed = speed;
+          line_following_mode = false;
+          //braking = true;
+          stopped = true;
+          analogWrite(ENA, leftSpeed);
+          analogWrite(ENB, rightSpeed); 
+
+      } //STOPSELF
         
       //else {
       //  Serial.println("Command not recognized");
@@ -343,5 +424,5 @@ void loop() {
 
     }//serial avaiable
 
-} //loop
+  } //loop
   

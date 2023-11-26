@@ -65,7 +65,7 @@ class Alert:
             "vehicle_stopped": self.vehicle_control.status.get('stopped', False),
             "coordinates": predictions.get('coordinates')
         }
-        print(prediction_timestamp, "<Alert creato>")
+        print(f"<Alert creato> {alert_details['type']}")
         self.alert_sended[str(prediction_timestamp)] = alert_details
         # Mantieni solo gli ultimi 10 alert
         if len(self.alert_sended) > 10:
@@ -73,6 +73,52 @@ class Alert:
             del self.alert_sended[oldest_key]
         #print(alert_details)
         self.mqtt_connection.send_alert(alert_details)
+
+    #Alert if vehicle stopped
+    def create_vehicle_stopped_alert(self):
+
+        alert_details = {
+            "timestamp": time.time(),
+            "t_creation" : time.time(),
+            "creator_id": self.vehicle_id,
+            "front_distance": self.vehicle_control.status.get('distance', 0),
+            "connected_RSU": self.rpi_instance.system_status.get("ap_connected", 'N/A'),
+            "distance_from_rsu": self.rpi_instance.system_status.get("ap_distance", 'N/A'),
+            "distance_from_other_aps": self.rpi_instance.system_status.get("other_aps", {}),
+            "type": "vehicle_stopped",
+            "object_in_front": self.vehicle_control.status.get("object_in_front", False),
+            "vehicle_stopped": self.vehicle_control.status.get('stopped', False),
+        }
+        self.send_alert(alert_details)
+    
+    #Alert if object undefined
+    def create_undefined_alert(self):
+
+        alert_details = {
+            "timestamp": time.time(),
+            "t_creation" : time.time(),
+            "creator_id": self.vehicle_id,
+            "front_distance": self.vehicle_control.status.get('distance', 0),
+            "connected_RSU": self.rpi_instance.system_status.get("ap_connected", 'N/A'),
+            "distance_from_rsu": self.rpi_instance.system_status.get("ap_distance", 'N/A'),
+            "distance_from_other_aps": self.rpi_instance.system_status.get("other_aps", {}),
+            "type": "undefined",
+            "object_in_front": self.vehicle_control.status.get("object_in_front", False),
+            "vehicle_stopped": self.vehicle_control.status.get('stopped', False),
+        }
+        self.send_alert(alert_details)
+
+    def send_alert(self, alert_details):
+        # Invia l'alert tramite MQTT e registra l'alert inviato
+        print(f"<Alert creato> {alert_details['type']}")
+        self.alert_sended[str(alert_details['timestamp'])] = alert_details
+        
+        self.mqtt_connection.send_alert(alert_details)
+        # Pulizia per mantenere solo gli ultimi 10 alert
+        if len(self.alert_sended) > 10:
+            oldest_key = sorted(self.alert_sended.keys())[0]
+            del self.alert_sended[oldest_key]
+
 
     def handle_received_alert(self,alert):
         tstamp = alert.get('timestamp', time.time())
