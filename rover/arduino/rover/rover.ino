@@ -175,9 +175,9 @@ void loop() {
         else if (lastSensorLine == RIGHT){
           goDirection = GO_LEFT;
         }
-        else{
-          goDirection = STOP;
-        }
+        //else{
+          //goDirection = STOP;
+        //}
       } else {
         goDirection = STOP;
       }
