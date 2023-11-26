@@ -376,6 +376,7 @@ void loop() {
           dx=digitalRead(RIGHT);
           center=digitalRead(CENTER);
           moving = isMoving(speed);
+          on_track = center == HIGH;
           //braking = false;
           //speed_ms = ;
 
