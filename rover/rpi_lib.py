@@ -28,6 +28,7 @@ class Raspberry(str):
 		self.system_status["disk_space"] = self.pi.get_disk_space()
 		self.system_status["ap_connected"] = self.system_status["wifi"][0]
 		self.system_status["ap_distance"] = self.get_rsu_distance()
+		self.system_status['other_aps'] = {}
 		self.get_rsu_distance()
 		return self.system_status
 
