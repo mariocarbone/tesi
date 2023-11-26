@@ -190,18 +190,21 @@ void loop() {
         case GO_AHEAD:
           leftSpeed = speed;
           rightSpeed = speed; 
+          steer_side = "CENTER";
           analogWrite(ENA, leftSpeed);
           analogWrite(ENB, rightSpeed);
           break;
         case GO_LEFT:
           leftSpeed = getSideSpeed(4,speed);
           rightSpeed = speed; 
+          steer_side = "LEFT4";
           analogWrite(ENA, leftSpeed);
           analogWrite(ENB, rightSpeed);
           break;
         case GO_RIGHT:
           leftSpeed = speed;
           rightSpeed = getSideSpeed(4,speed); 
+          steer_side = "RIGHT4";
           analogWrite(ENA, leftSpeed);
           analogWrite(ENB, rightSpeed);
           break;
@@ -217,12 +220,14 @@ void loop() {
         case GO_POWERLEFT:
           leftSpeed = getSideSpeed(5,speed);
           rightSpeed = speed; 
+          steer_side = "LEFT5";
           analogWrite(ENA, leftSpeed);
           analogWrite(ENB, rightSpeed);
           break;
         case GO_POWERRIGHT:
           leftSpeed = speed;
           rightSpeed = getSideSpeed(5,speed); 
+          steer_side = "RIGHT5";
           analogWrite(ENA, leftSpeed);
           analogWrite(ENB, rightSpeed);
           break;
