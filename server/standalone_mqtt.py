@@ -37,5 +37,5 @@ class MQTTConnection:
 
 # Esempio di utilizzo in modalità standalone
 if __name__ == "__main__":
-    mqtt_connection = MQTTConnection("indirizzo_broker", 1883, "rsu_id", standalone=True)
+    mqtt_connection = MQTTConnection("192.168.1.6", 1883, "rsu_id", standalone=True)
     mqtt_connection.start()
