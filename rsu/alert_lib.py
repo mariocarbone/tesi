@@ -6,6 +6,7 @@ class Alert:
 	def __init__(self, rsu_id, mqtt_connection):
 		self.rsu_id = rsu_id
 		self.mqtt_connection = mqtt_connection
+		self.mqtt_connection.on_alert_callback = self.handle_received_alert
 		self.alert_sended = {}
 		self.alert_received = {}
 		self.last_predictions = []
