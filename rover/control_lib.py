@@ -46,9 +46,8 @@ class Vehicle_Control():
 			response = self.arduino.get_status()
 			if isinstance(response, dict):
 				self.status.update(response)
-				if self.status.get("object_in_front") and callable(self.object_in_front_callback):
-					if(self.status["object_in_front"]) == 1:
-						self.object_in_front_callback()
+				if self.status.get("object_in_front") and self.status.get("braking") and callable(self.object_in_front_callback):
+					fself.object_in_front_callback()
 			else:
 				print("Lo stato di Arduino non è un dizionario valido.")
 

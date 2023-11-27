@@ -163,7 +163,6 @@ void loop() {
           on_track = center == HIGH;
           //distance = hc.dist();
           moving = isMoving(speed);
-          braking = false;
           //speed_ms = ;
           
           Serial.println("{\"speed\":" + String(speed) + ",\"speed_left_side\":" + String(leftSpeed)
@@ -174,6 +173,8 @@ void loop() {
                         + ",\"braking\":" + braking + ",\"moving\":" + moving + ",\"object_in_front\":" + object_in_front 
                         + ",\"last_command\":\"" +String(last_command)+ "\"}");         
           }
+
+          braking = false; //Aggiorno lo stato di braking dopo la lettura dello stato in modo tale da leggerlo se a true solo una volta
       }
       return; // Ritorno all'inizio del loop
   } //distance < 20s
