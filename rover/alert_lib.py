@@ -111,7 +111,7 @@ class Alert:
             "distance_from_other_aps": self.rpi_instance.system_status.get("other_aps", {}),
             "type": "undefined",
             "object_in_front": self.vehicle_control.status.get("object_in_front", 0),
-            "vehicle_stopped": self.vehicle_control.status.get('stopped', F0alse),
+            "vehicle_stopped": self.vehicle_control.status.get('stopped', 0),
         }
         self.send_alert(alert_details)
 
