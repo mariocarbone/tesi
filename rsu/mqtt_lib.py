@@ -27,11 +27,12 @@ class MQTTConnection:
 			if payload["creator_id"] == self.rsu_id:
 				pass 
 			else:
-				t_arrival = time.time()*1000 
 				creator = payload["creator_id"]
+				t_arrival = time.time()*1000 
 				t_trasm = payload["t_creation"]*1000
-				t_total_ms = round(t_arrival - t_trasm,2)
-				print("<Ricevuto Alert> da", creator, "Tempo impiegato:", t_total_ms , " ms")
+				t_total_ms = round(t_arrival - t_trasm)
+				print("<Ricevuto Alert> da", creator, " - Tempo impiegato:", t_total_ms , " ms")
+				payload["t_travel"]= t_total_ms
 				self.manage_alert(payload)
 			
 			#print("<Alert> Ricevuto Alert")
