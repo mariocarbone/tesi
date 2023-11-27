@@ -115,7 +115,7 @@ class Alert:
     def send_alert(self, alert_details):
         # Invia l'alert tramite MQTT e registra l'alert inviato
         print(f"<Alert creato> {alert_details['type']}")
-        self.alert_sended[str(alert_details['timestamp'])] = alert_details
+        self.alert_sended[str(alert_details['t_creation'])] = alert_details
         
         self.mqtt_connection.send_alert(alert_details)
         # Pulizia per mantenere solo gli ultimi 10 alert
@@ -125,7 +125,7 @@ class Alert:
 
 
     def handle_received_alert(self,alert):
-        tstamp = alert.get('timestamp', time.time())
+        tstamp = alert.get('t_creation', time.time())
         
         self.alert_received[str(tstamp)] = alert
         # Mantieni solo gli ultimi 10 alert

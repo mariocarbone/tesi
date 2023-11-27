@@ -63,6 +63,15 @@ class Alert:
 		#print(alert_details)
 		self.mqtt_connection.send_alert(alert_details)
 
+	def handle_received_alert(self,alert):
+		tstamp = alert.get('t_creation', time.time())
+		
+		self.alert_received[str(tstamp)] = alert
+		# Mantieni solo gli ultimi 10 alert
+		if len(self.alert_received) > 10:
+			oldest_key = sorted(self.alert_received.keys())[0]
+			del self.alert_received[oldest_key]
+			
 
 	def check_zona(self, punto):
 		for zona in self.zone :

@@ -22,7 +22,6 @@ class Vehicle_Control():
 		self.on_track = 0
 		self.moving = 0
 		self.stopped_vehicle_alert = False
-		
 		self.status = {
 			"speed": 45,
 			"speed_left_side": 40,
@@ -47,10 +46,13 @@ class Vehicle_Control():
 			response = self.arduino.get_status()
 			if isinstance(response, dict):
 				self.status.update(response)
-				if self.status.get("object_in_front") == 1 and self.status.get("braking") == 1 and self.stopped_vehicle_alert and callable(self.object_in_front_callback):
-					self.object_in_front_callback()
-				if self.status.get("moving") == 1:
-					self.stopped_vehicle_alert = True
+
+				if self.status.get("object_in_front") == 1 and self.status.get("braking") == 1 and callable(self.object_in_front_callback) :
+					if not self.stopped_vehicle_alert:
+						self.object_in_front_callback()
+						self.stopped_vehicle_alert = True
+				else:	
+					self.stopped_vehicle_alert = False
 			else:
 				print("Lo stato di Arduino non è un dizionario valido.")
 
@@ -82,12 +84,12 @@ class Vehicle_Control():
 			if(t_remain == -1):
 				print("<Vehicle Control> continuo a marciare, rover fermo o distanza superiore a 10")
 			elif(t_remain > 1):
+				print("<Vehicle Control> faccio rallentare il rover alla velocità minima")
+				self.arduino.speed(70) #Imposto la velocità minima per far marciare il rover	
+			else:
 				print("<Vehicle Control> raggiungo l'obiettivo e fermo il rover in ", t_remain, "secondi")
 				wait_and_stop_thread = threading.Thread(target=self.wait_then_brake, args=(t_remain,))
 				wait_and_stop_thread.start()
-			else:
-				print("<Vehicle Control> faccio rallentare il rover alla velocità minima")
-				self.arduino.speed(70) #Imposto la velocità minima per far marciare il rover			
 				
 		elif(type == "undefined"):
 			print("<Vehicle Control> faccio rallentare il rover alla velocità minima")

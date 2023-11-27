@@ -30,13 +30,13 @@ class MQTTConnection:
 				t_arrival = time.time()*1000 
 				creator = payload["creator_id"]
 				t_trasm = payload["t_creation"]*1000
-				t_total_ms = round(t_arrival - t_trasm)
+				t_total_ms = round(t_arrival - t_trasm,2)
 				print("<Ricevuto Alert> da", creator, "Tempo impiegato:", t_total_ms , " ms")
 				self.manage_alert(payload)
 			
-			print("<Alert> Ricevuto Alert")
-			payload = json.loads(message.payload)
-			print(payload)
+			#print("<Alert> Ricevuto Alert")
+			#payload = json.loads(message.payload)
+			#print(payload)
 			#self.manage_alert(payload)
 			# alert_id = payload["id"]
 			# alert[alert_id] = payload
@@ -57,4 +57,5 @@ class MQTTConnection:
 		self.client.publish(self.topic_alert + "/" + self.rsu_id , alert_json)
 
 	def manage_alert(self, payload):
-		print("Gestione dell'alert:", payload)
+		if self.on_alert_callback:
+			self.on_alert_callback(payload)
