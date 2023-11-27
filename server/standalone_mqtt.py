@@ -24,7 +24,10 @@ class MQTTConnection:
             client.subscribe("/alert/" + self.rsu_id + '/#')
 
     def on_message(self, client, userdata, message):
-        print(f"<Ricevuto messaggio> Topic: {message.topic}, Messaggio: {message.payload.decode()}")
+        now = time.time()*1000
+        start = message.payload.get("t_creation")*1000
+        time_travel = now - start
+        print(f"<Ricevuto messaggio> Topic: {message.topic}, {time_travel} ms")
 
     def start(self):
         if self.standalone:
