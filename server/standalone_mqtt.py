@@ -26,7 +26,7 @@ class MQTTConnection:
     def on_message(self, client, userdata, message):
         now = time.time()*1000
         payload = json.loads(message.payload)
-        start = message.payload.get("t_creation")*1000
+        start = payload.get("t_creation")*1000
         time_travel = now - start
         print(f"<Ricevuto messaggio> Topic: {message.topic}, {time_travel} ms")
 
