@@ -44,7 +44,7 @@ class MQTTConnection:
 
 	def send_alert(self, alert):
 		alert_json = json.dumps(alert)
-		rsu_id = alert.get("connected_RSU", "N/A")
+		rsu_id = alert.get("connected_RSU", "RSU")
 		if rsu_id == "N/A":
 			full_topic = f"{self.topic_alert}"
 		else:
