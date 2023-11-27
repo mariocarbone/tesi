@@ -9,6 +9,7 @@ class Alert:
         self.vehicle_id = vehicle_id
         self.mqtt_connection = mqtt_connection
         self.mqtt_connection.on_alert_callback = self.handle_received_alert
+        self.vehicle_control.object_in_front_callback = self.on_object_in_front_detected
         self.vehicle_control = vehicle_control
         self.rpi_instance = rpi_instance
         self.alert_sended = {}
@@ -74,6 +75,10 @@ class Alert:
         #print(alert_details)
         self.mqtt_connection.send_alert(alert_details)
 
+    def on_object_in_front_detected(self):
+        print("Rilevato oggetto di fronte al veicolo a meno di 15cm, genero un alert")
+        self.create_undefined_alert()
+
     #Alert if vehicle stopped
     def create_vehicle_stopped_alert(self):
 
@@ -93,7 +98,6 @@ class Alert:
     
     #Alert if object undefined
     def create_undefined_alert(self):
-
         alert_details = {
             "timestamp": time.time(),
             "t_creation" : time.time(),

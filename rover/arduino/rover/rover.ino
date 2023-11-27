@@ -136,6 +136,7 @@ byte determineDirection(byte lastLine, byte prevLine) {
 void loop() {
 
   distance = hc.dist();
+//  unsigned long StartTime = millis();
 
   if (distance < 15) {
       // Se la distanza è minore di 15 cm, ferma il veicolo
@@ -147,6 +148,8 @@ void loop() {
       object_in_front = true;
       analogWrite(ENA, leftSpeed);
       analogWrite(ENB, rightSpeed);
+//      unsigned long CurrentTime = millis();
+//      unsigned long ElapsedTime = CurrentTime - StartTime;
 
       if (Serial.available() > 0) {
         String command = Serial.readStringUntil('\n');

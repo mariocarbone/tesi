@@ -12,6 +12,7 @@ class Vehicle_Control():
 		self.arduino = Arduino("/dev/ttyACM0", 9600, 1, 1)
 		self.rpi = raspberry_istance
 		self.status_lock = Lock()
+		self.object_in_front_callback=None
 		self.distance = 0.0
 		self.distance_lock = Lock()
 		self.stop = 0
@@ -45,6 +46,8 @@ class Vehicle_Control():
 			response = self.arduino.get_status()
 			if isinstance(response, dict):
 				self.status.update(response)
+				if self.status.get("object_in_front") and callable(self.object_in_front_callback):
+					self.object_in_front_callback()
 			else:
 				print("Lo stato di Arduino non è un dizionario valido.")
 
