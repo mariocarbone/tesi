@@ -21,6 +21,7 @@ class Vehicle_Control():
 		self.turn_step = 10
 		self.on_track = 0
 		self.moving = 0
+		self.stopped_vehicle_alert = False
 		
 		self.status = {
 			"speed": 45,
@@ -46,8 +47,10 @@ class Vehicle_Control():
 			response = self.arduino.get_status()
 			if isinstance(response, dict):
 				self.status.update(response)
-				if self.status.get("object_in_front")==1 and self.status.get("braking") ==1  and callable(self.object_in_front_callback):
+				if self.status.get("object_in_front") == 1 and self.status.get("braking") == 1 and self.stopped_vehicle_alert and callable(self.object_in_front_callback):
 					self.object_in_front_callback()
+				if self.status.get("moving") == 1:
+					self.stopped_vehicle_alert = True
 			else:
 				print("Lo stato di Arduino non è un dizionario valido.")
 
