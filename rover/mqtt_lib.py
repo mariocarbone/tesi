@@ -48,7 +48,7 @@ class MQTTConnection:
 		if rsu_id == "N/A":
 			full_topic = f"{self.topic_alert}"
 		else:
-		full_topic = f"{self.topic_alert}/{rsu_id}"
+			full_topic = f"{self.topic_alert}/{rsu_id}"
 
 		self.client.publish(full_topic, alert_json)
 
