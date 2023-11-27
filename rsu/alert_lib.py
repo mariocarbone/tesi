@@ -52,8 +52,8 @@ class Alert:
 			"t_creation" : time.time(),
 			"creator_id": self.rsu_id,
 			"type": predictions.get('category', 'undefined'),
-			"confidence": predictions.get('score', 0),
-			"coordinates": predictions.get('coordinates')
+			"confidence": predictions.get('score', 0)#,
+			#"coordinates": predictions.get('coordinates')
 		}
 		print(prediction_timestamp, "<Alert creato>")
 		self.alert_sended[str(prediction_timestamp)] = alert_details
