@@ -66,14 +66,14 @@ class Alert:
             "vehicle_stopped": self.vehicle_control.status.get('stopped', False),
             "coordinates": predictions.get('coordinates')
         }
-        print(f"<Alert creato> {alert_details['type']}")
+        self.mqtt_connection.send_alert(alert_details)
         self.alert_sended[str(prediction_timestamp)] = alert_details
+        print(f"<Alert creato> type: {alert_details['type']}")
         # Mantieni solo gli ultimi 10 alert
         if len(self.alert_sended) > 10:
             oldest_key = sorted(self.alert_sended.keys())[0]
             del self.alert_sended[oldest_key]
         #print(alert_details)
-        self.mqtt_connection.send_alert(alert_details)
 
     def on_object_in_front_detected(self):
         print("Rilevato oggetto di fronte al veicolo a meno di 15cm, genero un alert")
