@@ -17,7 +17,7 @@ class Alert:
         self.last_predictions = []
 
     def process_predictions(self, predictions):
-        prediction_timestamp = int(predictions.get('timestamp', time.time()))
+        prediction_timestamp = predictions.get('timestamp', time.time())
         for key, prediction in predictions.items():
             if key != "timestamp" and isinstance(prediction, dict):
                 if self.should_generate_alert(prediction):
