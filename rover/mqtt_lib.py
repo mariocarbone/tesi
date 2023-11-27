@@ -45,10 +45,11 @@ class MQTTConnection:
 	def send_alert(self, alert):
 		alert_json = json.dumps(alert)
 		rsu_id = alert.get("connected_RSU", "RSU")
+		type = alert.get("type","undefined")
 		if rsu_id == "N/A":
-			full_topic = f"{self.topic_alert}"
+			full_topic = f"{self.topic_alert}/{type}"
 		else:
-			full_topic = f"{self.topic_alert}/{rsu_id}"
+			full_topic = f"{self.topic_alert}/{rsu_id}/{type}"
 
 		self.client.publish(full_topic, alert_json)
 

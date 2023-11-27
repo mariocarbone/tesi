@@ -55,7 +55,8 @@ class MQTTConnection:
 
 	def send_alert(self, alert):
 		alert_json = json.dumps(alert)
-		self.client.publish(self.topic_alert + "/" + self.rsu_id , alert_json)
+		type = alert.get("type", "undefined")
+		self.client.publish(self.topic_alert + "/" + self.rsu_id + "/" + type, alert_json)
 
 	def manage_alert(self, payload):
 		if self.on_alert_callback:
