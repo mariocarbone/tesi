@@ -9,8 +9,8 @@ class Alert:
         self.vehicle_id = vehicle_id
         self.mqtt_connection = mqtt_connection
         self.mqtt_connection.on_alert_callback = self.handle_received_alert
-        self.vehicle_control.object_in_front_callback = self.on_object_in_front_detected
         self.vehicle_control = vehicle_control
+        self.vehicle_control.object_in_front_callback = self.on_object_in_front_detected
         self.rpi_instance = rpi_instance
         self.alert_sended = {}
         self.alert_received = {}
