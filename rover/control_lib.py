@@ -46,17 +46,17 @@ class Vehicle_Control():
 			response = self.arduino.get_status()
 			if isinstance(response, dict):
 				self.status.update(response)
-				self.check_alert_status()
+
+				# Esegui il controllo direttamente qui
+				if self.status.get("object_in_front") == 1 and self.status.get("braking") == 1:
+					if not self.stopped_vehicle_alert:
+						if callable(self.object_in_front_callback):
+							self.object_in_front_callback()
+						self.stopped_vehicle_alert = True
+				else:
+					self.stopped_vehicle_alert = False
 			else:
 				print("Lo stato di Arduino non è un dizionario valido.")
-
-	def check_alert_status(self):
-		if self.status.get("object_in_front") == 1 and self.status.get("braking") == 1 and callable(self.object_in_front_callback) :
-			if not self.stopped_vehicle_alert:
-				self.object_in_front_callback()
-				self.stopped_vehicle_alert = True
-		else:	
-			self.stopped_vehicle_alert = False
 
 	def alert_to_controls(self,alert):
 		type = alert['type']
