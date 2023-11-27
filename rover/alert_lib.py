@@ -49,6 +49,9 @@ class Alert:
     def should_generate_alert(self, prediction):
         if prediction.get("category") == "person" and prediction.get("score") > 0.7:
                 return True
+        elif prediction.get("category") == "car" and prediction.get("score") > 0.8:
+            if(self.vehicle_control.status.get("moving") == 1):
+                return True
         return False
 
     def create_and_send_alert(self, predictions, prediction_timestamp):
@@ -58,13 +61,13 @@ class Alert:
             "creator_id": self.vehicle_id,
             "front_distance": self.vehicle_control.status.get('distance', 0),
             "connected_RSU": self.rpi_instance.system_status.get("ap_connected", 'RSU'),
-            "distance_from_rsu": self.rpi_instance.system_status.get("ap_distance", '0'),
+            "distance_from_rsu": self.rpi_instance.system_status.get("ap_distance", 0),
             "distance_from_other_aps": self.rpi_instance.system_status.get("other_aps", {}),
-            "type": predictions.get('category', 'unknown'),
+            "type": predictions.get('category', 'undefined'),
             "confidence": predictions.get('score', 0),
-            "object_in_front": self.vehicle_control.status.get("object_in_front", False),
-            "vehicle_stopped": self.vehicle_control.status.get('stopped', False),
-            "coordinates": predictions.get('coordinates')
+            "object_in_front": self.vehicle_control.status.get("object_in_front",0),
+            "vehicle_stopped": self.vehicle_control.status.get('stopped',0)#,
+            #"coordinates": predictions.get('coordinates')
         }
         self.mqtt_connection.send_alert(alert_details)
         self.alert_sended[str(prediction_timestamp)] = alert_details
@@ -87,12 +90,12 @@ class Alert:
             "t_creation" : time.time(),
             "creator_id": self.vehicle_id,
             "front_distance": self.vehicle_control.status.get('distance', 0),
-            "connected_RSU": self.rpi_instance.system_status.get("ap_connected", 'N/A'),
-            "distance_from_rsu": self.rpi_instance.system_status.get("ap_distance", 'N/A'),
+            "connected_RSU": self.rpi_instance.system_status.get("ap_connected", 'RSU'),
+            "distance_from_rsu": self.rpi_instance.system_status.get("ap_distance", 0),
             "distance_from_other_aps": self.rpi_instance.system_status.get("other_aps", {}),
             "type": "vehicle_stopped",
-            "object_in_front": self.vehicle_control.status.get("object_in_front", False),
-            "vehicle_stopped": self.vehicle_control.status.get('stopped', False),
+            "object_in_front": self.vehicle_control.status.get("object_in_front", 0),
+            "vehicle_stopped": self.vehicle_control.status.get('stopped', 0),
         }
         self.send_alert(alert_details)
     
@@ -103,12 +106,12 @@ class Alert:
             "t_creation" : time.time(),
             "creator_id": self.vehicle_id,
             "front_distance": self.vehicle_control.status.get('distance', 0),
-            "connected_RSU": self.rpi_instance.system_status.get("ap_connected", 'N/A'),
-            "distance_from_rsu": self.rpi_instance.system_status.get("ap_distance", 'N/A'),
+            "connected_RSU": self.rpi_instance.system_status.get("ap_connected", 'RSU'),
+            "distance_from_rsu": self.rpi_instance.system_status.get("ap_distance", 0),
             "distance_from_other_aps": self.rpi_instance.system_status.get("other_aps", {}),
             "type": "undefined",
-            "object_in_front": self.vehicle_control.status.get("object_in_front", False),
-            "vehicle_stopped": self.vehicle_control.status.get('stopped', False),
+            "object_in_front": self.vehicle_control.status.get("object_in_front", 0),
+            "vehicle_stopped": self.vehicle_control.status.get('stopped', F0alse),
         }
         self.send_alert(alert_details)
 
