@@ -14,6 +14,7 @@ class Raspberry(str):
 		self.system_status = {}
 		self.pi = PI()
 		self.other_aps = {}
+		self.get_system_status()
 
 	def get_system_status(self):
 		ram_used = int(self.pi.get_ram_info()[1])
