@@ -39,7 +39,7 @@ def main():
     port = 1883
     threads = []
 
-    for i in range(1000):
+    for i in range(100):
         client_id = f"client_{i}"
         thread = threading.Thread(target=create_and_run_client, args=(client_id, broker_address, port))
         thread.start()
