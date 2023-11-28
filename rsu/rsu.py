@@ -129,6 +129,8 @@ def detection():
 				#with prediction_lock:
 				prediction_json = json
 				alert_instance.process_predictions(prediction_json)
+			else:
+				prediction_json = {}
 		else:
 			#logging.warning('Coda dei frame vuota') 
 			#print(round(time.time()*1000), "- App Main > Coda dei frame vuota")
