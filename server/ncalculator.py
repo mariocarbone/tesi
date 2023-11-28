@@ -10,6 +10,7 @@ class SubscriberClient:
         self.client.on_message = self.on_message
         self.client.connect(broker_address, port)
         self.times = []
+        self.message_count = 0
 
     def on_connect(self, client, userdata, flags, rc):
         print(f"<Subscriber> Connesso con codice: {rc}")
@@ -21,18 +22,22 @@ class SubscriberClient:
         t_creation = payload.get("t_creation")
         time_travel = now - t_creation
         self.times.append(time_travel)
+        self.message_count += 1
 
-    def calculate_average_time(self):
+        if self.message_count >= 50:
+            self.display_average()
+            self.message_count = 0
+            self.times = []
+
+    def display_average(self):
         if self.times:
-            return sum(self.times) / len(self.times)
-        return 0
+            average_time = sum(self.times) / len(self.times)
+            print(f"Tempo medio di trasmissione: {average_time * 1000} ms")
 
     def run(self):
         self.client.loop_start()
         while True:
-            time.sleep(5)  # Intervallo per calcolare la media
-            average_time = self.calculate_average_time()
-            print(f"Tempo medio di trasmissione: {average_time * 1000} ms")
+            time.sleep(5)
 
 def main():
     broker_address = "192.168.1.6"
