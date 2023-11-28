@@ -24,7 +24,7 @@ class SubscriberClient:
         self.times.append(time_travel)
         self.message_count += 1
 
-        if self.message_count >= 50:
+        if self.message_count >= 500:
             self.display_average()
             self.message_count = 0
             self.times = []
