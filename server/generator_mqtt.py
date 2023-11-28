@@ -7,7 +7,7 @@ class MQTTClient:
     def __init__(self, client_id, broker_address, port):
         self.client = mqtt.Client(client_id)
         self.client.on_connect = self.on_connect
-        self.client.on_message = self.on_message
+        #self.client.on_message = self.on_message
         self.client.connect(broker_address, port)
         self.topic = "/alert/" + client_id
 
@@ -39,7 +39,7 @@ def main():
     port = 1883
     threads = []
 
-    for i in range(100):
+    for i in range(50):
         client_id = f"client_{i}"
         thread = threading.Thread(target=create_and_run_client, args=(client_id, broker_address, port))
         thread.start()
