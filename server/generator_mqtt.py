@@ -8,19 +8,10 @@ def create_client(client_id, broker_address, port):
 
     def on_connect(client, userdata, flags, rc):
         print(f"<Client {client_id}> Connesso con codice: {rc}")
-        client.subscribe("/alert/#")  # Sottoscrizione a tutti gli alert
         payload = json.dumps({"t_creation": time.time()})
         client.publish("/alert/" + client_id, payload)
-
-    def on_message(client, userdata, message):
-        now = time.time()
-        payload = json.loads(message.payload)
-        t_creation = payload.get("t_creation")
-        time_travel = (now - t_creation) * 1000  # Tempo in millisecondi
-        print(f"<Client {client_id}> Ricevuto messaggio. Tempo di trasmissione: {time_travel} ms")
-
+    
     client.on_connect = on_connect
-    client.on_message = on_message
     client.connect(broker_address, port)
     return client
 
