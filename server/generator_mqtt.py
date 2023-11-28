@@ -3,53 +3,51 @@ import json
 import time
 import threading
 
-def create_client(client_id, broker_address, port):
-    client = mqtt.Client(client_id)
-    event = threading.Event()  # Evento per sincronizzare la pubblicazione dopo la sottoscrizione
+class MQTTClient:
+    def __init__(self, client_id, broker_address, port):
+        self.client = mqtt.Client(client_id)
+        self.client.on_connect = self.on_connect
+        self.client.on_message = self.on_message
+        self.client.connect(broker_address, port)
+        self.topic = "/alert/" + client_id
 
-    def on_connect(client, userdata, flags, rc):
-        print(f"<Client {client_id}> Connesso con codice: {rc}")
-        client.subscribe("/alert/#", qos=1)  # Sottoscrizione a tutti gli alert con QoS 1
-        event.set()
+    def on_connect(self, client, userdata, flags, rc):
+        print(f"<Client {client._client_id.decode()}> Connesso con codice: {rc}")
+        client.subscribe("/alert/#", qos=1)
+        self.publish_alert()
 
-    def on_message(client, userdata, message):
+    def on_message(self, client, userdata, message):
         now = time.time()
         payload = json.loads(message.payload)
         t_creation = payload.get("t_creation")
-        time_travel = (now - t_creation) * 1000  # Tempo in millisecondi
-        print(f"<Client {client_id}> Ricevuto messaggio. Tempo di trasmissione: {time_travel} ms")
+        time_travel = (now - t_creation) * 1000
+        print(f"<Client {client._client_id.decode()}> Ricevuto messaggio. Tempo di trasmissione: {time_travel} ms")
 
-    client.on_connect = on_connect
-    client.on_message = on_message
-    client.connect(broker_address, port)
-
-    def publish_message():
-        event.wait()  # Aspetta che la connessione e la sottoscrizione siano completate
+    def publish_alert(self):
         payload = json.dumps({"t_creation": time.time()})
-        client.publish("/alert/" + client_id, payload, qos=1)  # Pubblica con QoS 1
+        self.client.publish(self.topic, payload, qos=1)
 
-    return client, publish_message
+    def run(self):
+        self.client.loop_forever()
 
-def run_client(client, publish_message):
-    try:
-        publish_message()
-        client.loop_forever()
-    except KeyboardInterrupt:
-        print(f"<Client {client._client_id}> Disconnessione.")
+def create_and_run_client(client_id, broker_address, port):
+    mqtt_client = MQTTClient(client_id, broker_address, port)
+    mqtt_client.run()
 
 def main():
     broker_address = "192.168.1.6"
     port = 1883
-    clients = []
+    threads = []
 
     for i in range(1000):
         client_id = f"client_{i}"
-        client, publish_message = create_client(client_id, broker_address, port)
-        clients.append(client)
-
-        # Avvio il client e la pubblicazione del messaggio in un thread separato
-        thread = threading.Thread(target=run_client, args=(client, publish_message))
+        thread = threading.Thread(target=create_and_run_client, args=(client_id, broker_address, port))
         thread.start()
+        threads.append(thread)
+
+    # Aspetta che tutti i thread terminino (opzionale)
+    for thread in threads:
+        thread.join()
 
 if __name__ == "__main__":
     main()
