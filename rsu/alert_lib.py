@@ -49,10 +49,10 @@ class Alert:
 	def create_and_send_alert(self, predictions, prediction_timestamp):
 		alert_details = {
 			"timestamp": prediction_timestamp,
-			"t_creation" : time.time(),
 			"creator_id": self.rsu_id,
 			"type": predictions.get('category', 'undefined'),
-			"confidence": predictions.get('score', 0)#,
+			"confidence": predictions.get('score', 0),
+            "t_creation" : time.time()
 			#"coordinates": predictions.get('coordinates')
 		}
 		print(prediction_timestamp, "<Alert creato>")

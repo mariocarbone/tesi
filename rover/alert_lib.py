@@ -57,7 +57,6 @@ class Alert:
     def create_and_send_alert(self, predictions, prediction_timestamp):
         alert_details = {
             "timestamp": prediction_timestamp,
-            "t_creation" : time.time(),
             "creator_id": self.vehicle_id,
             "front_distance": self.vehicle_control.status.get('distance', 0),
             "connected_RSU": self.rpi_instance.system_status.get("ap_connected", 'RSU'),
@@ -66,7 +65,8 @@ class Alert:
             "type": predictions.get('category', 'undefined'),
             "confidence": predictions.get('score', 0),
             "object_in_front": self.vehicle_control.status.get("object_in_front",0),
-            "vehicle_stopped": self.vehicle_control.status.get('stopped',0)#,
+            "vehicle_stopped": self.vehicle_control.status.get('stopped',0),
+            "t_creation" : time.time(),
             #"coordinates": predictions.get('coordinates')
         }
         self.mqtt_connection.send_alert(alert_details)
@@ -87,7 +87,6 @@ class Alert:
 
         alert_details = {
             "timestamp": time.time(),
-            "t_creation" : time.time(),
             "creator_id": self.vehicle_id,
             "front_distance": self.vehicle_control.status.get('distance', 0),
             "connected_RSU": self.rpi_instance.system_status.get("ap_connected", 'RSU'),
@@ -96,6 +95,7 @@ class Alert:
             "type": "vehicle_stopped",
             "object_in_front": self.vehicle_control.status.get("object_in_front", 0),
             "vehicle_stopped": self.vehicle_control.status.get('stopped', 0),
+            "t_creation" : time.time()
         }
         self.send_alert(alert_details)
     
@@ -103,7 +103,6 @@ class Alert:
     def create_undefined_alert(self):
         alert_details = {
             "timestamp": time.time(),
-            "t_creation" : time.time(),
             "creator_id": self.vehicle_id,
             "front_distance": self.vehicle_control.status.get('distance', 0),
             "connected_RSU": self.rpi_instance.system_status.get("ap_connected", 'RSU'),
@@ -112,6 +111,7 @@ class Alert:
             "type": "undefined",
             "object_in_front": self.vehicle_control.status.get("object_in_front", 0),
             "vehicle_stopped": self.vehicle_control.status.get('stopped', 0),
+            "t_creation" : time.time()
         }
         self.send_alert(alert_details)
 
