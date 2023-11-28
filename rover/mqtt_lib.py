@@ -10,7 +10,7 @@ class MQTTConnection:
 		self.topic_alert = topic_alert
 		self.topic_auto = topic_auto
 		self.vehicle_id = vehicle_id
-		self.client = mqtt.Client(self.vehicle_id)
+		self.client = mqtt.Client(vehicle_id)
 		self.client.on_connect = self.on_connect
 		self.client.on_message = self.on_message
 		self.client.connect(broker_address, port)
