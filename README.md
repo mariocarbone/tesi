@@ -1,4 +1,4 @@
-# Tesi: Rover a guida autonoma con integrazione di un sistema di alerting
+# Tesi: Sviluppo di un sistema di smart alerting basato su percezione cooperativa
 
 Rover:  
 Lo script principale app-main.py vi avviato sul rover, questo va ad utilizzare diverse librerie python, tensorflow ecc.. per effettuare il riconoscimento di ostacoli e condividerli con altri dispositivi mediante protocollo mqtt.
